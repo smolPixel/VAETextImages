@@ -1,0 +1,58 @@
+"""Take in charge all generation algorithms"""
+import os, shutil
+from process_data import *
+import subprocess
+import torch
+import copy
+
+def run_external_process(process):
+    output, error = process.communicate()
+    if process.returncode != 0:
+        raise SystemError
+    return output, error
+
+class generator():
+
+    def __init__(self, argdict, train, dev, test, classifier=None):
+        self.argdict=argdict
+
+        # self.argdict['c']
+
+        algo = self.argdict['algo']
+        if algo == "VAE":
+            from Generator.VAE.VAE import VAE
+            self.generator=VAE(self.argdict, train, dev, test)
+        else:
+            raise ValueError(f"No generator named {algo}")
+
+        self.classifier=classifier
+
+    def train(self):
+        self.generator.train()
+
+    def encode(self):
+        return self.generator.encode()
+
+
+
+    def generate(self, datapoints, cat):
+        return self.generator.generate(datapoints, cat)
+
+    def generate_from_label(self, label, number):
+        """Generate from a given label and a number of sentences"""
+        points_to_label = torch.randn(number, self.argdict['latent_size']).cuda()
+        # points_to_label = torch.zeros(self.argdict['batch_size_MQS'],
+        #                               self.argdict['latent_size'] + len(self.argdict['categories'])).cuda()
+        #In some case you can't control the generation
+        # if self.argdict['algo'] in ['SVAE', 'CVAE']:
+        #     labels=torch.zeros(number, len(self.argdict['categories'])).cuda()
+        #     labels[:, label]=1
+        #     points_to_label=torch.cat([points_to_label, labels], dim=1)
+        return self.generator.generate(points_to_label, label)
+
+    def run_epoch(self, datasets, datasetsLabelled):
+        self.generator.datasets=datasets
+        self.generator.datasetsLabelled=datasetsLabelled
+        self.generator.run_epoch()
+        # self.generator.run_epoch_classifier()
+        # self.generator.run_epoch_VAE()
