@@ -50,6 +50,10 @@ class generator():
         #     points_to_label=torch.cat([points_to_label, labels], dim=1)
         return self.generator.generate(points_to_label, label)
 
+    def test_separability(self):
+        encoded=self.encode()
+        print(encoded)
+
     def run_epoch(self, datasets, datasetsLabelled):
         self.generator.datasets=datasets
         self.generator.datasetsLabelled=datasetsLabelled

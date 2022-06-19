@@ -27,24 +27,15 @@ def set_seed(seed=42):
 
 def main(argdict):
     # run_lstm(argdict)
-<<<<<<< HEAD
-
-=======
     train, dev, test=create_datasets(argdict)
     Gen = generator(argdict, train, dev, test)
     Gen.train()
->>>>>>> f6f8d189e49765d8885a8565af4bb994174e3c3c
-
+    Gen.test_separability()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='VAE for data augmentation')
     #General arguments on training
     parser.add_argument('--dataset', type=str, default='SST-2', help="dataset you want to run the process on. Includes SST2, TREC6, FakeNews")
-<<<<<<< HEAD
-
-    args = parser.parse_args()
-    argsdict = args.__dict__
-=======
     parser.add_argument('--computer', type=str, default='labo', help="Whether you run at home or at iro. Automatically changes the base path")
     parser.add_argument('--dataset_size', type=int, default=0, help='number of example in the original dataset. If 0, use the entire dataset')
     parser.add_argument('--random_seed', type=int, default=7, help='Random seed ')
@@ -84,5 +75,4 @@ if __name__ == '__main__':
         raise ValueError("Dataset not found")
     argsdict['categories'] = categories
 
->>>>>>> f6f8d189e49765d8885a8565af4bb994174e3c3c
     main(argsdict)
