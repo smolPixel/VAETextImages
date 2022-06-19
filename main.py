@@ -7,11 +7,8 @@ from process_data import *
 import random
 import numpy as np
 import torch
-<<<<<<< HEAD
-=======
 from data.dataset import create_datasets
 from Generator.Generator import generator
->>>>>>> f6f8d189e49765d8885a8565af4bb994174e3c3c
 
 def set_seed(seed=42):
     random.seed(seed)
