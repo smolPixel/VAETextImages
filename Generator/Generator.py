@@ -59,6 +59,7 @@ class generator():
         X=encoded['encoded_train']
         Y=encoded['true_labels_train']
         separator.fit(X, Y)
+        print(separator.score(X, Y))
 
         print(encoded.keys())
 
