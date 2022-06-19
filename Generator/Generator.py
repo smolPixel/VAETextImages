@@ -57,6 +57,7 @@ class generator():
         separator=SVC()
         encoded=self.encode()
         print(encoded['encoded_train'])
+        print(encoded['true_labels_train'])
         print(encoded.keys())
 
 
