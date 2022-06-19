@@ -52,7 +52,7 @@ class generator():
 
     def test_separability(self):
         encoded=self.encode()
-        print(encoded.keys()['encoded_train'])
+        print(encoded['encoded_train'])
 
 
 
