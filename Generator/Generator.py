@@ -56,8 +56,10 @@ class generator():
     def test_separability(self):
         separator=SVC()
         encoded=self.encode()
-        print(encoded['encoded_train'])
-        print(encoded['true_labels_train'])
+        X=encoded['encoded_train']
+        Y=encoded['true_labels_train']
+        separator.fit(X, Y)
+
         print(encoded.keys())
 
 
