@@ -52,7 +52,7 @@ class generator():
 
     def test_separability(self):
         encoded=self.encode()
-        print(encoded)
+        print(encoded.keys())
 
     def run_epoch(self, datasets, datasetsLabelled):
         self.generator.datasets=datasets
