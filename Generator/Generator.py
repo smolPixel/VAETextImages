@@ -4,6 +4,7 @@ from process_data import *
 import subprocess
 import torch
 import copy
+from sklearn.svm import SVC
 
 def run_external_process(process):
     output, error = process.communicate()
@@ -24,6 +25,8 @@ class generator():
             self.generator=VAE(self.argdict, train, dev, test)
         else:
             raise ValueError(f"No generator named {algo}")
+
+
 
         self.classifier=classifier
 
@@ -51,8 +54,10 @@ class generator():
         return self.generator.generate(points_to_label, label)
 
     def test_separability(self):
+        separator=SVC()
         encoded=self.encode()
         print(encoded['encoded_train'])
+        print(encoded.keys())
 
 
 
