@@ -54,11 +54,11 @@ class VAE():
             max_sequence_length=60,  # self.argdict.max_sequence_length,
             embedding_size=300,  # self.argdict.embedding_size,
             rnn_type='gru',  # self.argdict.rnn_type,
-            hidden_size=self.argdict['hidden_size_algo'],
+            hidden_size=self.argdict['hidden_size'],
             word_dropout=self.argdict['word_dropout'],  # self.argdict.word_dropout,
-            embedding_dropout=self.argdict['dropout_algo'],  # self.argdict.embedding_dropout,
+            embedding_dropout=self.argdict['dropout'],  # self.argdict.embedding_dropout,
             latent_size=self.argdict['latent_size'],
-            num_layers=self.argdict['num_layers_algo'],
+            num_layers=self.argdict['num_layers'],
             bidirectional=False  # self.argdict.bidirectional
         )
         model = SentenceVAE(**params)
@@ -145,7 +145,7 @@ class VAE():
                 Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
                 Average_NLL.append(NLL_loss.cpu().detach()/batch_size)
 
-            print(f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch_algo']}, Mean ELBO {np.mean(Average_loss)}, Mean NLL {np.mean(Average_NLL)}, Mean KL div {np.mean(Average_KL_Div)} KL Weight {KL_weight}")
+            print(f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean ELBO {np.mean(Average_loss)}, Mean NLL {np.mean(Average_NLL)}, Mean KL div {np.mean(Average_KL_Div)} KL Weight {KL_weight}")
 
     def create_graph(self):
         """First encode all train into the latent space"""
@@ -192,7 +192,7 @@ class VAE():
         # tensor = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.Tensor
         # step = 0
         # for epoch in range(self.argdict.epochs):
-        for epoch in range(self.argdict['nb_epoch_algo']):
+        for epoch in range(self.argdict['nb_epoch']):
             self.epoch=epoch
             self.run_epoch()
         self.interpolate()

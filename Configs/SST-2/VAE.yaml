@@ -1,0 +1,15 @@
+---
+dataset: "SST-2"
+computer: "labo"
+dataset_size: 0
+random_seed: 42
+max_length: 0
+algo: "VAE"
+nb_epoch: 30
+latent_size: 5
+hidden_size: 1024
+num_layers: 1
+batch_size: 64
+dropout: 0.3
+word_dropout: 0.3
+x0: 15
