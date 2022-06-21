@@ -13,4 +13,5 @@ class GRU_Encoder(nn.Module):
                                batch_first=True)
 	def forward(self, input_sequence):
 		input_embedding = self.embedding(input_sequence)
-		_, hidden = self.encoder_rnn(input_embedding)
+		_, hidden = self.rnn(input_embedding)
+		return _, hidden
