@@ -47,7 +47,7 @@ class VAE():
         self.step = 0
         self.epoch = 0
 
-        enco=encoder(self.argdict)
+        enco=encoder(self.argdict, vocab_size=self.datasets['train'].vocab_size)
         print(enco)
         fds
 
