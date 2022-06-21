@@ -84,7 +84,7 @@ class SentenceVAE(nn.Module):
         # DECODER
         hidden = self.latent2hidden(z)
 
-        hidden = hidden.view(batch_size, self.hidden_factor, self.hidden_size)
+        hidden = hidden.view(batch_size, 1, self.hidden_size)
         hidden = torch.transpose(hidden, 0, 1)
         hidden = hidden.contiguous()
 
