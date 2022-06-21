@@ -9,7 +9,7 @@ class encoder(nn.Module):
 		encoder=self.argdict['encoder']
 		if encoder.lower()=="gru":
 			from Encoders.GRU import GRU_Encoder
-			self.model=GRU_Encoder
+			self.model=GRU_Encoder(argdict)
 
 
 	def forward(self, input):
