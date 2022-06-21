@@ -9,7 +9,7 @@ class GRU_Encoder(nn.Module):
 		self.argdict=argdict
 
 		self.embedding = nn.Embedding(vocab_size, embedding_size)
-		self.rnn=rnn(embedding_size, hidden_size, num_layers=1, bidirectional=False,
+		self.rnn=nn.GRU(embedding_size, hidden_size, num_layers=1, bidirectional=False,
                                batch_first=True)
 	def forward(self, input):
 		input_embedding = self.embedding(input_sequence)
