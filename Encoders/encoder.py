@@ -4,6 +4,7 @@ import torch.nn as nn
 class encoder(nn.Module):
 
 	def __init__(self, argdict, **kwargs):
+		super().__init__()
 		self.argdict=argdict
 
 		encoder=self.argdict['encoder']
