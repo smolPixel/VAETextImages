@@ -5,7 +5,7 @@ from Generator.utils import to_var
 
 
 class SentenceVAE(nn.Module):
-    def __init__(self, vocab_size, embedding_size, rnn_type, hidden_size, word_dropout, embedding_dropout, latent_size,
+    def __init__(self, encoder, vocab_size, embedding_size, rnn_type, hidden_size, word_dropout, embedding_dropout, latent_size,
                 sos_idx, eos_idx, pad_idx, unk_idx, max_sequence_length, num_layers=1, bidirectional=False):
 
         super().__init__()
@@ -37,12 +37,14 @@ class SentenceVAE(nn.Module):
         else:
             raise ValueError()
 
-        self.encoder_rnn = rnn(embedding_size, hidden_size, num_layers=num_layers, bidirectional=self.bidirectional,
-                               batch_first=True)
+        self.encoder=encoder
+
+        # self.encoder_rnn = rnn(embedding_size, hidden_size, num_layers=num_layers, bidirectional=self.bidirectional,
+        #                        batch_first=True)
         self.decoder_rnn = rnn(embedding_size, hidden_size, num_layers=num_layers, bidirectional=self.bidirectional,
                                batch_first=True)
 
-        self.hidden_factor = (2 if bidirectional else 1) * num_layers
+        # self.hidden_factor = (2 if bidirectional else 1) * num_layers
 
         self.hidden2mean = nn.Linear(hidden_size * self.hidden_factor, latent_size)
         self.hidden2logv = nn.Linear(hidden_size * self.hidden_factor, latent_size)
@@ -56,18 +58,20 @@ class SentenceVAE(nn.Module):
         # input_sequence = input_sequence[sorted_idx]
 
         # ENCODER
-        input_embedding = self.embedding(input_sequence)
+        # input_embedding = self.embedding(input_sequence)
 
         # packed_input = rnn_utils.pack_padded_sequence(input_embedding, sorted_lengths.data.tolist(), batch_first=True)
 
         # _, hidden = self.encoder_rnn(packed_input)
-        _, hidden = self.encoder_rnn(input_embedding)
+        # _, hidden = self.encoder_rnn(input_embedding)
 
-        if self.bidirectional or self.num_layers > 1:
-            # flatten hidden state
-            hidden = hidden.view(batch_size, self.hidden_size*self.hidden_factor)
-        else:
-            hidden = hidden.squeeze()
+        _, hidden=self.encoder(input_sequence)
+
+        # if self.bidirectional or self.num_layers > 1:
+        #     flatten hidden state
+            # hidden = hidden.view(batch_size, self.hidden_size*self.hidden_factor)
+        # else:
+        #     hidden = hidden.squeeze()
 
         # REPARAMETERIZATION
         mean = self.hidden2mean(hidden)
