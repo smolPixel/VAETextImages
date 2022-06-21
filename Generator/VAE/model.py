@@ -46,9 +46,9 @@ class SentenceVAE(nn.Module):
 
         # self.hidden_factor = (2 if bidirectional else 1) * num_layers
 
-        self.hidden2mean = nn.Linear(hidden_size * self.hidden_factor, latent_size)
-        self.hidden2logv = nn.Linear(hidden_size * self.hidden_factor, latent_size)
-        self.latent2hidden = nn.Linear(latent_size, hidden_size * self.hidden_factor)
+        self.hidden2mean = nn.Linear(hidden_size, latent_size)
+        self.hidden2logv = nn.Linear(hidden_size, latent_size)
+        self.latent2hidden = nn.Linear(latent_size, hidden_size)
         self.outputs2vocab = nn.Linear(hidden_size * (2 if bidirectional else 1), vocab_size)
 
     def forward(self, input_sequence, length):
