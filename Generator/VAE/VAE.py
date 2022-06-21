@@ -16,6 +16,7 @@ from sklearn.metrics import accuracy_score
 # from Generators.VAE.ptb import PTB
 from Generator.utils import to_var, idx2word, expierment_name
 from Generator.VAE.model import SentenceVAE
+from Encoders.encoder import encoder
 
 class VAE():
 
@@ -26,7 +27,7 @@ class VAE():
         self.model, self.params=self.init_model_dataset()
         # optimizers
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)  # self.argdict.learning_rate)
-        self.loss_function_discriminator = torch.nn.CrossEntropyLoss()
+        self.loss_function_discriminator = torch.nn.CrossEntropyLoss()z
 
     def init_model_dataset(self):
         splits = ['train', 'dev']  # + (['test'] if self.argdict.test else [])
@@ -45,6 +46,11 @@ class VAE():
         # print(datasetsLabelled['train'])
         self.step = 0
         self.epoch = 0
+
+        enco=encoder(self.argdict)
+        print(enco)
+        fds
+
         params = dict(
             vocab_size=self.datasets['train'].vocab_size,
             sos_idx=self.datasets['train'].sos_idx,

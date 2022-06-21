@@ -19,6 +19,7 @@ class generator():
 
         # self.argdict['c']
 
+
         algo = self.argdict['algo']
         if algo == "VAE":
             from Generator.VAE.VAE import VAE
