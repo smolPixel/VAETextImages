@@ -27,7 +27,7 @@ class VAE():
         self.model, self.params=self.init_model_dataset()
         # optimizers
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)  # self.argdict.learning_rate)
-        self.loss_function_discriminator = torch.nn.CrossEntropyLoss()z
+        self.loss_function_discriminator = torch.nn.CrossEntropyLoss()
 
     def init_model_dataset(self):
         splits = ['train', 'dev']  # + (['test'] if self.argdict.test else [])
