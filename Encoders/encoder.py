@@ -10,7 +10,7 @@ class encoder(nn.Module):
 		encoder=self.argdict['encoder']
 		if encoder.lower()=="gru":
 			from Encoders.GRU import GRU_Encoder
-			self.model=GRU_Encoder(argdict, kwargs['vocab_size'], kwargs['embedding_size'])
+			self.model=GRU_Encoder(argdict, kwargs['vocab_size'], kwargs['embedding_size'], hidden_size=kwargs['hidden_size'])
 
 
 	def forward(self, input):
