@@ -80,11 +80,11 @@ class SentenceVAE(nn.Module):
         z = z * std + mean
 
         # DECODER
-        hidden = self.latent2hidden(z)
-
-        hidden = hidden.view(batch_size, 1, self.hidden_size)
-        hidden = torch.transpose(hidden, 0, 1)
-        hidden = hidden.contiguous()
+        # hidden = self.latent2hidden(z)
+        #
+        # hidden = hidden.view(batch_size, 1, self.hidden_size)
+        # hidden = torch.transpose(hidden, 0, 1)
+        # hidden = hidden.contiguous()
 
         # decoder input
         # if self.word_dropout_rate > 0:

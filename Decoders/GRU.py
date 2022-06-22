@@ -19,6 +19,7 @@ class GRU_Decoder(nn.Module):
 		return _, hidden
 
 	def generate(self, z):
+		
 
 		hidden = self.latent2hidden(z)
 
