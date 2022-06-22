@@ -23,7 +23,7 @@ class GRU_Decoder(nn.Module):
 		logp = nn.functional.log_softmax(self.outputs2vocab(outputs), dim=-1)
 		return logp
 
-	def generate(self, z):
+	def generate(self, z, sos_idx, pad_idx):
 		batch_size = z.size(0)
 
 		hidden = self.latent2hidden(z)
@@ -44,13 +44,13 @@ class GRU_Decoder(nn.Module):
 		# else:
 		#     hidden = hidden.unsqueeze(0)
 
-		generations = torch.tensor((batch_size, self.max_sequence_length)).fill_(self.pad_idx).long()
+		generations = torch.tensor((batch_size, self.max_sequence_length)).fill_(pad_idx).long()
 
 		t = 0
 		while t < self.max_sequence_length:
 
 			if t == 0:
-				input_sequence = torch.Tensor(batch_size).fill_(self.sos_idx).long()
+				input_sequence = torch.Tensor(batch_size).fill_(sos_idx).long()
 				input_sequence = input_sequence.unsqueeze(1)
 
 			input_embedding = self.embedding(input_sequence)

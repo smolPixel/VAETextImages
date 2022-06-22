@@ -152,7 +152,7 @@ class SentenceVAE(nn.Module):
             batch_size = z.size(0)
 
 
-        generated=self.decoder.generate(z)
+        generated=self.decoder.generate(z, pad_idx=self.pad_idx, sos_idx=self.sos_idx)
         #
         # hidden = self.latent2hidden(z)
         #

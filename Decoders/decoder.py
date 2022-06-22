@@ -16,5 +16,5 @@ class decoder(nn.Module):
 	def forward(self, input, z):
 		return self.model(input, z)
 
-	def generate(self, z):
-		return self.model.generate(z)
+	def generate(self, z, **kwargs):
+		return self.model.generate(z, **kwargs)
