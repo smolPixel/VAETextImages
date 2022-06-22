@@ -17,8 +17,9 @@ class GRU_Decoder(nn.Module):
 
 	def forward(self, input_sequence, latent_space):
 		input_embedding = self.embedding(input_sequence)
-		_, hidden = self.rnn(input_embedding)
-		return _, hidden
+		outputs, hidden = self.rnn(input_embedding)
+		logp = nn.functional.log_softmax(self.outputs2vocab(outputs), dim=-1)
+		return logp
 
 	def generate(self, z):
 

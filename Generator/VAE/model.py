@@ -102,11 +102,11 @@ class SentenceVAE(nn.Module):
         # # decoder forward pass
         # # outputs, _ = self.decoder_rnn(packed_input, hidden)
         # outputs, _ = self.decoder_rnn(input_embedding, hidden)
-        outputs, _=self.decoder(input_sequence, z)
+        logp =self.decoder(input_sequence, z)
 
         # project outputs to vocab
         # logp = nn.functional.log_softmax(self.outputs2vocab(padded_outputs.view(-1, padded_outputs.size(2))), dim=-1)
-        logp = nn.functional.log_softmax(self.outputs2vocab(outputs), dim=-1)
+        # logp = nn.functional.log_softmax(self.outputs2vocab(outputs), dim=-1)
         # logp = logp.view(b, s, self.embedding.num_embeddings)
 
         return logp, mean, logv, z
