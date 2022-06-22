@@ -1,5 +1,5 @@
 import torch.nn as nn
-
+import torch
 
 class GRU_Decoder(nn.Module):
 
@@ -34,7 +34,7 @@ class GRU_Decoder(nn.Module):
 		#     hidden = hidden.unsqueeze(0)
 		# if self.num_layers > 1:
 		# unflatten hidden state
-		hidden = hidden.view(batch_size, self.hidden_factor, self.hidden_size)
+		hidden = hidden.view(batch_size, 1, self.hidden_size)
 		hidden = torch.transpose(hidden, 0, 1)
 		hidden = hidden.contiguous()
 		# hidden = hidden.view(self.hidden_factor, batch_size, self.hidden_size)
@@ -48,7 +48,7 @@ class GRU_Decoder(nn.Module):
 		while t < self.max_sequence_length:
 
 			if t == 0:
-				input_sequence = to_var(torch.Tensor(batch_size).fill_(self.sos_idx).long())
+				input_sequence = torch.Tensor(batch_size).fill_(self.sos_idx).long()
 				input_sequence = input_sequence.unsqueeze(1)
 
 			input_embedding = self.embedding(input_sequence)
