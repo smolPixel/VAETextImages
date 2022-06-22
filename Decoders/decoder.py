@@ -10,8 +10,11 @@ class decoder(nn.Module):
 		encoder=self.argdict['decoder']
 		if encoder.lower()=="gru":
 			from Decoders.GRU import GRU_Decoder
-			self.model=GRU_Decoder(argdict, kwargs['vocab_size'], kwargs['embedding_size'], hidden_size=kwargs['hidden_size'])
+			self.model=GRU_Decoder(argdict, kwargs['vocab_size'], kwargs['embedding_size'], hidden_size=kwargs['hidden_size'], latent_size=kwargs['latent_size'])
 
 
 	def forward(self, input, z):
 		return self.model(input, z)
+
+	def generate(self, z):
+		return self.model.generate(z)
