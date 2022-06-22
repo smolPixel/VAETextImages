@@ -22,7 +22,7 @@ class GRU_Decoder(nn.Module):
 		return logp
 
 	def generate(self, z):
-
+		batch_size = z.size(0)
 
 		hidden = self.latent2hidden(z)
 
