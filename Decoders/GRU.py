@@ -8,6 +8,7 @@ class GRU_Decoder(nn.Module):
 		print("Think about why there aint no embedding dropout on encoder?")
 		self.argdict=argdict
 
+		self.hidden_size=hidden_size
 
 		self.latent2hidden=nn.Linear(latent_size, hidden_size)
 		self.embedding = nn.Embedding(vocab_size, embedding_size)
