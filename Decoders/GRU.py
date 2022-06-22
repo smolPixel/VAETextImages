@@ -63,7 +63,6 @@ class GRU_Decoder(nn.Module):
 			logits = self.outputs2vocab(output)
 
 			input_sequence = torch.argmax(logits, dim=-1)
-			print(generations)
-			print(input_sequence)
 			generations[:, t] = input_sequence.squeeze(1)
 			t += 1
+		return generations
