@@ -65,7 +65,7 @@ class SentenceVAE(nn.Module):
         # _, hidden = self.encoder_rnn(packed_input)
         # _, hidden = self.encoder_rnn(input_embedding)
 
-        _, hidden=self.encoder(input_sequence)
+        mean, logv=self.encoder(input_sequence)
 
         # if self.bidirectional or self.num_layers > 1:
         #     flatten hidden state
@@ -74,8 +74,6 @@ class SentenceVAE(nn.Module):
         #     hidden = hidden.squeeze()
 
         # REPARAMETERIZATION
-        mean = self.hidden2mean(hidden)
-        logv = self.hidden2logv(hidden)
         std = torch.exp(0.5 * logv)
 
         z = to_var(torch.randn([batch_size, self.latent_size]))
