@@ -53,7 +53,7 @@ class GRU_Decoder(nn.Module):
 				input_sequence = torch.Tensor(batch_size).fill_(sos_idx).long()
 				input_sequence = input_sequence.unsqueeze(1)
 
-			input_embedding = self.embedding(input_sequence)
+			input_embedding = self.embedding(input_sequence.to(self.device))
 
 			output, hidden = self.decoder_rnn(input_embedding, hidden)
 
