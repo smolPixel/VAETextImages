@@ -48,7 +48,7 @@ class VAE():
         self.step = 0
         self.epoch = 0
 
-        enco=encoder(self.argdict, vocab_size=self.datasets['train'].vocab_size, embedding_size=300, hidden_size=self.argdict['hidden_size'])
+        enco=encoder(self.argdict, vocab_size=self.datasets['train'].vocab_size, embedding_size=300, hidden_size=self.argdict['hidden_size'], latent_size=self.argdict['latent_size'])
         deco=decoder(self.argdict, vocab_size=self.datasets['train'].vocab_size, embedding_size=300, hidden_size=self.argdict['hidden_size'], latent_size=self.argdict['latent_size'])
 
         params = dict(
