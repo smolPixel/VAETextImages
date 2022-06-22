@@ -13,5 +13,5 @@ class decoder(nn.Module):
 			self.model=GRU_Decoder(argdict, kwargs['vocab_size'], kwargs['embedding_size'], hidden_size=kwargs['hidden_size'])
 
 
-	def forward(self, input):
-		return self.model(input)
+	def forward(self, input, z):
+		return self.model(input, z)
