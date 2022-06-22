@@ -55,7 +55,7 @@ class GRU_Decoder(nn.Module):
 
 			input_embedding = self.embedding(input_sequence.cuda())
 
-			output, hidden = self.decoder_rnn(input_embedding, hidden)
+			output, hidden = self.rnn(input_embedding, hidden)
 
 			# output = self.outputs2embeds(output)
 
