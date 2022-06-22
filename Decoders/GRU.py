@@ -9,6 +9,7 @@ class GRU_Decoder(nn.Module):
 		self.argdict=argdict
 
 		self.hidden_size=hidden_size
+		self.max_sequence_length=60
 
 		self.latent2hidden=nn.Linear(latent_size, hidden_size)
 		self.embedding = nn.Embedding(vocab_size, embedding_size)
