@@ -28,28 +28,28 @@ class SentenceVAE(nn.Module):
         self.word_dropout_rate = word_dropout
         self.embedding_dropout = nn.Dropout(p=embedding_dropout)
 
-        if rnn_type == 'rnn':
-            rnn = nn.RNN
-        elif rnn_type == 'gru':
-            rnn = nn.GRU
+        # if rnn_type == 'rnn':
+        #     rnn = nn.RNN
+        # elif rnn_type == 'gru':
+        #     rnn = nn.GRU
         # elif rnn_type == 'lstm':
         #     rnn = nn.LSTM
-        else:
-            raise ValueError()
+        # else:
+        #     raise ValueError()
 
         self.encoder=encoder
         self.decoder=decoder
         # self.encoder_rnn = rnn(embedding_size, hidden_size, num_layers=num_layers, bidirectional=self.bidirectional,
         #                        batch_first=True)
-        self.decoder_rnn = rnn(embedding_size, hidden_size, num_layers=num_layers, bidirectional=self.bidirectional,
-                               batch_first=True)
+        # self.decoder_rnn = rnn(embedding_size, hidden_size, num_layers=num_layers, bidirectional=self.bidirectional,
+        #                        batch_first=True)
 
         # self.hidden_factor = (2 if bidirectional else 1) * num_layers
 
-        self.hidden2mean = nn.Linear(hidden_size, latent_size)
-        self.hidden2logv = nn.Linear(hidden_size, latent_size)
-        self.latent2hidden = nn.Linear(latent_size, hidden_size)
-        self.outputs2vocab = nn.Linear(hidden_size * (2 if bidirectional else 1), vocab_size)
+        # self.hidden2mean = nn.Linear(hidden_size, latent_size)
+        # self.hidden2logv = nn.Linear(hidden_size, latent_size)
+        # self.latent2hidden = nn.Linear(latent_size, hidden_size)
+        # self.outputs2vocab = nn.Linear(hidden_size * (2 if bidirectional else 1), vocab_size)
 
     def forward(self, input_sequence, length):
 
@@ -153,44 +153,47 @@ class SentenceVAE(nn.Module):
         else:
             batch_size = z.size(0)
 
-        hidden = self.latent2hidden(z)
 
-        # if self.bidirectional or self.num_layers > 1:
+        generated=self.decoder.generate(z)
+        #
+        # hidden = self.latent2hidden(z)
+        #
+        # # if self.bidirectional or self.num_layers > 1:
+        # #     # unflatten hidden state
+        # #     hidden = hidden.view(self.hidden_factor, batch_size, self.hidden_size)
+        # #     #Added the else here otherwise it was always unsqueezing which made it bug for bidir
+        # # else:
+        # #     hidden = hidden.unsqueeze(0)
+        # # if self.num_layers > 1:
         #     # unflatten hidden state
-        #     hidden = hidden.view(self.hidden_factor, batch_size, self.hidden_size)
+        # hidden=hidden.view(batch_size, self.hidden_factor, self.hidden_size)
+        # hidden=torch.transpose(hidden, 0, 1)
+        # hidden=hidden.contiguous()
+        #     # hidden = hidden.view(self.hidden_factor, batch_size, self.hidden_size)
         #     #Added the else here otherwise it was always unsqueezing which made it bug for bidir
-        # else:
-        #     hidden = hidden.unsqueeze(0)
-        # if self.num_layers > 1:
-            # unflatten hidden state
-        hidden=hidden.view(batch_size, self.hidden_factor, self.hidden_size)
-        hidden=torch.transpose(hidden, 0, 1)
-        hidden=hidden.contiguous()
-            # hidden = hidden.view(self.hidden_factor, batch_size, self.hidden_size)
-            #Added the else here otherwise it was always unsqueezing which made it bug for bidir
-        # else:
-        #     hidden = hidden.unsqueeze(0)
+        # # else:
+        # #     hidden = hidden.unsqueeze(0)
+        #
+        # generations = self.tensor(batch_size, self.max_sequence_length).fill_(self.pad_idx).long()
+        #
+        # t = 0
+        # while t < self.max_sequence_length:
+        #
+        #     if t == 0:
+        #         input_sequence = to_var(torch.Tensor(batch_size).fill_(self.sos_idx).long())
+        #         input_sequence = input_sequence.unsqueeze(1)
+        #
+        #     input_embedding = self.embedding(input_sequence)
+        #
+        #     output, hidden = self.decoder_rnn(input_embedding, hidden)
+        #
+        #     # output = self.outputs2embeds(output)
+        #
+        #     # logits = self.embed2vocab(output)
+        #     logits = self.outputs2vocab(output)
+        #
+        #     input_sequence = torch.argmax(logits, dim=-1)
+        #     generations[:, t]=input_sequence.squeeze(1)
+        #     t += 1
 
-        generations = self.tensor(batch_size, self.max_sequence_length).fill_(self.pad_idx).long()
-
-        t = 0
-        while t < self.max_sequence_length:
-
-            if t == 0:
-                input_sequence = to_var(torch.Tensor(batch_size).fill_(self.sos_idx).long())
-                input_sequence = input_sequence.unsqueeze(1)
-
-            input_embedding = self.embedding(input_sequence)
-
-            output, hidden = self.decoder_rnn(input_embedding, hidden)
-
-            # output = self.outputs2embeds(output)
-
-            # logits = self.embed2vocab(output)
-            logits = self.outputs2vocab(output)
-
-            input_sequence = torch.argmax(logits, dim=-1)
-            generations[:, t]=input_sequence.squeeze(1)
-            t += 1
-
-        return generations, z
+        return generated, z
