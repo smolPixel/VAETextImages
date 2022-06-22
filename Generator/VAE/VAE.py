@@ -53,6 +53,7 @@ class VAE():
 
         params = dict(
             encoder=enco,
+            decoder=deco,
             vocab_size=self.datasets['train'].vocab_size,
             sos_idx=self.datasets['train'].sos_idx,
             eos_idx=self.datasets['train'].eos_idx,
