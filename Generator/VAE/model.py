@@ -5,7 +5,7 @@ from Generator.utils import to_var
 
 
 class SentenceVAE(nn.Module):
-    def __init__(self, encoder, vocab_size, embedding_size, rnn_type, hidden_size, word_dropout, embedding_dropout, latent_size,
+    def __init__(self, encoder, decoder, vocab_size, embedding_size, rnn_type, hidden_size, word_dropout, embedding_dropout, latent_size,
                 sos_idx, eos_idx, pad_idx, unk_idx, max_sequence_length, num_layers=1, bidirectional=False):
 
         super().__init__()
@@ -38,7 +38,7 @@ class SentenceVAE(nn.Module):
             raise ValueError()
 
         self.encoder=encoder
-
+        self.decoder=decoder
         # self.encoder_rnn = rnn(embedding_size, hidden_size, num_layers=num_layers, bidirectional=self.bidirectional,
         #                        batch_first=True)
         self.decoder_rnn = rnn(embedding_size, hidden_size, num_layers=num_layers, bidirectional=self.bidirectional,
@@ -89,28 +89,22 @@ class SentenceVAE(nn.Module):
         hidden = hidden.contiguous()
 
         # decoder input
-        if self.word_dropout_rate > 0:
-            # randomly replace decoder input with <unk>
-            prob = torch.rand(input_sequence.size())
-            if torch.cuda.is_available():
-                prob=prob.cuda()
-            prob[(input_sequence.data - self.sos_idx) * (input_sequence.data - self.pad_idx) == 0] = 1
-            decoder_input_sequence = input_sequence.clone()
-            decoder_input_sequence[prob < self.word_dropout_rate] = self.unk_idx
-            input_embedding = self.embedding(decoder_input_sequence)
-        input_embedding = self.embedding_dropout(input_embedding)
-        # packed_input = rnn_utils.pack_padded_sequence(input_embedding, sorted_lengths.data.tolist(), batch_first=True)
-
-        # decoder forward pass
-        # outputs, _ = self.decoder_rnn(packed_input, hidden)
-        outputs, _ = self.decoder_rnn(input_embedding, hidden)
-
-        # process outputs
-        # padded_outputs = rnn_utils.pad_packed_sequence(outputs, batch_first=True)[0]
-        # padded_outputs = padded_outputs.contiguous()
-        # _,reversed_idx = torch.sort(sorted_idx)
-        # padded_outputs = padded_outputs[reversed_idx]
-        # b,s,_ = padded_outputs.size()
+        # if self.word_dropout_rate > 0:
+        #     # randomly replace decoder input with <unk>
+        #     prob = torch.rand(input_sequence.size())
+        #     if torch.cuda.is_available():
+        #         prob=prob.cuda()
+        #     prob[(input_sequence.data - self.sos_idx) * (input_sequence.data - self.pad_idx) == 0] = 1
+        #     decoder_input_sequence = input_sequence.clone()
+        #     decoder_input_sequence[prob < self.word_dropout_rate] = self.unk_idx
+        #     input_embedding = self.embedding(decoder_input_sequence)
+        # input_embedding = self.embedding_dropout(input_embedding)
+        # # packed_input = rnn_utils.pack_padded_sequence(input_embedding, sorted_lengths.data.tolist(), batch_first=True)
+        #
+        # # decoder forward pass
+        # # outputs, _ = self.decoder_rnn(packed_input, hidden)
+        # outputs, _ = self.decoder_rnn(input_embedding, hidden)
+        outputs, _=self.decoder(input_sequence, z)
 
         # project outputs to vocab
         # logp = nn.functional.log_softmax(self.outputs2vocab(padded_outputs.view(-1, padded_outputs.size(2))), dim=-1)

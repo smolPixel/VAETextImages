@@ -17,6 +17,7 @@ from sklearn.metrics import accuracy_score
 from Generator.utils import to_var, idx2word, expierment_name
 from Generator.VAE.model import SentenceVAE
 from Encoders.encoder import encoder
+from Decoders.decoder import decoder
 
 class VAE():
 
@@ -48,6 +49,7 @@ class VAE():
         self.epoch = 0
 
         enco=encoder(self.argdict, vocab_size=self.datasets['train'].vocab_size, embedding_size=300, hidden_size=self.argdict['hidden_size'])
+        deco=decoder(self.argdict, vocab_size=self.datasets['train'].vocab_size, embedding_size=300, hidden_size=self.argdict['hidden_size'])
 
         params = dict(
             encoder=enco,
