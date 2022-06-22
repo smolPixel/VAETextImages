@@ -43,7 +43,7 @@ class GRU_Decoder(nn.Module):
 		# else:
 		#     hidden = hidden.unsqueeze(0)
 
-		generations = self.tensor(batch_size, self.max_sequence_length).fill_(self.pad_idx).long()
+		generations = torch.tensor(batch_size, self.max_sequence_length).fill_(self.pad_idx).long()
 
 		t = 0
 		while t < self.max_sequence_length:
