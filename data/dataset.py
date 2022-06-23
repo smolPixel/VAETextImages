@@ -9,6 +9,7 @@ import pandas as pd
 from nltk.tokenize import TweetTokenizer
 from process_data import *
 from torchtext.vocab import build_vocab_from_iterator
+from torchvision import datasets, transforms
 import copy
 
 #
@@ -157,15 +158,25 @@ class dataset(Dataset):
         return pd.DataFrame.from_dict(dict, orient='index')
 
 def create_datasets(argdict):
-    tokenizer=TweetTokenizer()
+    if argdict['dataset'] in ['SST-2']:
+        #Textual dataset
+        tokenizer=TweetTokenizer()
 
-    train, dev, test=get_dataFrame(argdict)
-    vocab = build_vocab_from_iterator((iter([tokenizer.tokenize(sentence) for sentence in list(train['sentence'])])),specials=["<unk>", "<pad>", "<bos>", "<eos>"])
-    vocab.set_default_index(vocab["<unk>"])
-    train=dataset(train, tokenizer, vocab, argdict)
-    dev=dataset(dev, tokenizer, vocab, argdict)
-    test=dataset(test, tokenizer, vocab, argdict)
-    return train, dev, test
+        train, dev, test=get_dataFrame(argdict)
+        vocab = build_vocab_from_iterator((iter([tokenizer.tokenize(sentence) for sentence in list(train['sentence'])])),specials=["<unk>", "<pad>", "<bos>", "<eos>"])
+        vocab.set_default_index(vocab["<unk>"])
+        train=dataset(train, tokenizer, vocab, argdict)
+        dev=dataset(dev, tokenizer, vocab, argdict)
+        test=dataset(test, tokenizer, vocab, argdict)
+        return train, dev, test
+    elif argdict['dataset'] in ['MNIST']:
+        #Image dataset
+        train = datasets.MNIST(root='./mnist_data/', train=True, transform=transforms.ToTensor(), download=True)
+        test = datasets.MNIST(root='./mnist_data/', train=False, transform=transforms.ToTensor(),
+                                      download=False)
+        train, dev=torch.utils.data.random_split(train, [55000, 5000])
+        argdict['input_size']=784
+        return train, dev, test
 
 def create_datasets_from_dataframes(argdict, train):
     tokenizer=TweetTokenizer()

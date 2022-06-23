@@ -31,9 +31,10 @@ def main(argdict):
     Gen.test_separability()
 
 if __name__ == '__main__':
-    # parser = argparse.ArgumentParser(description='VAE for data augmentation')
+    parser = argparse.ArgumentParser(description='Experiments for VAE')
     # #General arguments on training
-    # parser.add_argument('--dataset', type=str, default='SST-2', help="dataset you want to run the process on. Includes SST2, TREC6, FakeNews")
+
+    parser.add_argument('--config_file', type=str, default='Configs/SST-2/VAE.yaml', help="dataset you want to run the process on. Includes SST2, TREC6, FakeNews")
     # parser.add_argument('--computer', type=str, default='labo', help="Whether you run at home or at iro. Automatically changes the base path")
     # parser.add_argument('--dataset_size', type=int, default=0, help='number of example in the original dataset. If 0, use the entire dataset')
     # parser.add_argument('--random_seed', type=int, default=7, help='Random seed ')
@@ -49,10 +50,12 @@ if __name__ == '__main__':
     # parser.add_argument('--dropout_algo', type=float, default=0.3, help='dropout of the classifier')
     # parser.add_argument('--word_dropout', type=float, default=0.3, help='dropout of the classifier')
     # parser.add_argument('--x0', default=50, type=int, help='x0')
-    # args = parser.parse_args()
-    # argsdict = args.__dict__
+    args = parser.parse_args()
+    args = args.__dict__
 
-    stream=open("Configs/SST-2/VAE.yaml", "r")
+
+    print(args)
+    stream=open(args['config_file'], "r")
     argsdict=yaml.safe_load(stream)
     # print(dico)
     # fds
@@ -75,6 +78,8 @@ if __name__ == '__main__':
         categories = ["NotIro", "Iro"]
     elif argsdict['dataset'] == "IronyB":
         categories = ["Clash", "Situational", "Other", "NotIro"]
+    elif argsdict['dataset'] == 'MNIST':
+        categories = [0,1,2,3,4,5,6,7,8,9]
     else:
         raise ValueError("Dataset not found")
     argsdict['categories'] = categories

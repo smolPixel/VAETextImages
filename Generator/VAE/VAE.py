@@ -15,7 +15,7 @@ from sklearn.metrics import accuracy_score
 
 # from Generators.VAE.ptb import PTB
 from Generator.utils import to_var, idx2word, expierment_name
-from Generator.VAE.model import SentenceVAE
+from Generator.VAE.model import VAE_model
 from Encoders.encoder import encoder
 from Decoders.decoder import decoder
 
@@ -48,31 +48,16 @@ class VAE():
         self.step = 0
         self.epoch = 0
 
-        enco=encoder(self.argdict, vocab_size=self.datasets['train'].vocab_size, embedding_size=300, hidden_size=self.argdict['hidden_size'], latent_size=self.argdict['latent_size'])
-        deco=decoder(self.argdict, vocab_size=self.datasets['train'].vocab_size, embedding_size=300, hidden_size=self.argdict['hidden_size'], latent_size=self.argdict['latent_size'])
+        enco=encoder(self.argdict)#vocab_size=self.datasets['train'].vocab_size, embedding_size=300, hidden_size=self.argdict['hidden_size'], latent_size=self.argdict['latent_size'])
+        deco=decoder(self.argdict)
 
         params = dict(
             encoder=enco,
-            decoder=deco,
-            vocab_size=self.datasets['train'].vocab_size,
-            sos_idx=self.datasets['train'].sos_idx,
-            eos_idx=self.datasets['train'].eos_idx,
-            pad_idx=self.datasets['train'].pad_idx,
-            unk_idx=self.datasets['train'].unk_idx,
-            max_sequence_length=60,  # self.argdict.max_sequence_length,
-            embedding_size=300,  # self.argdict.embedding_size,
-            rnn_type='gru',  # self.argdict.rnn_type,
-            hidden_size=self.argdict['hidden_size'],
-            word_dropout=self.argdict['word_dropout'],  # self.argdict.word_dropout,
-            embedding_dropout=self.argdict['dropout'],  # self.argdict.embedding_dropout,
-            latent_size=self.argdict['latent_size'],
-            num_layers=self.argdict['num_layers'],
-            bidirectional=False  # self.argdict.bidirectional
+            decoder=deco
         )
-        model = SentenceVAE(**params)
+        model = VAE_model(**params)
         if torch.cuda.is_available():
             model = model.cuda()
-
 
         return model, params
 
@@ -124,7 +109,9 @@ class VAE():
             Average_KL_Div=[]
             for iteration, batch in enumerate(data_loader):
 
+                print(batch)
                 batch_size = batch['input'].size(0)
+                # print(batch['input'])
 
                 for k, v in batch.items():
                     if torch.is_tensor(v):
