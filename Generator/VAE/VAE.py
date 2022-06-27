@@ -109,16 +109,18 @@ class VAE():
             Average_KL_Div=[]
             for iteration, batch in enumerate(data_loader):
 
-                print(batch)
-                batch_size = batch['input'].size(0)
-                # print(batch['input'])
-
-                for k, v in batch.items():
-                    if torch.is_tensor(v):
-                        batch[k] = to_var(v)
+                # print(batch)
+                # batch_size = batch['input'].size(0)
+                print(batch['input'])
+                #
+                # for k, v in batch.items():
+                #     if torch.is_tensor(v):
+                #         batch[k] = to_var(v)
 
                 # Forward pass
-                logp, mean, logv, z = self.model(batch['input'], batch['length'])
+                logp, mean, logv, z = self.model(batch)
+
+                print(logp.shape)
 
                 # loss calculation
                 # NLL_loss, KL_loss, KL_weight = loss_fn(logp, batch['target'],
