@@ -48,6 +48,7 @@ class VAE(nn.Module):
 
 	def encoder(self, x):
 		print(x.shape)
+		fds
 		h = F.relu(self.fc1(x))
 		h = F.relu(self.fc2(h))
 		return self.fc31(h), self.fc32(h)  # mu, log_var
