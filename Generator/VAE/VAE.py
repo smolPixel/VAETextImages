@@ -132,7 +132,7 @@ class VAE():
 
                 print(logp.shape)
                 print(batch['target'].shape)
-                target=batch['target'].view(logp.shape)
+                target=batch['target'].view(logp.shape).to('cuda')
                 # loss calculation
                 # NLL_loss, KL_loss, KL_weight = loss_fn(logp, batch['target'],
                 #                                        batch['length'], mean, logv, self.argdict.anneal_function, step,
