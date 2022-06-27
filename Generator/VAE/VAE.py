@@ -117,7 +117,9 @@ class VAE():
                 #         batch[k] = to_var(v)
 
                 if self.argdict['dataset']=="MNIST":
-                    fds
+                    batch={'input':batch[0], 'target':batch[0], 'label':batch[1]}
+                print(batch)
+                fds
 
                 # Forward pass
                 logp, mean, logv, z = self.model(batch)
