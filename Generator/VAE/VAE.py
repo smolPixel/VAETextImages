@@ -78,7 +78,7 @@ class VAE():
         # NLL = torch.nn.NLLLoss(ignore_index=self.datasets['train'].pad_idx, reduction='sum')
         # cut-off unnecessary padding from target, and flatten
         # target = target[:, :torch.max(length).item()].contiguous().view(-1)
-        target = target.contiguous().view(-1)
+        # target = target.contiguous().view(-1)
         # logp = logp.view(-1, logp.size(2))
 
         # Negative Log Likelihood
