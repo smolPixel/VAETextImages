@@ -12,9 +12,8 @@ class Linear_Encoder(nn.Module):
 		self.hidden2logv = nn.Linear(self.argdict['hidden_size_encoder'][1], self.argdict['latent_size'])
 
 	def forward(self, input_sequence):
-		print(input_sequence.shape)
-		print(self.argdict['input_size'])
-		input_sequence=input_sequence.to('cuda')
+
+		input_sequence=input_sequence.view(-1, self.argdict['input_size'])to('cuda')
 		h = F.relu(self.fc1(input_sequence))
 		hidden = F.relu(self.fc2(h))
 		mean = self.hidden2mean(hidden)
