@@ -31,6 +31,10 @@ class VAE():
         # optimizers
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)  # self.argdict.learning_rate)
         self.loss_function_discriminator = torch.nn.CrossEntropyLoss()
+        if self.argdict['dataset'] in ['SST-2']:
+            self.loss_function_basic=torch.nn.NLLLoss(ignore_index=self.datasets['train'].pad_idx, reduction='sum')
+        elif self.argdict['dataset'] in ["MNIST"]:
+            self.loss_function_basic=torch.nn.BCELoss(reduction='sum')
 
     def init_model_dataset(self):
         splits = ['train', 'dev']  # + (['test'] if self.argdict.test else [])
@@ -71,14 +75,14 @@ class VAE():
             return min(1, step / x0)
 
     def loss_fn(self, logp, target,  mean, logv, anneal_function, step, k):
-        NLL = torch.nn.NLLLoss(ignore_index=self.datasets['train'].pad_idx, reduction='sum')
+        # NLL = torch.nn.NLLLoss(ignore_index=self.datasets['train'].pad_idx, reduction='sum')
         # cut-off unnecessary padding from target, and flatten
         # target = target[:, :torch.max(length).item()].contiguous().view(-1)
         target = target.contiguous().view(-1)
         logp = logp.view(-1, logp.size(2))
 
         # Negative Log Likelihood
-        NLL_loss = NLL(logp, target)
+        NLL_loss = self.loss_function_basic(logp, target)
 
         # KL Divergence
         KL_loss = -0.5 * torch.sum(1 + logv - mean.pow(2) - logv.exp())
