@@ -79,7 +79,7 @@ class VAE():
         # cut-off unnecessary padding from target, and flatten
         # target = target[:, :torch.max(length).item()].contiguous().view(-1)
         target = target.contiguous().view(-1)
-        logp = logp.view(-1, logp.size(2))
+        # logp = logp.view(-1, logp.size(2))
 
         # Negative Log Likelihood
         NLL_loss = self.loss_function_basic(logp, target)
