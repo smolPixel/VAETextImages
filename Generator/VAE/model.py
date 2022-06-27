@@ -5,9 +5,10 @@ from Generator.utils import to_var
 
 
 class VAE_model(nn.Module):
-    def __init__(self, encoder, decoder):
+    def __init__(self, argdict, encoder, decoder):
 
         super().__init__()
+        self.argdict=argdict
         self.tensor = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.Tensor
 
         self.encoder=encoder
