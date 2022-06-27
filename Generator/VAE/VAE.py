@@ -115,8 +115,9 @@ class VAE():
                 # for k, v in batch.items():
                 #     if torch.is_tensor(v):
                 #         batch[k] = to_var(v)
-
+                print("warning, preprocessing should be moved to data loader")
                 if self.argdict['dataset']=="MNIST":
+
                     batch={'input':batch[0], 'target':batch[0], 'label':batch[1]}
 
                 # Forward pass
