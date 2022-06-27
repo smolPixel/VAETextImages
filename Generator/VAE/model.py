@@ -11,6 +11,8 @@ class VAE_model(nn.Module):
         self.argdict=argdict
         self.tensor = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.Tensor
 
+
+
         self.encoder=encoder
         self.decoder=decoder
 
@@ -69,7 +71,7 @@ class VAE_model(nn.Module):
             batch_size = z.size(0)
 
 
-        generated=self.decoder.generate(z, pad_idx=self.pad_idx, sos_idx=self.sos_idx)
+        generated=self.decoder.generate(z)#, pad_idx=self.pad_idx, sos_idx=self.sos_idx)
         #
         # hidden = self.latent2hidden(z)
         #
