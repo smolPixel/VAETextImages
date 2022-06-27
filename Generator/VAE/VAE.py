@@ -131,7 +131,7 @@ class VAE():
                 logp, mean, logv, z = self.model(batch)
 
                 print(logp.shape)
-                print(batch['target'].shape
+                print(batch['target'].shape)
 
                 # loss calculation
                 # NLL_loss, KL_loss, KL_weight = loss_fn(logp, batch['target'],
