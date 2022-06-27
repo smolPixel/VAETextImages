@@ -22,7 +22,7 @@ class VAE_model(nn.Module):
         mean, logv=self.encoder(input_sequence)
         std = torch.exp(0.5 * logv)
 
-        z = to_var(torch.randn([batch_size, self.argdict['latent_size']))
+        z = to_var(torch.randn([batch_size, self.argdict['latent_size']]))
         z = z * std + mean
         logp =self.decoder(input_sequence, z)
 
