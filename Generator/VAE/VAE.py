@@ -140,6 +140,8 @@ class VAE():
                 NLL_loss, KL_loss, KL_weight = self.loss_fn(logp, target,  mean, logv, 'logistic', self.step,
                                                             0.0025)
 
+                batch_size=logp.shape[0]
+
                 loss = (NLL_loss + KL_weight * KL_loss) / batch_size
 
                 # backward + optimization
