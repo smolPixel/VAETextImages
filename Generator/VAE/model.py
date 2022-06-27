@@ -13,7 +13,9 @@ class VAE_model(nn.Module):
         self.encoder=encoder
         self.decoder=decoder
 
-    def forward(self, input_sequence, length):
+    def forward(self, batch):
+
+        input_sequence=batch['input']
 
         batch_size = input_sequence.size(0)
         mean, logv=self.encoder(input_sequence)

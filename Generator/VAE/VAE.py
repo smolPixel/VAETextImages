@@ -116,6 +116,9 @@ class VAE():
                 #     if torch.is_tensor(v):
                 #         batch[k] = to_var(v)
 
+                if self.argdict['dataset']=="MNIST":
+                    fds
+
                 # Forward pass
                 logp, mean, logv, z = self.model(batch)
 
