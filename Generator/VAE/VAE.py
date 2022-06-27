@@ -54,6 +54,7 @@ class VAE():
         deco=decoder(self.argdict)
 
         params = dict(
+            argdict=self.argdict,
             encoder=enco,
             decoder=deco
         )
