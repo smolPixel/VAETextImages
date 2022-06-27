@@ -111,7 +111,6 @@ class VAE():
 
                 # print(batch)
                 # batch_size = batch['input'].size(0)
-                print(batch['input'])
                 #
                 # for k, v in batch.items():
                 #     if torch.is_tensor(v):
