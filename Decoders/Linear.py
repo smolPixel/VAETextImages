@@ -14,3 +14,8 @@ class Linear_Decoder(nn.Module):
 		h = F.relu(self.fc4(z))
 		h = F.relu(self.fc5(h))
 		return F.sigmoid(self.fc6(h))
+
+	def generate(self, z):
+		h = F.relu(self.fc4(z))
+		h = F.relu(self.fc5(h))
+		return F.sigmoid(self.fc6(h))
