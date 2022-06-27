@@ -19,6 +19,8 @@ from Generator.VAE.model import VAE_model
 from Encoders.encoder import encoder
 from Decoders.decoder import decoder
 
+
+
 class VAE():
 
     def __init__(self, argdict, train, dev, test):
