@@ -11,24 +11,14 @@ from sklearn.manifold import TSNE
 df=pd.read_csv('../graph_SST2.tsv', sep='\t', index_col=0)
 labels=list(df['labs'])
 
-# Sentences=list(df['sentence'])
-# Points=list(df['points'])
-# Points=[ast.literal_eval(point) for point in Points]
-# # print(Sentences)
-# # print(Points)
-#
-# indOG=2
-#
-# Comp=Points[indOG]
-#
-# distances=[distance.cosine(Comp, pp) for pp in Points]
-# bests=np.argpartition(distances, 5)[:5]
-#
-#
-# print(bests)
-# print(f"Sentence original: {Sentences[indOG]}")
-# for i, ind in enumerate(bests):
-# 	print(f"Close sentence: {Sentences[ind]}")
+dfPos=df[df['labs']==1]
+dfNeg=df[df['labs']==0]
+
+
+xPos=list(dfPos['x'])
+yPos=list(dfPos['y'])
+xNeg=list(dfNeg['x'])
+yNeg=list(dfNeg['y'])
 
 
 
