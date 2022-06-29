@@ -1,5 +1,5 @@
 ---
-dataset: "SST-2"
+dataset: "SST2"
 computer: "labo"
 dataset_size: 0
 random_seed: 42
