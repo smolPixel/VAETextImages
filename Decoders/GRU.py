@@ -13,6 +13,9 @@ class GRU_Decoder(nn.Module):
 		embedding_size=argdict['embedd_size']
 		vocab_size=argdict['input_size']
 
+		self.sos_idx=argdict['sos_idx']
+		self.pad_idx=argdict['pad_idx']
+
 		self.hidden_size=hidden_size
 		self.max_sequence_length=60
 
@@ -30,7 +33,7 @@ class GRU_Decoder(nn.Module):
 		logp = nn.functional.log_softmax(self.outputs2vocab(outputs), dim=-1)
 		return logp
 
-	def generate(self, z, sos_idx, pad_idx):
+	def generate(self, z):
 		batch_size = z.size(0)
 
 		hidden = self.latent2hidden(z)
@@ -51,13 +54,13 @@ class GRU_Decoder(nn.Module):
 		# else:
 		#     hidden = hidden.unsqueeze(0)
 
-		generations = torch.zeros((batch_size, self.max_sequence_length)).fill_(pad_idx).long()
+		generations = torch.zeros((batch_size, self.max_sequence_length)).fill_(self.pad_idx).long()
 
 		t = 0
 		while t < self.max_sequence_length:
 
 			if t == 0:
-				input_sequence = torch.Tensor(batch_size).fill_(sos_idx).long()
+				input_sequence = torch.Tensor(batch_size).fill_(self.sos_idx).long()
 				input_sequence = input_sequence.unsqueeze(1)
 
 			input_embedding = self.embedding(input_sequence.cuda())

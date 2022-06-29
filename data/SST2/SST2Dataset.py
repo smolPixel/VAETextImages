@@ -30,6 +30,8 @@ class SST2_dataset(Dataset):
 		self.sos_idx = self.vocab_object['<sos>']
 		self.eos_idx = self.vocab_object['<eos>']
 		self.unk_idx = self.vocab_object['<unk>']
+		argdict['pad_idx']=self.pad_idx
+		argdict['sos_idx']=self.sos_idx
 		self.loss_function=torch.nn.NLLLoss(ignore_index=self.pad_idx, reduction='sum')
 		index=0
 		mask=len(argdict['categories'])
