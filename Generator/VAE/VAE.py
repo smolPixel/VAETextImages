@@ -121,8 +121,9 @@ class VAE():
                 # Forward pass
                 logp, mean, logv, z = self.model(batch)
 
-                print(logp.shape)
-                print(batch['target'].shape)
+                logp=logp.view(log.shape[0], -1)
+                target=target.view(target.shape[-1])
+                # print(batch['target'].shape)
                 target=batch['target'].view(-1, logp.shape[-1]).to('cuda')
                 # loss calculation
                 # NLL_loss, KL_loss, KL_weight = loss_fn(logp, batch['target'],
