@@ -64,13 +64,8 @@ class VAE():
 
         return model, params
 
-    def kl_anneal_function(self, anneal_function, step, k, x0):
-        if anneal_function == 'logistic':
-            return float(1 / (1 + np.exp(-k * (step - x0))))
-        elif anneal_function == 'linear':
-            return min(1, step / x0)
 
-    def loss_fn(self, logp, target,  mean, logv, anneal_function, step, k):
+    def loss_fn(self, logp, target,  mean, logv):
         # NLL = torch.nn.NLLLoss(ignore_index=self.datasets['train'].pad_idx, reduction='sum')
         # cut-off unnecessary padding from target, and flatten
         # target = target[:, :torch.max(length).item()].contiguous().view(-1)
@@ -128,13 +123,12 @@ class VAE():
 
                 # print(logp.shape)
                 # print(batch['target'].shape)
-                target=batch['target'].view(logp.shape).to('cuda')
+                target=batch['target'].view(-1, logp.shape[-1]).to('cuda')
                 # loss calculation
                 # NLL_loss, KL_loss, KL_weight = loss_fn(logp, batch['target'],
                 #                                        batch['length'], mean, logv, self.argdict.anneal_function, step,
                 #                                        self.argdict.k, self.argdict.x0)
-                NLL_loss, KL_loss, KL_weight = self.loss_fn(logp, target,  mean, logv, 'logistic', self.step,
-                                                            0.0025)
+                NLL_loss, KL_loss, KL_weight = self.loss_fn(logp, target,  mean, logv)
 
                 batch_size=logp.shape[0]
 
