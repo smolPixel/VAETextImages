@@ -40,8 +40,10 @@ class SST2_dataset(Dataset):
 			input =vocab(tokenized_text)
 			if find_max_len and len(input)>self.max_len:
 				self.max_len=len(input)
-			self.data[index] = {'sentence':row['sentence'], 'input': input, 'label':row['label'], 'true_label':row['true_label']}
+			print(row['label'])
+			self.data[index] = {'sentence':row['sentence'], 'input': input, 'label':row['label']}
 			index+=1
+		fds
 
 	# def tokenize_and_vectorize(self, sentences):
 	#     """Takes an array of sentences and return encoded data"""
