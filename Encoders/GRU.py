@@ -16,6 +16,7 @@ class GRU_Encoder(nn.Module):
 		self.hidden2logv = nn.Linear(argdict['hidden_size'], argdict['latent_size'])
 
 	def forward(self, input_sequence):
+		input_sequence=input_sequence.to('cuda')
 		input_embedding = self.embedding(input_sequence)
 		_, hidden = self.rnn(input_embedding)
 		mean = self.hidden2mean(hidden)
