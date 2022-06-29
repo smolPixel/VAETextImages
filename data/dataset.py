@@ -168,6 +168,7 @@ def create_datasets(argdict):
         train=dataset(train, tokenizer, vocab, argdict)
         dev=dataset(dev, tokenizer, vocab, argdict)
         test=dataset(test, tokenizer, vocab, argdict)
+        argdict['input_size']=train.vocab_size
         return train, dev, test
     elif argdict['dataset'] in ['MNIST']:
         #Image dataset
