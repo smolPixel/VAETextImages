@@ -91,7 +91,6 @@ class SST2_dataset(Dataset):
 			'input': np.asarray(input, dtype=int),
 			'target': np.asarray(target, dtype=int),
 			'label': label,
-			'true_label' : self.data[item]['true_label']
 		}
 
 	def get_texts(self):
