@@ -30,7 +30,7 @@ class VAE_model(nn.Module):
 
         return logp, mean, logv, z
 
-    def encode(self, input_sequence, length):
+    def encode(self, input_sequence):
         # print("HIHIOHOHO")
         # print(input_sequence.shape)
         batch_size = input_sequence.size(0)
