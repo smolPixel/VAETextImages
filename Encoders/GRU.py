@@ -3,7 +3,7 @@ import torch.nn as nn
 
 class GRU_Encoder(nn.Module):
 
-	def __init__(self, argdict)#, vocab_size, embedding_size, hidden_size, latent_size):
+	def __init__(self, argdict):#, vocab_size, embedding_size, hidden_size, latent_size):
 		super().__init__()
 		print("Think about why there aint no embedding dropout on encoder?")
 		self.argdict=argdict
