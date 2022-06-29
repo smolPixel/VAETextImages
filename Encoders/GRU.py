@@ -3,17 +3,17 @@ import torch.nn as nn
 
 class GRU_Encoder(nn.Module):
 
-	def __init__(self, argdict, vocab_size, embedding_size, hidden_size, latent_size):
+	def __init__(self, argdict):#, vocab_size, embedding_size, hidden_size, latent_size):
 		super().__init__()
 		print("Think about why there aint no embedding dropout on encoder?")
 		self.argdict=argdict
 
-		self.embedding = nn.Embedding(vocab_size, embedding_size)
-		self.rnn=nn.GRU(embedding_size, hidden_size, num_layers=1, bidirectional=False,
+		self.embedding = nn.Embedding(argdict['input_size'], argdict['embedd_size'])
+		self.rnn=nn.GRU(argdict['embedd_size'], argdict['hidden_size'], num_layers=1, bidirectional=False,
                                batch_first=True)
 
-		self.hidden2mean = nn.Linear(hidden_size, latent_size)
-		self.hidden2logv = nn.Linear(hidden_size, latent_size)
+		self.hidden2mean = nn.Linear(argdict['hidden_size'], argdict['latent_size'])
+		self.hidden2logv = nn.Linear(argdict['hidden_size'], argdict['latent_size'])
 
 	def forward(self, input_sequence):
 		input_embedding = self.embedding(input_sequence)

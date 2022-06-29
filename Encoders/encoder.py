@@ -11,8 +11,8 @@ class encoder(nn.Module):
 		encoder=self.argdict['encoder']
 		if encoder.lower()=="gru":
 			from Encoders.GRU import GRU_Encoder
-			self.model=GRU_Encoder(argdict, self.datasets['train'].vocab_size, self.argdict['embedding_size'],
-								   hidden_size=self.argdict['hidden_size'], latent_size=self.argdict['latent_size'])
+			self.model=GRU_Encoder(argdict) #, self.datasets['train'].vocab_size, self.argdict['embedding_size'],
+								   # hidden_size=self.argdict['hidden_size'], latent_size=self.argdict['latent_size'])
 		elif encoder.lower()=="cnn":
 			from Encoders.CNN import CNN_Encoder
 			self.model=CNN_Encoder(argdict, )
