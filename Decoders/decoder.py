@@ -10,7 +10,7 @@ class decoder(nn.Module):
 		decoder=self.argdict['decoder']
 		if decoder.lower()=="gru":
 			from Decoders.GRU import GRU_Decoder
-			self.model=GRU_Decoder(argdict, kwargs['vocab_size'], kwargs['embedding_size'], hidden_size=kwargs['hidden_size'], latent_size=kwargs['latent_size'])
+			self.model=GRU_Decoder(argdict) #, kwargs['vocab_size'], kwargs['embedding_size'], hidden_size=kwargs['hidden_size'], latent_size=kwargs['latent_size'])
 		elif decoder.lower()=='linear':
 			from Decoders.Linear import Linear_Decoder
 			self.model=Linear_Decoder(argdict)
