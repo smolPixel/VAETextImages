@@ -286,9 +286,8 @@ class VAE():
 
                 self.model.eval()
                 # print(f"The dataset length is {len(data_loader.dataset)}")
-                dataset = torch.zeros(len(data_loader.dataset), self.params['latent_size'])
+                dataset = torch.zeros(len(data_loader.dataset), self.argdict['latent_size'])
                 labels = torch.zeros(len(data_loader.dataset))
-                true_labels = torch.zeros(len(data_loader.dataset))
                 sentences=[]
                 counter = 0
                 for iteration, batch in enumerate(data_loader):
@@ -301,17 +300,15 @@ class VAE():
                     #
                     # print(batch['input'])
                     # print(batch['input'].shape)
-                    z = self.model.encode(batch['input'], batch['length'])
+                    z = self.model.encode(batch['input'])
                     # print(batch_size)
                     # print(z.shape)
                     dataset[counter:counter + batch_size] = z
                     labels[counter:counter + batch_size] = batch['label']
-                    true_labels[counter:counter + batch_size] = batch['true_label']
                     sentences.extend(batch['sentence'])
                     counter += batch_size
                 # print(dataset)
                 dico[f"labels_{split}"]=labels
-                dico[f"true_labels_{split}"]=true_labels
                 dico[f"encoded_{split}"]=dataset
                 dico[f"sentences_{split}"]=sentences
                 # torch.save(labels, f"bin/labels_{split}.pt")
