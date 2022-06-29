@@ -291,6 +291,8 @@ class VAE():
                 sentences=[]
                 counter = 0
                 for iteration, batch in enumerate(data_loader):
+                    print(batch['label'])
+                    fd
                     # print("Oh la la banana")
                     batch_size = batch['input'].size(0)
                     # print(batch['input'].shape)
