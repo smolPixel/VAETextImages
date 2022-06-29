@@ -24,6 +24,9 @@ class generator():
         if algo == "VAE":
             from Generator.VAE.VAE import VAE
             self.generator=VAE(self.argdict, train, dev, test)
+        elif algo == "VAE_Ann":
+            from Generator.VAE_Annealing import VAE
+            self.generator = VAE(self.argdict, train, dev, test)
         else:
             raise ValueError(f"No generator named {algo}")
 
