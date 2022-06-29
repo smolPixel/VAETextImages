@@ -23,8 +23,10 @@ class GRU_Decoder(nn.Module):
 		self.outputs2vocab = nn.Linear(hidden_size, vocab_size)
 
 	def forward(self, input_sequence, latent_space):
+		input_sequence=input_sequence.to('cuda')
 		input_embedding = self.embedding(input_sequence)
-		outputs, hidden = self.rnn(input_embedding)
+		hidden=self.latent2hidden(latent_space)
+		outputs, hidden = self.rnn(input_embedding, hidden)
 		logp = nn.functional.log_softmax(self.outputs2vocab(outputs), dim=-1)
 		return logp
 
