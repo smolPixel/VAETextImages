@@ -121,7 +121,7 @@ class VAE():
                 # Forward pass
                 logp, mean, logv, z = self.model(batch)
 
-                logp=logp.view(log.shape[0], -1)
+                logp=logp.view(logp.shape[0], -1)
                 target=target.view(target.shape[-1])
                 # print(batch['target'].shape)
                 target=batch['target'].view(-1, logp.shape[-1]).to('cuda')
