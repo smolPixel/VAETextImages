@@ -158,7 +158,7 @@ class VAE():
         features = tsne.fit_transform(encoded['encoded_train'])
         x=features[:, 0]
         y=features[:, 1]
-        labs=encoded['true_labels_train']
+        labs=encoded['labels_train']
         sentences=encoded['sentences_train']
         dico={}
         for i in range(len(labs)):
