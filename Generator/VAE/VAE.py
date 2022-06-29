@@ -121,11 +121,11 @@ class VAE():
                 # Forward pass
                 logp, mean, logv, z = self.model(batch)
 
-                logp=logp.view(logp.shape[0], -1)
+                logp=logp.view(-1, logp.shape[-1])
                 # target=batch['target']
                 # target=target.view(-1)
                 # print(batch['target'].shape)
-                target=batch['target'].view(logp.shape[0], -1).to('cuda')
+                target=batch['target'].view(-1).to('cuda')
                 # loss calculation
                 # NLL_loss, KL_loss, KL_weight = loss_fn(logp, batch['target'],
                 #                                        batch['length'], mean, logv, self.argdict.anneal_function, step,
