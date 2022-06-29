@@ -167,7 +167,7 @@ class VAE():
 
         df = pd.DataFrame.from_dict(dico, orient='index')
         print(df)
-        df.to_csv('test.tsv', sep='\t')
+        df.to_csv(f'graph_{self.argdict["dataset"]}.tsv', sep='\t')
         sdffd
 
     def train(self):

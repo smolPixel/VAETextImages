@@ -7,7 +7,7 @@ max_length: 0
 algo: "VAE"
 encoder: "GRU"
 decoder: "GRU"
-nb_epoch: 1 #30
+nb_epoch: 30
 latent_size: 5
 hidden_size: 1024
 embedd_size: 300
