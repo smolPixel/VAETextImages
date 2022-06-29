@@ -122,6 +122,7 @@ class VAE():
                 logp, mean, logv, z = self.model(batch)
 
                 logp=logp.view(logp.shape[0], -1)
+                target=batch['target']
                 target=target.view(target.shape[-1])
                 # print(batch['target'].shape)
                 target=batch['target'].view(-1, logp.shape[-1]).to('cuda')
