@@ -147,7 +147,7 @@ class VAE():
                 Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
                 Average_NLL.append(NLL_loss.cpu().detach()/batch_size)
 
-            print(f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean ELBO {np.mean(Average_loss)}, Mean NLL {np.mean(Average_NLL)}, Mean KL div {np.mean(Average_KL_Div)} KL Weight {KL_weight}")
+            print(f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean ELBO {np.mean(Average_loss)}, Mean NLL {np.mean(Average_NLL)}, Mean KL div {np.mean(Average_KL_Div)}")
 
     def create_graph(self):
         """First encode all train into the latent space"""
