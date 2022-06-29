@@ -130,7 +130,7 @@ class VAE():
                 # NLL_loss, KL_loss, KL_weight = loss_fn(logp, batch['target'],
                 #                                        batch['length'], mean, logv, self.argdict.anneal_function, step,
                 #                                        self.argdict.k, self.argdict.x0)
-                NLL_loss, KL_loss, KL_weight = self.loss_fn(logp, target,  mean, logv)
+                NLL_loss, KL_loss= self.loss_fn(logp, target,  mean, logv)
 
                 batch_size=logp.shape[0]
 
