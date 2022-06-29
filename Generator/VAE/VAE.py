@@ -134,7 +134,7 @@ class VAE():
 
                 batch_size=logp.shape[0]
 
-                loss = (NLL_loss + KL_weight * KL_loss) / batch_size
+                loss = (NLL_loss +  KL_loss) / batch_size
 
                 # backward + optimization
                 if split == 'train':
