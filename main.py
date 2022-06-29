@@ -66,7 +66,7 @@ if __name__ == '__main__':
     elif argsdict['computer'] == 'labo':
         argsdict['path'] = "/u/piedboef/Documents/VAETI"
 
-    if argsdict['dataset'] == "SST-2":
+    if argsdict['dataset'] == "SST2":
         categories = ["neg", "pos"]
     elif argsdict['dataset'] == "TREC6":
         categories = ["ABBR", "DESC", "ENTY", "HUM", "LOC", "NUM"]
