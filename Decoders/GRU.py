@@ -3,10 +3,15 @@ import torch
 
 class GRU_Decoder(nn.Module):
 
-	def __init__(self, argdict, vocab_size, embedding_size, hidden_size, latent_size):
+	def __init__(self, argdict):#, vocab_size, embedding_size, hidden_size, latent_size):
 		super().__init__()
 		print("Think about why there aint no embedding dropout on encoder?")
 		self.argdict=argdict
+
+		hidden_size=argdict['hidden_size']
+		latent_size=argdict['latent_size']
+		embedding_size=argdict['embedd_size']
+		vocab_size=argdict['input_size']
 
 		self.hidden_size=hidden_size
 		self.max_sequence_length=60
