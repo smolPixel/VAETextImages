@@ -33,20 +33,6 @@ class VAE():
         self.loss_function_basic=train.loss_function
 
     def init_model_dataset(self):
-        splits = ['train', 'dev']  # + (['test'] if self.argdict.test else [])
-
-        # datasets = OrderedDict()
-        # for split in splits:
-        #     datasets[split] = PTB(
-        #         data_dir=self.argdict['pathFolder'] + '/Generators/VAE/data',
-        #         split=split,
-        #         create_data=False,  # self.argdict.create_data,
-        #         max_sequence_length=60,  # self.argdict.max_sequence_length,
-        #         min_occ=0  # self.argdict.min_occ
-        #     )
-
-        # print("BLIBLBILBi")
-        # print(datasetsLabelled['train'])
         self.step = 0
         self.epoch = 0
 
@@ -74,12 +60,13 @@ class VAE():
 
         # Negative Log Likelihood
         NLL_loss = self.loss_function_basic(logp, target)
-
+        # BCE = torch.nn.functional.binary_cross_entropy(logp, target.view(-1, 784), reduction='sum')
         # KL Divergence
         KL_loss = -0.5 * torch.sum(1 + logv - mean.pow(2) - logv.exp())
         # KL_weight = self.kl_anneal_function(anneal_function, step, k, self.dataset_length*self.argdict['x0'])
 
         return NLL_loss, KL_loss
+        # return BCE, KL_loss
 
     def run_epoch(self):
         for split in self.splits:
@@ -121,16 +108,16 @@ class VAE():
                 # Forward pass
                 logp, mean, logv, z = self.model(batch)
 
-                logp=logp.view(-1, logp.shape[-1])
-                # target=batch['target']
-                # target=target.view(-1)
-                # print(batch['target'].shape)
-                target=batch['target'].view(-1).to('cuda')
+
+                logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
+                # SST2:
+                # logp=logp.view(-1, logp.shape[-1])
+                # target=batch['target'].view(-1).to('cuda')
                 # loss calculation
                 # NLL_loss, KL_loss, KL_weight = loss_fn(logp, batch['target'],
                 #                                        batch['length'], mean, logv, self.argdict.anneal_function, step,
                 #                                        self.argdict.k, self.argdict.x0)
-                NLL_loss, KL_loss= self.loss_fn(logp, target,  mean, logv)
+                NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'),  mean, logv)
 
                 batch_size=logp.shape[0]
 
@@ -147,7 +134,7 @@ class VAE():
                 Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
                 Average_NLL.append(NLL_loss.cpu().detach()/batch_size)
 
-            print(f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean ELBO {np.mean(Average_loss)}, Mean NLL {np.mean(Average_NLL)}, Mean KL div {np.mean(Average_KL_Div)}")
+            print(f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean ELBO {np.mean(Average_loss)}, Mean LF {np.mean(Average_NLL)}, Mean KL div {np.mean(Average_KL_Div)}")
 
     def create_graph(self):
         """First encode all train into the latent space"""
@@ -159,10 +146,10 @@ class VAE():
         x=features[:, 0]
         y=features[:, 1]
         labs=encoded['labels_train']
-        sentences=encoded['sentences_train']
+        # sentences=encoded['sentences_train']
         dico={}
         for i in range(len(labs)):
-            dico[i]={'sentence':sentences[i], 'x':x[i], 'y':y[i], 'labs':labs[i].item(), 'points':encoded['encoded_train'][i].tolist()}
+            dico[i]={'x':x[i], 'y':y[i], 'labs':labs[i].item(), 'points':encoded['encoded_train'][i].tolist()}
 
 
         df = pd.DataFrame.from_dict(dico, orient='index')
@@ -265,11 +252,12 @@ class VAE():
             points[i]=px
         points=points.cuda()
         samples, z = self.model.inference(n=n, z=points)
-        generated = idx2word(samples, i2w=self.datasets['train'].get_i2w(), pad_idx=self.datasets['train'].get_w2i()['<pad>'], eos_idx=self.datasets['train'].get_w2i()['<eos>'])
-        print("Interpolation:")
-        for sent in generated:
-            print("------------------")
-            print(sent)
+        self.datasets['train'].process_generated(samples)
+        # generated = idx2word(samples, i2w=self.datasets['train'].get_i2w(), pad_idx=self.datasets['train'].get_w2i()['<pad>'], eos_idx=self.datasets['train'].get_w2i()['<eos>'])
+        # print("Interpolation:")
+        # for sent in generated:
+        #     print("------------------")
+        #     print(sent)
 
     def encode(self):
         with torch.no_grad():
@@ -305,12 +293,10 @@ class VAE():
                     # print(z.shape)
                     dataset[counter:counter + batch_size] = z
                     labels[counter:counter + batch_size] = batch['label']
-                    sentences.extend(batch['sentence'])
                     counter += batch_size
                 # print(dataset)
                 dico[f"labels_{split}"]=labels
                 dico[f"encoded_{split}"]=dataset
-                dico[f"sentences_{split}"]=sentences
                 # torch.save(labels, f"bin/labels_{split}.pt")
                 # torch.save(dataset, f"bin/encoded_{split}.pt")
             return dico

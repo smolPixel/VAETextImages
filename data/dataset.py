@@ -173,12 +173,18 @@ def create_datasets(argdict):
         return train, dev, test
     elif argdict['dataset'] in ['MNIST']:
         #Image dataset
+        from data.MNIST.MNIST_dataset import MNIST_dataset
         train = datasets.MNIST(root='./mnist_data/', train=True, transform=transforms.ToTensor(), download=True)
         test = datasets.MNIST(root='./mnist_data/', train=False, transform=transforms.ToTensor(),
                                       download=False)
         train, dev=torch.utils.data.random_split(train, [55000, 5000])
+        train=MNIST_dataset(train)
+        dev=MNIST_dataset(dev)
+        test=MNIST_dataset(test)
         argdict['input_size']=784
         return train, dev, test
+    else:
+        raise ValueError("dataset not found")
 
 def create_datasets_from_dataframes(argdict, train):
     tokenizer=TweetTokenizer()

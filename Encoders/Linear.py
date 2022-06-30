@@ -13,7 +13,7 @@ class Linear_Encoder(nn.Module):
 
 	def forward(self, input_sequence):
 
-		input_sequence=input_sequence.view(-1, self.argdict['input_size']).to('cuda')
+		input_sequence=input_sequence.view(-1, self.argdict['input_size']).to('cuda').float()
 		h = F.relu(self.fc1(input_sequence))
 		hidden = F.relu(self.fc2(h))
 		mean = self.hidden2mean(hidden)
