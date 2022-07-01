@@ -100,8 +100,10 @@ class VAE_Annealing():
                 #                                        self.argdict.k, self.argdict.x0)
                 NLL_loss, KL_loss, KL_weight = self.loss_fn(logp, target,  mean, logv, 'logistic', self.step,
                                                             0.0025)
-                print(NLL_loss)
+                # print(NLL_loss)
                 batch_size=logp.shape[0]
+                print(batch_size)
+                fds
 
                 loss = (NLL_loss + KL_weight * KL_loss) / batch_size
 
