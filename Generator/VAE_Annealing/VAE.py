@@ -15,7 +15,7 @@ from sklearn.metrics import accuracy_score
 
 # from Generators.VAE.ptb import PTB
 from Generator.utils import to_var, idx2word, expierment_name
-from Generator.VAE.model import VAE_model
+from Generator.VAE_Annealing.model import VAE_model
 from Encoders.encoder import encoder
 from Decoders.decoder import decoder
 
@@ -30,27 +30,10 @@ class VAE():
         self.model, self.params=self.init_model_dataset()
         # optimizers
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)  # self.argdict.learning_rate)
-        self.loss_function_discriminator = torch.nn.CrossEntropyLoss()
-        # if self.argdict['dataset'] in ['SST-2']:
-        #     self.loss_function_basic=torch.nn.NLLLoss(ignore_index=self.datasets['train'].pad_idx, reduction='sum')
-        # elif self.argdict['dataset'] in ["MNIST"]:
-        #     self.loss_function_basic=torch.nn.BCELoss(reduction='sum')
+        self.loss_function_basic=train.loss_function
+
 
     def init_model_dataset(self):
-        splits = ['train', 'dev']  # + (['test'] if self.argdict.test else [])
-
-        # datasets = OrderedDict()
-        # for split in splits:
-        #     datasets[split] = PTB(
-        #         data_dir=self.argdict['pathFolder'] + '/Generators/VAE/data',
-        #         split=split,
-        #         create_data=False,  # self.argdict.create_data,
-        #         max_sequence_length=60,  # self.argdict.max_sequence_length,
-        #         min_occ=0  # self.argdict.min_occ
-        #     )
-
-        # print("BLIBLBILBi")
-        # print(datasetsLabelled['train'])
         self.step = 0
         self.epoch = 0
 
@@ -75,15 +58,7 @@ class VAE():
             return min(1, step / x0)
 
     def loss_fn(self, logp, target,  mean, logv, anneal_function, step, k):
-        # NLL = torch.nn.NLLLoss(ignore_index=self.datasets['train'].pad_idx, reduction='sum')
-        # cut-off unnecessary padding from target, and flatten
-        # target = target[:, :torch.max(length).item()].contiguous().view(-1)
-        # target = target.contiguous().view(-1)
-        # logp = logp.view(-1, logp.size(2))
-
-        # Negative Log Likelihood
         NLL_loss = self.loss_function_basic(logp, target)
-
         # KL Divergence
         KL_loss = -0.5 * torch.sum(1 + logv - mean.pow(2) - logv.exp())
         KL_weight = self.kl_anneal_function(anneal_function, step, k, self.dataset_length*self.argdict['x0'])
@@ -115,17 +90,6 @@ class VAE():
             Average_NLL=[]
             Average_KL_Div=[]
             for iteration, batch in enumerate(data_loader):
-
-                # print(batch)
-                # batch_size = batch['input'].size(0)
-                #
-                # for k, v in batch.items():
-                #     if torch.is_tensor(v):
-                #         batch[k] = to_var(v)
-                print("warning, preprocessing should be moved to data loader")
-                if self.argdict['dataset']=="MNIST":
-
-                    batch={'input':batch[0], 'target':batch[0], 'label':batch[1]}
 
                 # Forward pass
                 logp, mean, logv, z = self.model(batch)
