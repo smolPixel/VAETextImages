@@ -15,6 +15,7 @@ class GRU_Decoder(nn.Module):
 
 		self.sos_idx=argdict['sos_idx']
 		self.pad_idx=argdict['pad_idx']
+		self.unk_idx=argdict['unk_idx']
 
 		self.word_dropout_rate=argdict['word_dropout']
 
