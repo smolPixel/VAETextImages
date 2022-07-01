@@ -4,7 +4,7 @@ import torch.nn as nn
 from Generator.utils import to_var
 
 
-class VAE_model(nn.Module):
+class VAE_Annealing_model(nn.Module):
     def __init__(self, argdict, encoder, decoder):
 
         super().__init__()

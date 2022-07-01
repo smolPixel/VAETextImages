@@ -15,13 +15,13 @@ from sklearn.metrics import accuracy_score
 
 # from Generators.VAE.ptb import PTB
 from Generator.utils import to_var, idx2word, expierment_name
-from Generator.VAE_Annealing.model import VAE_model
+from Generator.VAE_Annealing.model import VAE_Annealing_model
 from Encoders.encoder import encoder
 from Decoders.decoder import decoder
 
 
 
-class VAE():
+class VAE_Annealing():
 
     def __init__(self, argdict, train, dev, test):
         self.argdict=argdict
@@ -90,6 +90,7 @@ class VAE():
             Average_NLL=[]
             Average_KL_Div=[]
             for iteration, batch in enumerate(data_loader):
+
 
                 # Forward pass
                 logp, mean, logv, z = self.model(batch)
