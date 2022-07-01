@@ -16,6 +16,8 @@ class GRU_Decoder(nn.Module):
 		self.sos_idx=argdict['sos_idx']
 		self.pad_idx=argdict['pad_idx']
 
+		self.word_dropout=argdict['word_dropout']
+
 		self.hidden_size=hidden_size
 		self.max_sequence_length=60
 
@@ -29,6 +31,19 @@ class GRU_Decoder(nn.Module):
 		input_sequence=input_sequence.to('cuda')
 		input_embedding = self.embedding(input_sequence)
 		hidden=self.latent2hidden(latent_space)
+
+		if self.word_dropout_rate > 0:
+			# randomly replace decoder input with <unk>
+			prob = torch.rand(input_sequence.size())
+			if torch.cuda.is_available():
+				prob = prob.cuda()
+			prob[(input_sequence.data - self.sos_idx) * (input_sequence.data - self.pad_idx) == 0] = 1
+			decoder_input_sequence = input_sequence.clone()
+			decoder_input_sequence[prob < self.word_dropout_rate] = self.unk_idx
+			input_embedding = self.embedding(decoder_input_sequence)
+		input_embedding = self.embedding_dropout(input_embedding)
+
+
 		outputs, hidden = self.rnn(input_embedding, hidden)
 		logp = nn.functional.log_softmax(self.outputs2vocab(outputs), dim=-1)
 		return logp
