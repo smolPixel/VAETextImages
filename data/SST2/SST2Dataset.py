@@ -100,32 +100,8 @@ class SST2_dataset(Dataset):
 			ll.append(dat['sentence'])
 		return ll
 
-	def add_data(self, sentences, labels):
-		"""Add data to the dataset"""
-		for sentence, label in zip(sentences, labels):
-			words=sentence.split(' ')
-			input = ['<bos>'] + words + ['<eos>']
-			# input = input[:self.max_sequence_length]
-
-			# target = words[:self.max_sequence_length - 1]
-			# target = target + ['<eos>']
-
-			# assert len(input) == len(target), "%i, %i" % (len(input), len(target))
-			# length = len(input)
-
-			# input.extend(['<pad>'] * (self.max_sequence_length - length))
-			# target.extend(['<pad>'] * (self.max_sequence_length - length))
-			input = self.vocab_object(input)
-			# target = [self.w2i.get(w, self.w2i['<unk>']) for w in target]
-
-			id = len(self.data)
-			self.data[id]={}
-
-			self.data[id]['sentence']=sentence
-			self.data[id]['input'] = input
-			self.data[id]['label'] = int(label)
-			self.data[id]['true_label'] = int(label)
-			# print(self.data[id])
+	def shape_for_loss_function(self, logp, target):
+		return logp, target.view(target.shape[0], -1).float()
 
 	def convert_tokens_to_string(self, tokens):
 		if tokens==[]:
