@@ -58,8 +58,6 @@ class VAE_Annealing():
             return min(1, step / x0)
 
     def loss_fn(self, logp, target,  mean, logv, anneal_function, step, k):
-        print(logp.shape, target.shape)
-        fds
         NLL_loss = self.loss_function_basic(logp, target)
         # KL Divergence
         KL_loss = -0.5 * torch.sum(1 + logv - mean.pow(2) - logv.exp())
@@ -102,7 +100,7 @@ class VAE_Annealing():
                 #                                        self.argdict.k, self.argdict.x0)
                 NLL_loss, KL_loss, KL_weight = self.loss_fn(logp, target,  mean, logv, 'logistic', self.step,
                                                             0.0025)
-
+                print(NLL_loss)
                 batch_size=logp.shape[0]
 
                 loss = (NLL_loss + KL_weight * KL_loss) / batch_size
@@ -117,7 +115,7 @@ class VAE_Annealing():
                 Average_loss.append(loss.item())
                 Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
                 Average_NLL.append(NLL_loss.cpu().detach()/batch_size)
-
+            fds
             print(f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean ELBO {np.mean(Average_loss)}, Mean NLL {np.mean(Average_NLL)}, Mean KL div {np.mean(Average_KL_Div)} KL Weight {KL_weight}")
 
     def create_graph(self):
