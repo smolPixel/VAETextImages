@@ -9,10 +9,11 @@ encoder: "GRU"
 decoder: "GRU"
 nb_epoch: 30
 latent_size: 5
-hidden_size: 1024
+hidden_size: 512
 embedd_size: 300
 num_layers: 1
 batch_size: 64
 dropout: 0.3
 word_dropout: 0.3
 x0: 15
+k: 0.025
