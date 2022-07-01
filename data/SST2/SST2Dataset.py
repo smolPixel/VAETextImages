@@ -101,6 +101,8 @@ class SST2_dataset(Dataset):
 		return ll
 
 	def shape_for_loss_function(self, logp, target):
+		print(logp.shape)
+		print(target.shape)
 		return logp, target.view(target.shape[0], -1).float()
 
 	def convert_tokens_to_string(self, tokens):
