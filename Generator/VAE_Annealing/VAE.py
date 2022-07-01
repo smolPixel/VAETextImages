@@ -45,7 +45,7 @@ class VAE_Annealing():
             encoder=enco,
             decoder=deco
         )
-        model = VAE_model(**params)
+        model = VAE_Annealing_model(**params)
         if torch.cuda.is_available():
             model = model.cuda()
 
