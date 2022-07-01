@@ -90,7 +90,7 @@ class VAE_Annealing():
             Average_NLL=[]
             Average_KL_Div=[]
             for iteration, batch in enumerate(data_loader):
-
+                print("bru")
 
                 # Forward pass
                 logp, mean, logv, z = self.model(batch)
