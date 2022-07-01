@@ -93,8 +93,6 @@ class VAE_Annealing():
                 # Forward pass
                 logp, mean, logv, z = self.model(batch)
                 batch_size=logp.shape[0]
-                print(batch_size)
-                fds
                 logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
                 # NLL_loss, KL_loss, KL_weight = loss_fn(logp, batch['target'],
                 #                                        batch['length'], mean, logv, self.argdict.anneal_function, step,
@@ -115,7 +113,6 @@ class VAE_Annealing():
                 Average_loss.append(loss.item())
                 Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
                 Average_NLL.append(NLL_loss.cpu().detach()/batch_size)
-            fds
             print(f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean ELBO {np.mean(Average_loss)}, Mean NLL {np.mean(Average_NLL)}, Mean KL div {np.mean(Average_KL_Div)} KL Weight {KL_weight}")
 
     def create_graph(self):
