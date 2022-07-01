@@ -31,10 +31,10 @@ class VAE():
         # optimizers
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)  # self.argdict.learning_rate)
         self.loss_function_discriminator = torch.nn.CrossEntropyLoss()
-        if self.argdict['dataset'] in ['SST-2']:
-            self.loss_function_basic=torch.nn.NLLLoss(ignore_index=self.datasets['train'].pad_idx, reduction='sum')
-        elif self.argdict['dataset'] in ["MNIST"]:
-            self.loss_function_basic=torch.nn.BCELoss(reduction='sum')
+        # if self.argdict['dataset'] in ['SST-2']:
+        #     self.loss_function_basic=torch.nn.NLLLoss(ignore_index=self.datasets['train'].pad_idx, reduction='sum')
+        # elif self.argdict['dataset'] in ["MNIST"]:
+        #     self.loss_function_basic=torch.nn.BCELoss(reduction='sum')
 
     def init_model_dataset(self):
         splits = ['train', 'dev']  # + (['test'] if self.argdict.test else [])
