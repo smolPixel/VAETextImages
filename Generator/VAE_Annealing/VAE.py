@@ -94,11 +94,7 @@ class VAE_Annealing():
 
                 # Forward pass
                 logp, mean, logv, z = self.model(batch)
-
-                # print(logp.shape)
-                # print(batch['target'].shape)
-                target=batch['target'].view(logp.shape).to('cuda')
-                # loss calculation
+                logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
                 # NLL_loss, KL_loss, KL_weight = loss_fn(logp, batch['target'],
                 #                                        batch['length'], mean, logv, self.argdict.anneal_function, step,
                 #                                        self.argdict.k, self.argdict.x0)
