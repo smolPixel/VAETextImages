@@ -58,6 +58,8 @@ class VAE_Annealing():
             return min(1, step / x0)
 
     def loss_fn(self, logp, target,  mean, logv, anneal_function, step, k):
+        print(logp.shape, target.shape)
+        fds
         NLL_loss = self.loss_function_basic(logp, target)
         # KL Divergence
         KL_loss = -0.5 * torch.sum(1 + logv - mean.pow(2) - logv.exp())
