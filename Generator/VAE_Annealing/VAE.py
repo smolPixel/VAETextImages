@@ -90,12 +90,11 @@ class VAE_Annealing():
             Average_NLL=[]
             Average_KL_Div=[]
             for iteration, batch in enumerate(data_loader):
-                print("bru")
+                # Forward pass
+                logp, mean, logv, z = self.model(batch)
                 batch_size=logp.shape[0]
                 print(batch_size)
                 fds
-                # Forward pass
-                logp, mean, logv, z = self.model(batch)
                 logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
                 # NLL_loss, KL_loss, KL_weight = loss_fn(logp, batch['target'],
                 #                                        batch['length'], mean, logv, self.argdict.anneal_function, step,
