@@ -22,7 +22,7 @@ class decoder(nn.Module):
 
 	def forward(self, input, z):
 		norm=torch.clone(torch.linalg.norm(self.model.latent2hidden.weight))
-		print(norm)
+		print(norm.item())
 		fd
 		return self.model(input, z)
 
