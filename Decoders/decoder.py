@@ -21,7 +21,7 @@ class decoder(nn.Module):
 			raise ValueError("unrecognized Encoder")
 
 	def forward(self, input, z):
-		norm=torch.clone(torch.linalg.norm(self.model.latent2hidden.weight)))
+		norm=torch.clone(torch.linalg.norm(self.model.latent2hidden.weight))
 		print(norm)
 		fd
 		return self.model(input, z)
