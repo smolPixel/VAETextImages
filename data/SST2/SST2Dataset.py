@@ -11,7 +11,7 @@ from process_data import *
 from torchtext.vocab import build_vocab_from_iterator
 from torchvision import datasets, transforms
 import copy
-
+from Generator.utils import to_var, idx2word
 #
 class SST2_dataset(Dataset):
 	def __init__(self, data, tokenizer, vocab, argdict):
