@@ -111,6 +111,8 @@ class VAE():
 
                 logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
                 # SST2:
+                batch_size = logp.shape[0]
+                print(batch_size)
                 # logp=logp.view(-1, logp.shape[-1])
                 # target=batch['target'].view(-1).to('cuda')
                 # loss calculation
@@ -118,9 +120,6 @@ class VAE():
                 #                                        batch['length'], mean, logv, self.argdict.anneal_function, step,
                 #                                        self.argdict.k, self.argdict.x0)
                 NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'),  mean, logv)
-
-                batch_size=logp.shape[0]
-                print(batch_size)
 
                 loss = (NLL_loss +  KL_loss) / batch_size
 
