@@ -120,6 +120,7 @@ class VAE():
                 NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'),  mean, logv)
 
                 batch_size=logp.shape[0]
+                print(batch_size)
 
                 loss = (NLL_loss +  KL_loss) / batch_size
 
