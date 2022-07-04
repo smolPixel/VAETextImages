@@ -32,7 +32,8 @@ class GRU_Decoder(nn.Module):
 		input_sequence=input_sequence.to('cuda')
 		# input_embedding = self.embedding(input_sequence)
 		hidden=self.latent2hidden(latent_space)
-
+		print(self.latent2hidden.weight)
+		fds
 		if self.word_dropout_rate > 0:
 			# randomly replace decoder input with <unk>
 			prob = torch.rand(input_sequence.size())

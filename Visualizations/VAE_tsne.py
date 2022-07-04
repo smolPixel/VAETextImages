@@ -8,7 +8,7 @@ from ast import literal_eval
 from sklearn.manifold import TSNE
 
 
-df=pd.read_csv('../graph_SST2.tsv', sep='\t', index_col=0)
+df=pd.read_csv('../graph_MNIST.tsv', sep='\t', index_col=0)
 # labels=list(df['labs'])
 #
 # dfPos=df[df['labs']==1]
@@ -34,7 +34,7 @@ for i in range(10):
 # plt.scatter(x=xPos, y=yPos, c='red')#, marker='3')
 # plt.scatter(x=xNeg, y=yNeg, c='blue', marker='3')
 
-plt.savefig(f"../Graphes/test_SST2_Annealing.png")
+plt.savefig(f"../Graphes/test_MNIST_Annealing.png")
 #
 # dfEx=df[df['x']>75]
 # # dfEx=dfEx[dfEx['x']>76]
