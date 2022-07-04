@@ -47,7 +47,7 @@ class MNIST_dataset(Dataset):
 		}
 
 	def shape_for_loss_function(self, logp, target):
-		return logp, target.view(target.shape[0], -1).float()
+		return logp, target.view(target.shape[0], -1).float().cuda()
 
 	def iterexamples(self):
 		for i, ex in self.data.items():
