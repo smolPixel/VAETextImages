@@ -100,7 +100,7 @@ class VAE_Annealing():
                 NLL_loss, KL_loss, KL_weight = self.loss_fn(logp, target,  mean, logv, 'logistic', self.step,
                                                             0.0025)
                 # print(NLL_loss)
-                batch_size = logp.shape[0]
+                # batch_size = logp.shape[0]
                 # print(batch_size)
                 loss = (NLL_loss + KL_weight * KL_loss) / batch_size
 
