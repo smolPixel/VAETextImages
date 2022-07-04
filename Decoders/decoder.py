@@ -7,6 +7,9 @@ class decoder(nn.Module):
 		super().__init__()
 		self.argdict=argdict
 
+		self.norm=[]
+
+
 		decoder=self.argdict['decoder']
 		if decoder.lower()=="gru":
 			from Decoders.GRU import GRU_Decoder
@@ -18,7 +21,8 @@ class decoder(nn.Module):
 			raise ValueError("unrecognized Encoder")
 
 	def forward(self, input, z):
-		print(torch.linalg.norm(self.model.latent2hidden.weight))
+		norm=torch.clone(torch.linalg.norm(self.model.latent2hidden.weight)))
+		print(norm)
 		fd
 		return self.model(input, z)
 
