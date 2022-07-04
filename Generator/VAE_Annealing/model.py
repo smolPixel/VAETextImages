@@ -30,7 +30,7 @@ class VAE_Annealing_model(nn.Module):
 
         return logp, mean, logv, z
 
-    def encode(self, input_sequence, length):
+    def encode(self, input_sequence):
         # print("HIHIOHOHO")
         # print(input_sequence.shape)
         batch_size = input_sequence.size(0)
@@ -38,24 +38,10 @@ class VAE_Annealing_model(nn.Module):
         # input_sequence = input_sequence[sorted_idx]
 
         # ENCODER
-        input_embedding = self.embedding(input_sequence)
-
-        # packed_input = rnn_utils.pack_padded_sequence(input_embedding, sorted_lengths.data.tolist(), batch_first=True)
-
-        _, hidden = self.encoder_rnn(input_embedding)
-
-        if self.bidirectional or self.num_layers > 1:
-            # flatten hidden state
-            hidden = hidden.view(batch_size, self.hidden_size*self.hidden_factor)
-        else:
-            hidden = hidden.squeeze()
-
-        # REPARAMETERIZATION
-        mean = self.hidden2mean(hidden)
-        logv = self.hidden2logv(hidden)
+        mean, logv=self.encoder(input_sequence)
         std = torch.exp(0.5 * logv)
 
-        z = to_var(torch.randn([batch_size, self.latent_size]))
+        z = to_var(torch.randn([batch_size, self.argdict['latent_size']]))
         z = z * std + mean
         # print(z.shape)
 
