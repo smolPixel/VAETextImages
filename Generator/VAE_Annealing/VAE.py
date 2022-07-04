@@ -117,23 +117,22 @@ class VAE_Annealing():
 
     def create_graph(self):
         """First encode all train into the latent space"""
-        encoded=self.encode()
+        encoded = self.encode()
         from sklearn.manifold import TSNE
         tsne = TSNE(n_components=2)
 
         features = tsne.fit_transform(encoded['encoded_train'])
-        x=features[:, 0]
-        y=features[:, 1]
-        labs=encoded['true_labels_train']
-        sentences=encoded['sentences_train']
-        dico={}
+        x = features[:, 0]
+        y = features[:, 1]
+        labs = encoded['labels_train']
+        # sentences=encoded['sentences_train']
+        dico = {}
         for i in range(len(labs)):
-            dico[i]={'sentence':sentences[i], 'x':x[i], 'y':y[i], 'labs':labs[i].item(), 'points':encoded['encoded_train'][i].tolist()}
-
+            dico[i] = {'x': x[i], 'y': y[i], 'labs': labs[i].item(), 'points': encoded['encoded_train'][i].tolist()}
 
         df = pd.DataFrame.from_dict(dico, orient='index')
         print(df)
-        df.to_csv('test.tsv', sep='\t')
+        df.to_csv(f'graph_{self.argdict["dataset"]}.tsv', sep='\t')
         sdffd
 
     def train(self):
