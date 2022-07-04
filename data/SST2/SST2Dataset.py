@@ -74,7 +74,7 @@ class SST2_dataset(Dataset):
 		return self.vocab_object.get_stoi()
 
 	def process_generated(self, exo):
-		generated = idx2word(exos, i2w=self.get_i2w(),
+		generated = idx2word(exo, i2w=self.get_i2w(),
 							 pad_idx=self.get_w2i()['<pad>'],
 							 eos_idx=self.get_w2i()['<eos>'])
 		for sent in generated:
