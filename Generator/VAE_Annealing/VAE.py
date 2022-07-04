@@ -216,26 +216,19 @@ class VAE_Annealing():
                 print(f"Original sentence: {sent}, generated: {gen}")
             break
 
-
-
-
     def interpolate(self, n=5):
-        p0=to_var(torch.randn([1, self.argdict['latent_size']]))
-        p1=to_var(torch.randn([1, self.argdict['latent_size']]))
-        points=torch.zeros(n, self.argdict['latent_size'])
-        points[0]=p0
-        points[n-1]=p1
+        p0 = to_var(torch.randn([1, self.argdict['latent_size']]))
+        p1 = to_var(torch.randn([1, self.argdict['latent_size']]))
+        points = torch.zeros(n, self.argdict['latent_size'])
+        points[0] = p0
+        points[n - 1] = p1
         for i in range(n):
-            ratio=i/n
-            px=(1-ratio)*p0+ratio*p1
-            points[i]=px
-        points=points.cuda()
+            ratio = i / n
+            px = (1 - ratio) * p0 + ratio * p1
+            points[i] = px
+        points = points.cuda()
         samples, z = self.model.inference(n=n, z=points)
-        generated = idx2word(samples, i2w=self.datasets['train'].get_i2w(), pad_idx=self.datasets['train'].get_w2i()['<pad>'], eos_idx=self.datasets['train'].get_w2i()['<eos>'])
-        print("Interpolation:")
-        for sent in generated:
-            print("------------------")
-            print(sent)
+        self.datasets['train'].process_generated(samples)
 
     def encode(self):
         with torch.no_grad():
