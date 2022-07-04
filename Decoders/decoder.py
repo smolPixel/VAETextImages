@@ -18,6 +18,8 @@ class decoder(nn.Module):
 			raise ValueError("unrecognized Encoder")
 
 	def forward(self, input, z):
+		print(torch.linalg.norm(self.model.latent2hidden.weight))
+		fd
 		return self.model(input, z)
 
 	def generate(self, z, **kwargs):
