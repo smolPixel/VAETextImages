@@ -37,6 +37,9 @@ class generator():
     def train(self):
         self.generator.train()
 
+        #Weight graph
+
+
     def encode(self):
         return self.generator.encode()
 
