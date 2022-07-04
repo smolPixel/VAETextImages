@@ -92,7 +92,7 @@ class VAE_Annealing():
             for iteration, batch in enumerate(data_loader):
                 # Forward pass
                 logp, mean, logv, z = self.model(batch)
-                batch_size=logp.shape[0]
+                # batch_size=logp.shape[0]
                 logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
                 # NLL_loss, KL_loss, KL_weight = loss_fn(logp, batch['target'],
                 #                                        batch['length'], mean, logv, self.argdict.anneal_function, step,
@@ -100,7 +100,8 @@ class VAE_Annealing():
                 NLL_loss, KL_loss, KL_weight = self.loss_fn(logp, target,  mean, logv, 'logistic', self.step,
                                                             0.0025)
                 # print(NLL_loss)
-
+                batch_size = logp.shape[0]
+                print(batch_size)
                 loss = (NLL_loss + KL_weight * KL_loss) / batch_size
 
                 # backward + optimization
