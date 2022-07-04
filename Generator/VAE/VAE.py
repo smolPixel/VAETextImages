@@ -108,7 +108,7 @@ class VAE():
                 # Forward pass
                 logp, mean, logv, z = self.model(batch)
                 batch_size = logp.shape[0]
-                print(batch_size)
+                # print(batch_size)
 
                 logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
                 # SST2:
