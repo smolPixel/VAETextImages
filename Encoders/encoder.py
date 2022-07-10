@@ -1,5 +1,5 @@
 import torch.nn as nn
-
+import torch
 
 class encoder(nn.Module):
 
@@ -22,6 +22,14 @@ class encoder(nn.Module):
 		else:
 			raise ValueError("unrecognized Encoder")
 
+		self.means=[]
+		self.logps=[]
+
 
 	def forward(self, input):
-		return self.model(input)
+		mean, logp=self.model(input)
+		mean_norm=torch.norm(mean, dim=-1)
+		self.means.append(torch.mean(mean_norm).item())
+		logp_norm=torch.norm(logp, dim=-1)
+		self.logps.append(torch.mean(logp_norm).item())
+		return mean, logp
