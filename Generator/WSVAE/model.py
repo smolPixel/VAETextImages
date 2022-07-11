@@ -29,6 +29,7 @@ class WSVAE_model(nn.Module):
         if pretraining:
             c = torch.zeros_like(clogvar).uniform_(0, 1).unsqueeze(-1)
 
+        print(zstd.shape)
         z = to_var(torch.randn([batch_size, self.argdict['latent_size']]))
         z = z * zstd + zmu
         c=torch.bernoulli(c)
