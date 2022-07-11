@@ -151,9 +151,16 @@ class WSVAE():
         # shutil.
         os.makedirs(save_model_path, exist_ok=True)
 
+        #Pretraining the VAE
         for epoch in range(self.argdict['nb_epoch']):
             self.epoch=epoch
             self.run_epoch(pretraining=True)
+
+        #Until convergence
+        print("Change for until convergence")
+        for i in range(10):
+
+
         self.interpolate()
         # self.generate_from_train()
         self.create_graph()
