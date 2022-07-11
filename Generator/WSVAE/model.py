@@ -33,8 +33,6 @@ class WSVAE_model(nn.Module):
         z = z * zstd + zmu
         c=torch.bernoulli(c)
         z=torch.cat((z, c), dim=-1)
-        print(z.shape)
-        fds
 
         logp = self.decoder(input_sequence, z)
 
