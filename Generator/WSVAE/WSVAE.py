@@ -108,9 +108,11 @@ class WSVAE():
 
                 # backward + optimization
                 if split == 'train':
-                    self.optimizer.zero_grad()
+                    self.optimizer_encoder.zero_grad()
+                    self.optimizer_decoder.zero_grad()
                     loss.backward()
-                    self.optimizer.step()
+                    self.optimizer_encoder.step()
+                    self.optimizer_decoder.step()
                     self.step += 1
 
                 Average_loss.append(loss.item())
