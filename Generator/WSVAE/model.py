@@ -17,20 +17,25 @@ class WSVAE_model(nn.Module):
         self.decoder=decoder
         self.discriminator=discriminator
 
-    def forward(self, batch):
+    def forward(self, batch, pretraining=True):
 
         input_sequence=batch['input']
 
         batch_size = input_sequence.size(0)
         mean, logv=self.encoder(input_sequence)
         cmu, zmu = mean[:, :, -1], mean[:, :, :-1]
-        print(cmu)
-        print(zmu)
-        fds
-        std = torch.exp(0.5 * logv)
+        clogvar, zlogvar = logv[:, :, -1], logv[:, :, :-1]
+        zstd = torch.exp(0.5 * zlogvar)
+        if pretraining:
+            c = torch.zeros_like(clogvar).uniform_(0, 1).unsqueeze(-1)
 
         z = to_var(torch.randn([batch_size, self.argdict['latent_size']]))
-        z = z * std + mean
+        z = z * zstd + zmu
+        c=torch.bernoulli(c)
+        z=torch.cat((z, c), dim=-1)
+        print(z.shape)
+        fds
+
         logp = self.decoder(input_sequence, z)
 
         return logp, mean, logv, z
