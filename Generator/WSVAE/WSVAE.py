@@ -48,7 +48,7 @@ class WSVAE():
             decoder=deco,
             discriminator=discri
         )
-        model = VAE_model(**params)
+        model = WSVAE_model(**params)
         if torch.cuda.is_available():
             model = model.cuda()
 
