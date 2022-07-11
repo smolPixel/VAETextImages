@@ -31,7 +31,7 @@ class generator():
             from Generator.BVAE.BVAE import BVAE
             self.generator = BVAE(self.argdict, train, dev, test)
         elif algo == "WSVAE":
-            from Generator.WSVAE import WSVAE
+            from Generator.WSVAE.WSVAE import WSVAE
             self.generator = WSVAE(self.argdict, train, dev, test)
         else:
             raise ValueError(f"No generator named {algo}")
