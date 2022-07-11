@@ -30,8 +30,8 @@ class WSVAE():
         self.model, self.params=self.init_model_dataset()
         # optimizers
         self.optimizer=torch.optim.Adam(self.model.parameters(), lr=0.001)
-        # self.optimizer_encoder = torch.optim.Adam(self.model.encoder.parameters(), lr=0.001)  # self.argdict.learning_rate)
-        # self.optimizer_decoder = torch.optim.Adam(self.model.encoder.parameters(), lr=0.001)  # self.argdict.learning_rate)
+        self.optimizer_encoder = torch.optim.Adam(self.model.encoder.parameters(), lr=0.001)  # self.argdict.learning_rate)
+        self.optimizer_decoder = torch.optim.Adam(self.model.decoder.parameters(), lr=0.001)  # self.argdict.learning_rate)
         # self.optimizer_discriminator = torch.optim.Adam(self.model.discriminator.parameters(), lr=0.001)  # self.argdict.learning_rate)
         self.loss_function_basic=train.loss_function
 
@@ -109,13 +109,13 @@ class WSVAE():
 
                 # backward + optimization
                 if split == 'train':
-                    self.optimizer.zero_grad()
-                    # self.optimizer_encoder.zero_grad()
-                    # self.optimizer_decoder.zero_grad()
+                    # self.optimizer.zero_grad()
+                    self.optimizer_encoder.zero_grad()
+                    self.optimizer_decoder.zero_grad()
                     loss.backward()
-                    self.optimizer.step()
-                    # self.optimizer_encoder.step()
-                    # self.optimizer_decoder.step()
+                    # self.optimizer.step()
+                    self.optimizer_encoder.step()
+                    self.optimizer_decoder.step()
                     self.step += 1
 
                 Average_loss.append(loss.item())
