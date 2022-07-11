@@ -23,7 +23,7 @@ class WSVAE_model(nn.Module):
 
         batch_size = input_sequence.size(0)
         mean, logv=self.encoder(input_sequence)
-        cmu, zmu = mu[:, :, -1], mu[:, :, :-1]
+        cmu, zmu = mean[:, :, -1], mean[:, :, :-1]
         print(cmu)
         print(zmu)
         fds
