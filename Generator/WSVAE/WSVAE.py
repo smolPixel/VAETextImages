@@ -18,7 +18,7 @@ from Generator.utils import to_var, idx2word, expierment_name
 from Generator.VAE.model import VAE_model
 from Encoders.encoder import encoder
 from Decoders.decoder import decoder
-
+from Discriminators.discriminator import discriminator
 
 
 class WSVAE():
@@ -38,7 +38,8 @@ class WSVAE():
 
         enco=encoder(self.argdict)#vocab_size=self.datasets['train'].vocab_size, embedding_size=300, hidden_size=self.argdict['hidden_size'], latent_size=self.argdict['latent_size'])
         deco=decoder(self.argdict)
-        discriminator=
+        discriminator=discriminator(self.argdict)
+        fds
 
         params = dict(
             argdict=self.argdict,
