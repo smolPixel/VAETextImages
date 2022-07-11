@@ -23,17 +23,18 @@ class WSVAE_model(nn.Module):
 
         batch_size = input_sequence.size(0)
         mean, logv=self.encoder(input_sequence)
-        cmu, zmu = mean[:, :, -1], mean[:, :, :-1]
-        clogvar, zlogvar = logv[:, :, -1], logv[:, :, :-1]
-        zstd = torch.exp(0.5 * zlogvar)
-        if pretraining:
-            c = torch.zeros_like(clogvar).uniform_(0, 1).unsqueeze(-1)
-
-        z = to_var(torch.randn([batch_size, zstd.shape[-1]]))
-        z = z * zstd + zmu
-        c=torch.bernoulli(c)
-        z=torch.cat((z, c), dim=-1)
-
+        # cmu, zmu = mean[:, :, -1], mean[:, :, :-1]
+        # clogvar, zlogvar = logv[:, :, -1], logv[:, :, :-1]
+        # zstd = torch.exp(0.5 * zlogvar)
+        # if pretraining:
+        #     c = torch.zeros_like(clogvar).uniform_(0, 1).unsqueeze(-1)
+        #
+        # z = to_var(torch.randn([batch_size, zstd.shape[-1]]))
+        # z = z * zstd + zmu
+        # c=torch.bernoulli(c)
+        # z=torch.cat((z, c), dim=-1)
+        z = to_var(torch.randn([batch_size, self.argdict['latent_size']]))
+        z = z * std + mean
         logp = self.decoder(input_sequence, z)
 
         return logp, mean, logv, z
