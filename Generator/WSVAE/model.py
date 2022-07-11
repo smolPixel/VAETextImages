@@ -5,7 +5,7 @@ from Generator.utils import to_var
 
 
 class WSVAE_model(nn.Module):
-    def __init__(self, argdict, encoder, decoder):
+    def __init__(self, argdict, encoder, decoder, discriminator):
 
         super().__init__()
         self.argdict=argdict
@@ -15,6 +15,7 @@ class WSVAE_model(nn.Module):
 
         self.encoder=encoder
         self.decoder=decoder
+        self.discriminator=discriminator
 
     def forward(self, batch):
 
@@ -22,6 +23,10 @@ class WSVAE_model(nn.Module):
 
         batch_size = input_sequence.size(0)
         mean, logv=self.encoder(input_sequence)
+        cmu, zmu = mu[:, :, -1], mu[:, :, :-1]
+        print(cmu)
+        print(zmu)
+        fds
         std = torch.exp(0.5 * logv)
 
         z = to_var(torch.randn([batch_size, self.argdict['latent_size']]))

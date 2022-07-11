@@ -29,7 +29,9 @@ class WSVAE():
         self.datasets={'train':train, 'dev':dev, 'test':test}
         self.model, self.params=self.init_model_dataset()
         # optimizers
-        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)  # self.argdict.learning_rate)
+        self.optimizer_encoder = torch.optim.Adam(self.model.encoder.parameters(), lr=0.001)  # self.argdict.learning_rate)
+        self.optimizer_decoder = torch.optim.Adam(self.model.encoder.parameters(), lr=0.001)  # self.argdict.learning_rate)
+        self.optimizer_discriminator = torch.optim.Adam(self.model.discriminator.parameters(), lr=0.001)  # self.argdict.learning_rate)
         self.loss_function_basic=train.loss_function
 
     def init_model_dataset(self):
@@ -39,12 +41,12 @@ class WSVAE():
         enco=encoder(self.argdict)#vocab_size=self.datasets['train'].vocab_size, embedding_size=300, hidden_size=self.argdict['hidden_size'], latent_size=self.argdict['latent_size'])
         deco=decoder(self.argdict)
         discri=discriminator(self.argdict)
-        fds
 
         params = dict(
             argdict=self.argdict,
             encoder=enco,
-            decoder=deco
+            decoder=deco,
+            discriminator=discri
         )
         model = VAE_model(**params)
         if torch.cuda.is_available():
@@ -70,7 +72,7 @@ class WSVAE():
         return NLL_loss, KL_loss
         # return BCE, KL_loss
 
-    def run_epoch(self):
+    def run_epoch(self, pretraining=False):
         for split in self.splits:
 
             data_loader = DataLoader(
@@ -80,8 +82,6 @@ class WSVAE():
                 num_workers=cpu_count(),
                 pin_memory=torch.cuda.is_available()
             )
-
-            # tracker = defaultdict(tensor)
 
             # Enable/Disable Dropout
             if split == 'train':
@@ -96,30 +96,12 @@ class WSVAE():
             Average_KL_Div=[]
             for iteration, batch in enumerate(data_loader):
 
-                # print(batch)
-                # batch_size = batch['input'].size(0)
-                #
-                # for k, v in batch.items():
-                #     if torch.is_tensor(v):
-                #         batch[k] = to_var(v)
-                # print("warning, preprocessing should be moved to data loader")
-                # if self.argdict['dataset']=="MNIST":
-                #
-                #     batch={'input':batch[0], 'target':batch[0], 'label':batch[1]}
-
                 # Forward pass
                 logp, mean, logv, z = self.model(batch)
                 batch_size = logp.shape[0]
                 # print(batch_size)
 
                 logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
-                # SST2:
-                # logp=logp.view(-1, logp.shape[-1])
-                # target=batch['target'].view(-1).to('cuda')
-                # loss calculation
-                # NLL_loss, KL_loss, KL_weight = loss_fn(logp, batch['target'],
-                #                                        batch['length'], mean, logv, self.argdict.anneal_function, step,
-                #                                        self.argdict.k, self.argdict.x0)
                 NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'),  mean, logv)
 
                 loss = (NLL_loss +  KL_loss) / batch_size
@@ -159,55 +141,17 @@ class WSVAE():
         sdffd
 
     def train(self):
-        ts = time.strftime('%Y-%b-%d-%H:%M:%S', time.gmtime())
-
-
         print(self.model)
-
-        # if self.argdict.tensorboard_logging:
-        #     writer = SummaryWriter(os.path.join(self.argdict.logdir, expierment_name(self.argdict, ts)))
-        #     writer.add_text("model", str(model))
-        #     writer.add_text("self.argdict", str(self.argdict))
-        #     writer.add_text("ts", ts)
-
         save_model_path = os.path.join(self.argdict['path'], 'bin')
         # shutil.
         os.makedirs(save_model_path, exist_ok=True)
 
-        # with open(os.path.join(save_model_path, 'model_params.json'), 'w') as f:
-        #     json.dump(self.params, f, indent=4)
-
-
-
-        # tensor = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.Tensor
-        # step = 0
-        # for epoch in range(self.argdict.epochs):
         for epoch in range(self.argdict['nb_epoch']):
             self.epoch=epoch
-            self.run_epoch()
+            self.run_epoch(pretraining=True)
         self.interpolate()
         # self.generate_from_train()
         self.create_graph()
-        # fds
-
-
-                # if self.argdict.tensorboard_logging:
-                #     writer.add_scalar("%s-Epoch/ELBO" % split.upper(), torch.mean(tracker['ELBO']), epoch)
-
-                # save a dump of all sentences and the encoded latent space
-                # if split == 'valid':
-                #     dump = {'target_sents': tracker['target_sents'], 'z': tracker['z'].tolist()}
-                #     if not os.path.exists(os.path.join('dumps', ts)):
-                #         os.makedirs('dumps/' + ts)
-                #     with open(os.path.join('dumps/' + ts + '/valid_E%i.json' % epoch), 'w') as dump_file:
-                #         json.dump(dump, dump_file)
-
-                # save checkpoint
-                # if split == 'train':
-                #     checkpoint_path = os.path.join(save_model_path, "E%i.pytorch" % epoch)
-                #     torch.save(self.model.state_dict(), checkpoint_path)
-                #     print("Model saved at %s" % checkpoint_path)
-
 
     def generate_from_train(self):
         data_loader = DataLoader(
