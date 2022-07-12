@@ -124,6 +124,30 @@ class WSVAE():
 
             print(f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean ELBO {np.mean(Average_loss)}, Mean LF {np.mean(Average_NLL)}, Mean KL div {np.mean(Average_KL_Div)}")
 
+    def train_discriminator(self):
+        for epoch in range(self.argdict['nb_epoch_discriminator']):
+            for split in self.splits:
+                data_loader = DataLoader(
+                    dataset=self.datasets[split],
+                    batch_size=64,  # self.argdict.batch_size,
+                    shuffle=split == 'train',
+                    num_workers=cpu_count(),
+                    pin_memory=torch.cuda.is_available()
+                )
+
+                # Enable/Disable Dropout
+                if split == 'train':
+                    self.model.discriminator.train()
+                else:
+                    self.model.discriminator.eval()
+
+                preds=[]
+                ground_truth=[]
+                for iteration, batch in enumerate(data_loader):
+                    print(batch)
+                    fds
+
+
     def create_graph(self):
         """First encode all train into the latent space"""
         encoded=self.encode()
@@ -159,7 +183,8 @@ class WSVAE():
         #Until convergence
         print("Change for until convergence")
         for i in range(10):
-
+            self.train_discriminator()
+            fds
 
         self.interpolate()
         # self.generate_from_train()
