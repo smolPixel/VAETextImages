@@ -147,6 +147,7 @@ class WSVAE():
                     output=self.model.discriminator.forward(batch['input'])
                     print(output)
                     print(output.shape)
+                    print(batch['label'])
                     fsd
 
 
