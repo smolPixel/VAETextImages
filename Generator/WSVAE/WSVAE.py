@@ -32,8 +32,9 @@ class WSVAE():
         self.optimizer=torch.optim.Adam(self.model.parameters(), lr=0.001)
         self.optimizer_encoder = torch.optim.Adam(self.model.encoder.parameters(), lr=0.001)  # self.argdict.learning_rate)
         self.optimizer_decoder = torch.optim.Adam(self.model.decoder.parameters(), lr=0.001)  # self.argdict.learning_rate)
-        # self.optimizer_discriminator = torch.optim.Adam(self.model.discriminator.parameters(), lr=0.001)  # self.argdict.learning_rate)
+        self.optimizer_discriminator = torch.optim.Adam(self.model.discriminator.parameters(), lr=0.001)  # self.argdict.learning_rate)
         self.loss_function_basic=train.loss_function
+        self.loss_function_discriminator=torch.nn.BCEWithLogitsLoss()
 
     def init_model_dataset(self):
         self.step = 0
@@ -145,11 +146,20 @@ class WSVAE():
                 ground_truth=[]
                 for iteration, batch in enumerate(data_loader):
                     output=self.model.discriminator.forward(batch['input'])
-                    print(output)
-                    print(output.shape)
-                    print(batch['label'])
-                    fsd
-
+                    # print(output)
+                    # print(output.shape)
+                    # print(batch['label'])
+                    preds.extend(torch.sigmoid(output))
+                    ground_truth.extend(batch['label'])
+                    loss=self.loss_function_discriminator(output, batch['label'])
+                    if split == 'train':
+                        # self.optimizer.zero_grad()
+                        self.optimizer_discriminator.zero_grad()
+                        loss.backward()
+                        # self.optimizer.step()
+                        self.optimizer_discriminator.step()
+            print(preds, ground_truth)
+            fds
 
     def create_graph(self):
         """First encode all train into the latent space"""
