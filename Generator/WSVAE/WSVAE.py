@@ -144,6 +144,7 @@ class WSVAE():
 
                 preds=[]
                 ground_truth=[]
+                losses=[]
                 for iteration, batch in enumerate(data_loader):
                     output=self.model.discriminator.forward(batch['input'])
                     # print(output)
@@ -151,7 +152,7 @@ class WSVAE():
                     # print(batch['label'])
                     preds.extend(torch.sigmoid(output))
                     ground_truth.extend(batch['label'])
-                    loss=self.loss_function_discriminator(output, batch['label'].cuda())
+                    loss=self.loss_function_discriminator(output, batch['label'].cuda().long())
                     if split == 'train':
                         # self.optimizer.zero_grad()
                         self.optimizer_discriminator.zero_grad()
@@ -160,6 +161,7 @@ class WSVAE():
                         self.optimizer_discriminator.step()
             print(preds, ground_truth)
             fds
+            print(f"Epoch {epoch}, accuracy {accuracy_score(ground_truth, preds)}")
 
     def create_graph(self):
         """First encode all train into the latent space"""
