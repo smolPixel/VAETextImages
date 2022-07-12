@@ -144,8 +144,9 @@ class WSVAE():
                 preds=[]
                 ground_truth=[]
                 for iteration, batch in enumerate(data_loader):
-                    print(batch)
-                    fds
+                    output=self.model.discriminator.forward(batch['input'])
+                    print(output)
+                    fsd
 
 
     def create_graph(self):

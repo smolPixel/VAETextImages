@@ -14,6 +14,10 @@ class discriminator(nn.Module):
 			from Discriminators.GRU import GRU_Discriminator
 			self.model=GRU_Discriminator(argdict)
 
+
+
+	def forward(self, input):
+		return self.model.forward(input)
 		#
 		# self.means=[]
 		# self.logps=[]
