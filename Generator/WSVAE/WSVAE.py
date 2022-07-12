@@ -151,7 +151,7 @@ class WSVAE():
                     # print(batch['label'])
                     preds.extend(torch.sigmoid(output))
                     ground_truth.extend(batch['label'])
-                    loss=self.loss_function_discriminator(output, batch['label'])
+                    loss=self.loss_function_discriminator(output, batch['label'].cuda())
                     if split == 'train':
                         # self.optimizer.zero_grad()
                         self.optimizer_discriminator.zero_grad()
