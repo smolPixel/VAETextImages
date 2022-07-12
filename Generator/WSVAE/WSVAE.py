@@ -162,7 +162,7 @@ class WSVAE():
                         self.optimizer_discriminator.step()
                 # print(preds, ground_truth)
                 # fds
-                 print(f"Epoch {epoch} split {split}, accuracy {accuracy_score(ground_truth, preds)}, loss {np.mean(losses)}")
+                print(f"Epoch {epoch} split {split}, accuracy {accuracy_score(ground_truth, preds)}, loss {np.mean(losses)}")
 
     def create_graph(self):
         """First encode all train into the latent space"""
