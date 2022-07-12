@@ -18,5 +18,5 @@ class GRU_Discriminator(nn.Module):
 		input_sequence=input_sequence.to('cuda')
 		input_embedding = self.embedding(input_sequence)
 		_, hidden = self.rnn(input_embedding)
-		logit = self.linear(hidden)
+		logit = self.linear(hidden).squeeze(-1)
 		return logit
