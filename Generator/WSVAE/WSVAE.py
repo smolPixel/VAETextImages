@@ -191,6 +191,13 @@ class WSVAE():
                 logp, mean, logv, z = self.model(batch)
                 batch_size = logp.shape[0]
                 # print(batch_size)
+                z_normal, c = z[:, :, :-1], z[:, :, -1]
+                softmaxed_gumbeled = F.gumbel_softmax(logp, tau=1, hard=True, dim=-1)
+                print(softmaxed_gumbeled.shape)
+                print(logp.shape)
+                output_discriminator = self.model.discriminate(softmaxed_gumbeled)
+                print(output_discriminator)
+                fds
 
                 logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
                 NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'),  mean, logv)
@@ -200,13 +207,6 @@ class WSVAE():
                 #Minimize Eq 8= Eq 4 (standard VAE) + Eq 6 (reconstruction of c) + Eq 7 (reconstruction of z)
                 #Equation
                 loss_generator=(NLL_loss +  KL_loss) / batch_size
-                z_normal, c= z[:,:,:-1], z[:,:,-1]
-                softmaxed_gumbeled=F.gumbel_softmax(logp, tau=1, hard=True, dim=-1)
-                print(softmaxed_gumbeled.shape)
-                print(logp.shape)
-                output_discriminator=self.model.discriminate(softmaxed_gumbeled)
-                print(output_discriminator)
-                fds
 
 
 
