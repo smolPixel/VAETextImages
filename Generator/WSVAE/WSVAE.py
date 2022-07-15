@@ -1,4 +1,4 @@
-"""Wrapper for the WSVAE, as defined in https://arxiv.org/pdf/1703.00955.pdf"""
+"""Wrapper for the WSVAE, as defined in https://arxiv.org/pdf/1703.00955.pdf, inspired by the github https://github.com/GBLin5566/toward-controlled-generation-of-text-pytorch"""
 import os
 import json
 import time
@@ -164,6 +164,65 @@ class WSVAE():
                 # fds
                 print(f"Epoch {epoch} split {split}, accuracy {accuracy_score(ground_truth, preds)}, loss {np.mean(losses)}")
 
+    def train_gen_enc(self):
+        for split in self.splits:
+            data_loader = DataLoader(
+                dataset=self.datasets[split],
+                batch_size=64,  # self.argdict.batch_size,
+                shuffle=split == 'train',
+                num_workers=cpu_count(),
+                pin_memory=torch.cuda.is_available()
+            )
+
+            # Enable/Disable Dropout
+            if split == 'train':
+                self.model.train()
+                self.dataset_length=len(data_loader)
+            else:
+                self.model.eval()
+
+
+            Average_loss=[]
+            Average_NLL=[]
+            Average_KL_Div=[]
+            for iteration, batch in enumerate(data_loader):
+
+                # Forward pass
+                logp, mean, logv, z = self.model(batch)
+                batch_size = logp.shape[0]
+                # print(batch_size)
+
+                logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
+                NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'),  mean, logv)
+
+                loss = (NLL_loss +  KL_loss) / batch_size
+
+                #Minimize Eq 8= Eq 4 (standard VAE) + Eq 6 (reconstruction of c) + Eq 7 (reconstruction of z)
+                #Equation
+                loss_generator=(NLL_loss +  KL_loss) / batch_size
+                print(z)
+                fds
+
+
+
+                # backward + optimization
+                if split == 'train':
+                    # self.optimizer.zero_grad()
+                    self.optimizer_encoder.zero_grad()
+                    self.optimizer_decoder.zero_grad()
+                    loss.backward()
+                    # self.optimizer.step()
+                    self.optimizer_encoder.step()
+                    self.optimizer_decoder.step()
+                    self.step += 1
+
+                Average_loss.append(loss.item())
+                Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
+                Average_NLL.append(NLL_loss.cpu().detach()/batch_size)
+
+            print(f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean ELBO {np.mean(Average_loss)}, Mean LF {np.mean(Average_NLL)}, Mean KL div {np.mean(Average_KL_Div)}")
+
+
     def create_graph(self):
         """First encode all train into the latent space"""
         encoded=self.encode()
@@ -199,7 +258,11 @@ class WSVAE():
         #Until convergence
         print("Change for until convergence")
         for i in range(10):
+            #Train the discriminator by Eq 11 - Only labelled part for now
             self.train_discriminator()
+            #Train the generator with equation 8, which is sum of the VAE loss, the attribute c loss which is the expectation over p(z)p(c) that the discriminator can recover the correct c,
+            #abd the z loss where we check whether the encoder can recover the correct z code
+            self.train_gen_enc()
             fds
 
         self.interpolate()
