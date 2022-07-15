@@ -35,6 +35,7 @@ class WSVAE():
         self.optimizer_discriminator = torch.optim.Adam(self.model.discriminator.parameters(), lr=0.001)  # self.argdict.learning_rate)
         self.loss_function_basic=train.loss_function
         self.loss_function_discriminator=torch.nn.BCEWithLogitsLoss()
+        self.loss_function_encoder=torch.nn.L1Loss()
 
     def init_model_dataset(self):
         self.step = 0
@@ -206,9 +207,11 @@ class WSVAE():
                 #Why not optimize on the difference of mu and logv directly
                 print("WARNING THIS SHOULD BE DONE AFTER GETTING ENCODER LOSS")
                 encoded_generated=self.model.encode(softmaxed_gumbeled)
-                print(encoded_generated)
-                fds
+                z_normal_encoded= encoded_generated[:, :, :-1]
+                loss_encoder=self.loss_function_encoder(z_normal_encoded, z_normal)
 
+
+                #Regular loss
                 logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
                 NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'),  mean, logv)
 
@@ -218,7 +221,7 @@ class WSVAE():
                 #Equation
                 loss_generator=(NLL_loss +  KL_loss) / batch_size
                 loss_generator+=loss_discriminator/batch_size
-
+                loss_generator+=loss_encoder/batch_size
 
                 # backward + optimization
                 if split == 'train':
