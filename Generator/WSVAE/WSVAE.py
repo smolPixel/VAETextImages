@@ -230,7 +230,7 @@ class WSVAE():
                     self.optimizer_encoder.step()
                     self.step += 1
 
-                loss_generator==(NLL_loss +  KL_loss) / batch_size
+                loss_generator=(NLL_loss +  KL_loss) / batch_size
                 loss_generator+=loss_discriminator/batch_size
                 loss_generator+=loss_encoder/batch_size
 
