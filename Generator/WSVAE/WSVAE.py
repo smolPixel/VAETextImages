@@ -188,6 +188,7 @@ class WSVAE():
             Average_KL_Div=[]
             preds = []
             ground_truth = []
+            loss_reconstruction=[]
             for iteration, batch in enumerate(data_loader):
 
                 # Forward pass
@@ -205,7 +206,7 @@ class WSVAE():
 
                 #Getting reconstruction loss
                 #Why not optimize on the difference of mu and logv directly
-                print("WARNING THIS SHOULD BE DONE AFTER GETTING ENCODER LOSS")
+                # print("WARNING THIS SHOULD BE DONE AFTER GETTING ENCODER LOSS")
                 encoded_generated=self.model.encode(softmaxed_gumbeled)
                 z_normal_encoded= encoded_generated[:, :, :-1]
                 loss_encoder=self.loss_function_encoder(z_normal_encoded, z_normal)
@@ -215,22 +216,32 @@ class WSVAE():
                 logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
                 NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'),  mean, logv)
 
-                loss = (NLL_loss +  KL_loss) / batch_size
+                # loss = (NLL_loss +  KL_loss) / batch_size
 
                 #Minimize Eq 8= Eq 4 (standard VAE) + Eq 6 (reconstruction of c) + Eq 7 (reconstruction of z)
                 #Equation
                 loss_generator=(NLL_loss +  KL_loss) / batch_size
-                loss_generator+=loss_discriminator/batch_size
-                loss_generator+=loss_encoder/batch_size
-
                 # backward + optimization
                 if split == 'train':
                     # self.optimizer.zero_grad()
                     self.optimizer_encoder.zero_grad()
                     self.optimizer_decoder.zero_grad()
-                    loss.backward()
+                    loss_generator.backward()
                     # self.optimizer.step()
                     self.optimizer_encoder.step()
+                    self.optimizer_decoder.step()
+                    self.step += 1
+
+
+                loss_generator=loss_discriminator/batch_size
+                loss_generator+=loss_encoder/batch_size
+
+                # backward + optimization
+                if split == 'train':
+                    # self.optimizer.zero_grad()
+                    self.optimizer_decoder.zero_grad()
+                    loss_generator.backward()
+                    # self.optimizer.step()
                     self.optimizer_decoder.step()
                     self.step += 1
 
@@ -238,7 +249,8 @@ class WSVAE():
                 Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
                 Average_NLL.append(NLL_loss.cpu().detach()/batch_size)
 
-            print(f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean ELBO {np.mean(Average_loss)}, Mean LF {np.mean(Average_NLL)}, Mean KL div {np.mean(Average_KL_Div)}")
+            print(f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean ELBO {np.mean(Average_loss)}, Mean LF {np.mean(Average_NLL)}, Mean KL div {np.mean(Average_KL_Div)}"
+                  f"Acc recon {accuracy_score(ground_truth, preds)}")
 
 
     def create_graph(self):
