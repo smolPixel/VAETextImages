@@ -225,7 +225,7 @@ class WSVAE():
                 if split == 'train':
                     # self.optimizer.zero_grad()
                     self.optimizer_encoder.zero_grad()
-                    loss_encoder.backward()
+                    loss_encoder.backward(retain_graph=True)
                     # self.optimizer.step()
                     self.optimizer_encoder.step()
                     self.step += 1
