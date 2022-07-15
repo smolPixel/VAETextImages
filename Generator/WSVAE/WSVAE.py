@@ -197,7 +197,7 @@ class WSVAE():
                 softmaxed_gumbeled = F.gumbel_softmax(logp, tau=1, hard=True, dim=-1)
                 output_discriminator = self.model.discriminate(softmaxed_gumbeled)
                 loss_discriminator = self.loss_function_discriminator(output_discriminator, batch['label'].cuda().float())
-                preds.extend(torch.round(torch.sigmoid(output).cpu().detach()))
+                preds.extend(torch.round(torch.sigmoid(output_discriminator).cpu().detach()))
                 ground_truth.extend(batch['label'])
 
                 logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
@@ -208,7 +208,7 @@ class WSVAE():
                 #Minimize Eq 8= Eq 4 (standard VAE) + Eq 6 (reconstruction of c) + Eq 7 (reconstruction of z)
                 #Equation
                 loss_generator=(NLL_loss +  KL_loss) / batch_size
-
+                loss_generator+=loss_discriminator/batch_size
 
 
                 # backward + optimization
