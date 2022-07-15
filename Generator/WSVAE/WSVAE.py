@@ -201,8 +201,7 @@ class WSVAE():
                 #Equation
                 loss_generator=(NLL_loss +  KL_loss) / batch_size
                 z_normal, c= z[:,:,:-1], z[:,:,-1]
-                print(z_normal)
-                print(c)
+                print(logp)
                 fds
 
 
