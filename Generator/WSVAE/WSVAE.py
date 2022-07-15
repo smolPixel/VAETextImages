@@ -203,6 +203,7 @@ class WSVAE():
                 ground_truth.extend(batch['label'])
 
                 #Getting reconstruction loss
+                #Why not optimize on the difference of mu and logv directly
                 print("WARNING THIS SHOULD BE DONE AFTER GETTING ENCODER LOSS")
                 encoded_generated=self.model.encode(softmaxed_gumbeled)
                 print(encoded_generated)
