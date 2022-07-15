@@ -190,7 +190,7 @@ class WSVAE():
             for iteration, batch in enumerate(data_loader):
 
                 # Forward pass
-                logp, mean, logv, z = self.model(batch)
+                logp, mean, logv, z = self.model(batch, pretraining=False)
                 batch_size = logp.shape[0]
                 # print(batch_size)
                 z_normal, c = z[:, :, :-1], z[:, :, -1]
