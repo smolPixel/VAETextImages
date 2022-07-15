@@ -220,20 +220,18 @@ class WSVAE():
 
                 #Minimize Eq 8= Eq 4 (standard VAE) + Eq 6 (reconstruction of c) + Eq 7 (reconstruction of z)
                 #Equation
-                loss_generator=(NLL_loss +  KL_loss) / batch_size
+                loss_encoder=(NLL_loss +  KL_loss) / batch_size
                 # backward + optimization
                 if split == 'train':
                     # self.optimizer.zero_grad()
                     self.optimizer_encoder.zero_grad()
-                    self.optimizer_decoder.zero_grad()
-                    loss_generator.backward()
+                    loss_encoder.backward()
                     # self.optimizer.step()
                     self.optimizer_encoder.step()
-                    self.optimizer_decoder.step()
                     self.step += 1
 
-
-                loss_generator=loss_discriminator/batch_size
+                loss_generator==(NLL_loss +  KL_loss) / batch_size
+                loss_generator+=loss_discriminator/batch_size
                 loss_generator+=loss_encoder/batch_size
 
                 # backward + optimization
