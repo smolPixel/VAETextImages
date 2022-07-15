@@ -3,12 +3,12 @@ import os
 import json
 import time
 import torch
+import torch.functional as F
 import argparse
 import shutil
 import numpy as np
 import pandas as pd
 from multiprocessing import cpu_count
-from tensorboardX import SummaryWriter
 from torch.utils.data import DataLoader
 from collections import OrderedDict, defaultdict
 from sklearn.metrics import accuracy_score
@@ -201,7 +201,9 @@ class WSVAE():
                 #Equation
                 loss_generator=(NLL_loss +  KL_loss) / batch_size
                 z_normal, c= z[:,:,:-1], z[:,:,-1]
+                softmaxed_gumbeled=F.gumbel_softmax(logp, tau=1, hard=True, dim=2)
                 print(logp)
+                print(softmaxed_gumbeled)
                 fds
 
 
