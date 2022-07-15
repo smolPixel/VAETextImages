@@ -3,7 +3,7 @@ import os
 import json
 import time
 import torch
-import torch.functional as F
+import torch.nn.functional as F
 import argparse
 import shutil
 import numpy as np
