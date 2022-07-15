@@ -185,6 +185,8 @@ class WSVAE():
             Average_loss=[]
             Average_NLL=[]
             Average_KL_Div=[]
+            preds = []
+            ground_truth = []
             for iteration, batch in enumerate(data_loader):
 
                 # Forward pass
@@ -193,11 +195,10 @@ class WSVAE():
                 # print(batch_size)
                 z_normal, c = z[:, :, :-1], z[:, :, -1]
                 softmaxed_gumbeled = F.gumbel_softmax(logp, tau=1, hard=True, dim=-1)
-                print(softmaxed_gumbeled.shape)
-                print(logp.shape)
                 output_discriminator = self.model.discriminate(softmaxed_gumbeled)
-                print(output_discriminator)
-                fds
+                loss_discriminator = self.loss_function_discriminator(output_discriminator, batch['label'].cuda().float())
+                preds.extend(torch.round(torch.sigmoid(output).cpu().detach()))
+                ground_truth.extend(batch['label'])
 
                 logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
                 NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'),  mean, logv)
