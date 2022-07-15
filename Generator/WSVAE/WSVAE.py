@@ -200,7 +200,9 @@ class WSVAE():
                 #Minimize Eq 8= Eq 4 (standard VAE) + Eq 6 (reconstruction of c) + Eq 7 (reconstruction of z)
                 #Equation
                 loss_generator=(NLL_loss +  KL_loss) / batch_size
-                print(z)
+                z_normal, c= z[:,:,:-1], z[:,:,-1]
+                print(z_normal)
+                print(c)
                 fds
 
 
