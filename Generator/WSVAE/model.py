@@ -57,6 +57,9 @@ class WSVAE_model(nn.Module):
 
         return z
 
+    def discriminate(self, input):
+        return self.discriminator.forward(input)
+
     def inference(self,  n=4, z=None):
 
 

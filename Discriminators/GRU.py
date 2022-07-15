@@ -1,5 +1,5 @@
 import torch.nn as nn
-
+import torch
 
 class GRU_Discriminator(nn.Module):
 
@@ -15,8 +15,12 @@ class GRU_Discriminator(nn.Module):
 		self.linear = nn.Linear(argdict['hidden_size'], 1)
 
 	def forward(self, input_sequence):
-		input_sequence=input_sequence.to('cuda')
-		input_embedding = self.embedding(input_sequence)
+		input_sequence = input_sequence.to('cuda')
+		if isinstance(input_sequence, torch.LongTensor) or (
+            torch.cuda.is_available() and isinstance(input_sequence, torch.cuda.LongTensor)):
+			input_embedding = self.embedding(input_sequence)
+		else:
+			input_embedding=torch.matmul(input_sequence, self.embedding.weight)
 		_, hidden = self.rnn(input_embedding)
 		logit = self.linear(hidden).squeeze(-1).squeeze(0)
 		return logit
