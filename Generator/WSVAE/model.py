@@ -29,7 +29,7 @@ class WSVAE_model(nn.Module):
         if pretraining:
             c = torch.zeros_like(clogvar).uniform_(0, 1).unsqueeze(-1)
         else:
-            c = torch.sigmoid(clogvar)
+            c = torch.sigmoid(clogvar).unsqueeze(-1)
         #
         z = to_var(torch.randn([batch_size, zstd.shape[-1]]))
         z = z * zstd + zmu
