@@ -201,7 +201,9 @@ class WSVAE():
                 #Equation
                 loss_generator=(NLL_loss +  KL_loss) / batch_size
                 z_normal, c= z[:,:,:-1], z[:,:,-1]
+                print(logp.shape)
                 softmaxed_gumbeled=F.gumbel_softmax(logp, tau=1, hard=True, dim=2)
+
                 print(logp)
                 print(softmaxed_gumbeled)
                 fds
