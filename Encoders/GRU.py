@@ -1,5 +1,5 @@
 import torch.nn as nn
-
+import torch
 
 class GRU_Encoder(nn.Module):
 
