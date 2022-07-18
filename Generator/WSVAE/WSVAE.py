@@ -222,13 +222,13 @@ class WSVAE():
                 #Equation
                 loss_encoder=(NLL_loss +  KL_loss) / batch_size
                 # backward + optimization
-                if split == 'train':
-                    # self.optimizer.zero_grad()
-                    self.optimizer_encoder.zero_grad()
-                    loss_encoder.backward(retain_graph=True)
-                    # self.optimizer.step()
-                    self.optimizer_encoder.step()
-                    self.step += 1
+                # if split == 'train':
+                #     # self.optimizer.zero_grad()
+                #     self.optimizer_encoder.zero_grad()
+                #     loss_encoder.backward(retain_graph=True)
+                #     # self.optimizer.step()
+                #     self.optimizer_encoder.step()
+                #     self.step += 1
 
                 loss_generator=(NLL_loss +  KL_loss) / batch_size
                 loss_generator+=loss_discriminator/batch_size
@@ -237,9 +237,11 @@ class WSVAE():
                 # backward + optimization
                 if split == 'train':
                     # self.optimizer.zero_grad()
+                    self.optimizer_encoder.zero_grad()
                     self.optimizer_decoder.zero_grad()
                     loss_generator.backward()
                     # self.optimizer.step()
+                    self.optimizer_encoder.step()
                     self.optimizer_decoder.step()
                     self.step += 1
 
