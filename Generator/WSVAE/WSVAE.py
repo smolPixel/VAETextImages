@@ -293,7 +293,6 @@ class WSVAE():
             #Train the generator with equation 8, which is sum of the VAE loss, the attribute c loss which is the expectation over p(z)p(c) that the discriminator can recover the correct c,
             #abd the z loss where we check whether the encoder can recover the correct z code
             self.train_gen_enc()
-            fds
 
         self.interpolate()
         # self.generate_from_train()
