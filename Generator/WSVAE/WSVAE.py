@@ -245,7 +245,7 @@ class WSVAE():
                     self.optimizer_decoder.step()
                     self.step += 1
 
-                Average_loss.append(loss.item())
+                Average_loss.append(loss_generator.item())
                 Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
                 Average_NLL.append(NLL_loss.cpu().detach()/batch_size)
 
