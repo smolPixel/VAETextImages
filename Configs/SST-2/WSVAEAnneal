@@ -9,7 +9,7 @@ encoder: "GRU"
 decoder: "GRU"
 discriminator: "GRU"
 nb_epoch: 30
-nb_epoch_discriminator: 1
+nb_epoch_discriminator: 10
 latent_size: 5
 hidden_size: 1024
 embedd_size: 300

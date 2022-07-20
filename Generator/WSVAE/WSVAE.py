@@ -287,7 +287,8 @@ class WSVAE():
 
         #Until convergence
         print("Change for until convergence")
-        for i in range(10):
+        for i in range(50):
+            print(f'---{i}----')
             #Train the discriminator by Eq 11 - Only labelled part for now
             self.train_discriminator()
             #Train the generator with equation 8, which is sum of the VAE loss, the attribute c loss which is the expectation over p(z)p(c) that the discriminator can recover the correct c,

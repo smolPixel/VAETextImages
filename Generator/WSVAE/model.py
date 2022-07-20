@@ -27,7 +27,7 @@ class WSVAE_model(nn.Module):
         # clogvar, zlogvar = logv[:, :, -1], logv[:, :, :-1]
         std = torch.exp(0.5 * logv)
         if pretraining:
-            c = torch.multinomial([0.5, 0.5], batch_size, replacement=True)
+            c = torch.multinomial(torch.Tensor([0.5, 0.5]), batch_size, replacement=True)
             print(c)
             fds
         else:
