@@ -23,11 +23,13 @@ class WSVAE_model(nn.Module):
 
         batch_size = input_sequence.size(0)
         mean, logv=self.encoder(input_sequence)
-        cmu, zmu = mean[:, :, -1], mean[:, :, :-1]
-        clogvar, zlogvar = logv[:, :, -1], logv[:, :, :-1]
-        zstd = torch.exp(0.5 * zlogvar)
+        # cmu, zmu = mean[:, :, -1], mean[:, :, :-1]
+        # clogvar, zlogvar = logv[:, :, -1], logv[:, :, :-1]
+        std = torch.exp(0.5 * logv)
         if pretraining:
-            c = torch.zeros_like(clogvar).uniform_(0, 1).unsqueeze(-1)
+            c = torch.multinomial([0.5, 0.5], batch_size, replacement=True)
+            print(c)
+            fds
         else:
             c = torch.sigmoid(clogvar).unsqueeze(-1)
         #
