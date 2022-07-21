@@ -169,6 +169,8 @@ class WSVAE():
                         self.optimizer_discriminator.step()
                 # print(preds, ground_truth)
                 # fds
+                print(ground_truth)
+                print(preds)
                 print(f"Epoch {epoch} split {split}, accuracy {accuracy_score(ground_truth, preds)}, loss {np.mean(losses)}")
 
     def train_gen_enc(self):
