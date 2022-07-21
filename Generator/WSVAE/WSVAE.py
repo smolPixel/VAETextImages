@@ -206,7 +206,7 @@ class WSVAE():
                 #Getting discriminator loss
                 softmaxed_gumbeled = F.gumbel_softmax(logp, tau=1, hard=True, dim=-1)
                 output_discriminator = self.model.discriminate(softmaxed_gumbeled)
-                loss_discriminator = self.loss_function_discriminator(output_discriminator, batch['label'].cuda().float())
+                loss_discriminator = self.loss_function_discriminator(output_discriminator, batch['label'].cuda())
                 preds.extend(torch.round(torch.sigmoid(output_discriminator).cpu().detach()))
                 ground_truth.extend(batch['label'])
 
