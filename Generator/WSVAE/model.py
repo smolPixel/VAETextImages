@@ -31,6 +31,7 @@ class WSVAE_model(nn.Module):
             c=nn.functional.one_hot(c, num_classes=2).cuda().unsqueeze(0)
  
         else:
+            print(self.discriminator(batch['input']))
             c = torch.argmax(torch.softmax(self.discriminator(batch['input'])))
             print(c)
             fds
