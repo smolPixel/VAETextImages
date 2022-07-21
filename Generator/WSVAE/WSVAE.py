@@ -158,7 +158,7 @@ class WSVAE():
                     # print(output.shape)
                     # print(batch['label'])
                     loss=self.loss_function_discriminator(output, batch['label'].cuda())
-                    preds.extend(torch.round(torch.sigmoid(output).cpu().detach()))
+                    preds.extend(torch.argmax(torch.softmax(output).cpu().detach()))
                     ground_truth.extend(batch['label'])
                     losses.append(loss.item())
                     if split == 'train':
@@ -169,8 +169,6 @@ class WSVAE():
                         self.optimizer_discriminator.step()
                 # print(preds, ground_truth)
                 # fds
-                print(ground_truth)
-                print(preds)
                 print(f"Epoch {epoch} split {split}, accuracy {accuracy_score(ground_truth, preds)}, loss {np.mean(losses)}")
 
     def train_gen_enc(self):
