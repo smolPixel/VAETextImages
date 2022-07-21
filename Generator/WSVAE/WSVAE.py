@@ -12,6 +12,7 @@ from multiprocessing import cpu_count
 from torch.utils.data import DataLoader
 from collections import OrderedDict, defaultdict
 from sklearn.metrics import accuracy_score
+import copy
 
 # from Generators.VAE.ptb import PTB
 from Generator.utils import to_var, idx2word, expierment_name
@@ -42,7 +43,11 @@ class WSVAE():
         self.epoch = 0
 
         enco=encoder(self.argdict)#vocab_size=self.datasets['train'].vocab_size, embedding_size=300, hidden_size=self.argdict['hidden_size'], latent_size=self.argdict['latent_size'])
-        deco=decoder(self.argdict)
+
+        argdict_decoder=copy.deepcopy(self.argdict)
+        #Need to modify here because the decoder takes more than just the latent space
+        argdict_decoder['latent_size']=argdict_decoder['latent_size']+2
+        deco=decoder(argdict_decoder)
         discri=discriminator(self.argdict)
 
         params = dict(
