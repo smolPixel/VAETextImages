@@ -28,7 +28,7 @@ class WSVAE_model(nn.Module):
         std = torch.exp(0.5 * logv)
         if pretraining:
             c = torch.multinomial(torch.Tensor([0.5, 0.5]), batch_size, replacement=True)
-            c=nn.functional.one_hot(c, num_classes=2).cuda()
+            c=nn.functional.one_hot(c, num_classes=2).cuda().unsqueeze(0)
  
         else:
             c = torch.argmax(torch.softmax(self.discriminator(batch['input'])))
