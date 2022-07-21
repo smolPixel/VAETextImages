@@ -12,7 +12,7 @@ class GRU_Discriminator(nn.Module):
 		self.rnn=nn.GRU(argdict['embedd_size'], argdict['hidden_size'], num_layers=1, bidirectional=False,
                                batch_first=True)
 
-		self.linear = nn.Linear(argdict['hidden_size'], 1)
+		self.linear = nn.Linear(argdict['hidden_size'], 2)
 
 	def forward(self, input_sequence):
 		input_sequence = input_sequence.to('cuda')
