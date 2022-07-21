@@ -33,8 +33,6 @@ class WSVAE_model(nn.Module):
         else:
             print(self.discriminator(batch['input']))
             c=F.gumbel_softmax(self.discriminator(batch['input']), tau=1, hard=True, dim=-1)
-            print(c)
-            fds
             # c = torch.softmax(self.discriminator(batch['input']), dim=-1)
         #
         z = to_var(torch.randn([batch_size, std.shape[-1]]))
