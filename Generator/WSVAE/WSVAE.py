@@ -35,7 +35,8 @@ class WSVAE():
         self.optimizer_decoder = torch.optim.Adam(self.model.decoder.parameters(), lr=0.001)  # self.argdict.learning_rate)
         self.optimizer_discriminator = torch.optim.Adam(self.model.discriminator.parameters(), lr=0.001)  # self.argdict.learning_rate)
         self.loss_function_basic=train.loss_function
-        self.loss_function_discriminator=torch.nn.BCEWithLogitsLoss()
+        # self.loss_function_discriminator=torch.nn.BCEWithLogitsLoss()
+        self.loss_function_discriminator=torch.nn.CrossEntropyLoss()
         self.loss_function_encoder=torch.nn.L1Loss()
 
     def init_model_dataset(self):
