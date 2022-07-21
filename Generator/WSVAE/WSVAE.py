@@ -202,9 +202,7 @@ class WSVAE():
                 logp, mean, logv, z = self.model(batch, pretraining=False)
                 batch_size = logp.shape[0]
                 # print(batch_size)
-                print(z.shape)
-                fds
-                z_normal, c = z[:, :, :-1], z[:, :, -1]
+                z_normal, c = z[:, :, :-2], z[:, :, -2:]
 
                 #Getting discriminator loss
                 softmaxed_gumbeled = F.gumbel_softmax(logp, tau=1, hard=True, dim=-1)
@@ -217,7 +215,7 @@ class WSVAE():
                 #Why not optimize on the difference of mu and logv directly
                 # print("WARNING THIS SHOULD BE DONE AFTER GETTING ENCODER LOSS")
                 encoded_generated=self.model.encode(softmaxed_gumbeled)
-                z_normal_encoded= encoded_generated[:, :, :-1]
+                z_normal_encoded= encoded_generated[:, :, :-2]
                 loss_encoder=self.loss_function_encoder(z_normal_encoded, z_normal)
 
 
