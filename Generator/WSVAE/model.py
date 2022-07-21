@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 # import torch.nn.utils.rnn as rnn_utils
 from Generator.utils import to_var
-
+import torch.nn.functional as F
 
 class WSVAE_model(nn.Module):
     def __init__(self, argdict, encoder, decoder, discriminator):
