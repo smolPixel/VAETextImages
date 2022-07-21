@@ -32,7 +32,7 @@ class WSVAE_model(nn.Module):
  
         else:
             print(self.discriminator(batch['input']))
-            c = torch.argmax(torch.softmax(self.discriminator(batch['input'])))
+            c = torch.argmax(torch.softmax(self.discriminator(batch['input']), dim=-1), dim=-1)
             print(c)
             fds
         #
