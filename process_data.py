@@ -22,6 +22,7 @@ def get_dataFrame(argdict):
     os.makedirs(f"{argdict['path']}/SelectedData/{argdict['dataset']}/{argdict['dataset_size']}/",exist_ok=True)
 
     if create_train:
+        print(f"{argdict['path']}/data/{task}/train.tsv")
         dfTrain=pd.read_csv(f"{argdict['path']}/data/{task}/train.tsv", sep='\t')
 
 

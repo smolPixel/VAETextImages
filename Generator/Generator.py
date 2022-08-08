@@ -21,7 +21,13 @@ class generator():
 
 
         algo = self.argdict['algo']
-        if algo == "VAE":
+        if algo == "LM":
+            from Generator.LM.LM import LM
+            self.generator=LM(self.argdict, train, dev, test)
+        elif algo == "AE":
+            from Generator.AE.AE import AE
+            self.generator=AE(self.argdict, train, dev, test)
+        elif algo == "VAE":
             from Generator.VAE.VAE import VAE
             self.generator=VAE(self.argdict, train, dev, test)
         elif algo == "VAE_Annealing":
@@ -45,6 +51,8 @@ class generator():
 
         #Weight graph
 
+    def test(self):
+        self.generator.test()
 
     def encode(self):
         return self.generator.encode()
@@ -77,6 +85,8 @@ class generator():
         print(encoded.keys())
 
 
+    def encode_decode(self):
+        return self.generator.encode_decode()
 
     def run_epoch(self, datasets, datasetsLabelled):
         self.generator.datasets=datasets

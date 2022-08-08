@@ -8,20 +8,18 @@ import shutil
 import numpy as np
 import pandas as pd
 from multiprocessing import cpu_count
-from tensorboardX import SummaryWriter
 from torch.utils.data import DataLoader
 from collections import OrderedDict, defaultdict
 from sklearn.metrics import accuracy_score
 
 # from Generators.VAE.ptb import PTB
 from Generator.utils import to_var, idx2word, expierment_name
-from Generator.VAE.model import VAE_model
-from Encoders.encoder import encoder
+from Generator.LM.model import LM_model
 from Decoders.decoder import decoder
 
 
 
-class VAE():
+class LM():
 
     def __init__(self, argdict, train, dev, test):
         self.argdict=argdict
@@ -33,40 +31,22 @@ class VAE():
         self.loss_function_basic=train.loss_function
 
     def init_model_dataset(self):
-        self.step = 0
-        self.epoch = 0
-
-        enco=encoder(self.argdict)#vocab_size=self.datasets['train'].vocab_size, embedding_size=300, hidden_size=self.argdict['hidden_size'], latent_size=self.argdict['latent_size'])
         deco=decoder(self.argdict)
 
         params = dict(
             argdict=self.argdict,
-            encoder=enco,
             decoder=deco
         )
-        model = VAE_model(**params)
+        model = LM_model(**params)
         if torch.cuda.is_available():
             model = model.cuda()
 
         return model, params
 
 
-    def loss_fn(self, logp, target,  mean, logv):
-        # NLL = torch.nn.NLLLoss(ignore_index=self.datasets['train'].pad_idx, reduction='sum')
-        # cut-off unnecessary padding from target, and flatten
-        # target = target[:, :torch.max(length).item()].contiguous().view(-1)
-        # target = target.contiguous().view(-1)
-        # logp = logp.view(-1, logp.size(2))
-
-        # Negative Log Likelihood
+    def loss_fn(self, logp, target):
         NLL_loss = self.loss_function_basic(logp, target)
-        # BCE = torch.nn.functional.binary_cross_entropy(logp, target.view(-1, 784), reduction='sum')
-        # KL Divergence
-        KL_loss = -0.5 * torch.sum(1 + logv - mean.pow(2) - logv.exp())
-        # KL_weight = self.kl_anneal_function(anneal_function, step, k, self.dataset_length*self.argdict['x0'])
-
-        return NLL_loss, KL_loss
-        # return BCE, KL_loss
+        return NLL_loss
 
     def run_epoch(self):
         for split in self.splits:
@@ -91,49 +71,62 @@ class VAE():
 
             Average_loss=[]
             Average_NLL=[]
-            Average_KL_Div=[]
             for iteration, batch in enumerate(data_loader):
 
-                # print(batch)
-                # batch_size = batch['input'].size(0)
-                #
-                # for k, v in batch.items():
-                #     if torch.is_tensor(v):
-                #         batch[k] = to_var(v)
-                # print("warning, preprocessing should be moved to data loader")
-                # if self.argdict['dataset']=="MNIST":
-                #
-                #     batch={'input':batch[0], 'target':batch[0], 'label':batch[1]}
-
                 # Forward pass
-                logp, mean, logv, z = self.model(batch)
+                self.model.to('cuda')
+                logp = self.model(batch)
                 batch_size = logp.shape[0]
-                # print(batch_size)
-
                 logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
-                # SST2:
-                # logp=logp.view(-1, logp.shape[-1])
-                # target=batch['target'].view(-1).to('cuda')
-                # loss calculation
-                # NLL_loss, KL_loss, KL_weight = loss_fn(logp, batch['target'],
-                #                                        batch['length'], mean, logv, self.argdict.anneal_function, step,
-                #                                        self.argdict.k, self.argdict.x0)
-                NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'),  mean, logv)
-
-                loss = (NLL_loss +  KL_loss) / batch_size
+                NLL_loss= self.loss_fn(logp, target.to('cuda'))
+                loss = NLL_loss / batch_size
 
                 # backward + optimization
                 if split == 'train':
                     self.optimizer.zero_grad()
                     loss.backward()
                     self.optimizer.step()
-                    self.step += 1
 
                 Average_loss.append(loss.item())
-                Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
                 Average_NLL.append(NLL_loss.cpu().detach()/batch_size)
 
-            print(f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean ELBO {np.mean(Average_loss)}, Mean LF {np.mean(Average_NLL)}, Mean KL div {np.mean(Average_KL_Div)}")
+            print(f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean LF {np.mean(Average_NLL)}")
+
+
+    def test(self):
+        print("Testing system")
+        data_loader = DataLoader(
+            dataset=self.datasets['test'],
+            batch_size=64,  # self.argdict.batch_size,
+            shuffle=False,
+            num_workers=cpu_count(),
+            pin_memory=torch.cuda.is_available()
+        )
+
+        self.model.eval()
+
+
+        Average_loss=[]
+        Average_NLL=[]
+        Average_ppl=[]
+        critppl=torch.nn.CrossEntropyLoss()
+        for iteration, batch in enumerate(data_loader):
+
+            # Forward pass
+            self.model.to('cuda')
+            logp = self.model(batch)
+            batch_size = logp.shape[0]
+            logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
+            NLL_loss= self.loss_fn(logp, target.to('cuda'))
+            loss = NLL_loss / batch_size
+            Average_ppl.append(critppl(logp, target.to('cuda')).item())
+            Average_loss.append(loss.item())
+            Average_NLL.append(NLL_loss.cpu().detach()/batch_size)
+
+
+        print((torch.mean(torch.exp(Average_loss))))
+        print(Average_NLL)
+        print(f"Mean LF on Test {np.mean(Average_NLL)}")
 
     def create_graph(self):
         """First encode all train into the latent space"""
@@ -185,7 +178,7 @@ class VAE():
             self.run_epoch()
         self.interpolate()
         # self.generate_from_train()
-        self.create_graph()
+        # self.create_graph()
         # fds
 
 

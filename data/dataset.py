@@ -158,7 +158,7 @@ import copy
 #         return pd.DataFrame.from_dict(dict, orient='index')
 
 def create_datasets(argdict):
-    if argdict['dataset'] in ['SST2']:
+    if argdict['dataset'] in ['SST2', "SST100"]:
         from data.SST2.SST2Dataset import SST2_dataset
         #Textual dataset
         tokenizer=TweetTokenizer()

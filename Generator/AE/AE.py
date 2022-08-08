@@ -15,13 +15,13 @@ from sklearn.metrics import accuracy_score
 
 # from Generators.VAE.ptb import PTB
 from Generator.utils import to_var, idx2word, expierment_name
-from Generator.VAE.model import VAE_model
+from Generator.AE.model import AE_model
 from Encoders.encoder import encoder
 from Decoders.decoder import decoder
 
 
 
-class VAE():
+class AE():
 
     def __init__(self, argdict, train, dev, test):
         self.argdict=argdict
@@ -44,14 +44,14 @@ class VAE():
             encoder=enco,
             decoder=deco
         )
-        model = VAE_model(**params)
+        model = AE_model(**params)
         if torch.cuda.is_available():
             model = model.cuda()
 
         return model, params
 
 
-    def loss_fn(self, logp, target,  mean, logv):
+    def loss_fn(self, logp, target):
         # NLL = torch.nn.NLLLoss(ignore_index=self.datasets['train'].pad_idx, reduction='sum')
         # cut-off unnecessary padding from target, and flatten
         # target = target[:, :torch.max(length).item()].contiguous().view(-1)
@@ -62,10 +62,10 @@ class VAE():
         NLL_loss = self.loss_function_basic(logp, target)
         # BCE = torch.nn.functional.binary_cross_entropy(logp, target.view(-1, 784), reduction='sum')
         # KL Divergence
-        KL_loss = -0.5 * torch.sum(1 + logv - mean.pow(2) - logv.exp())
+        # KL_loss = -0.5 * torch.sum(1 + logv - mean.pow(2) - logv.exp())
         # KL_weight = self.kl_anneal_function(anneal_function, step, k, self.dataset_length*self.argdict['x0'])
 
-        return NLL_loss, KL_loss
+        return NLL_loss
         # return BCE, KL_loss
 
     def run_epoch(self):
@@ -106,7 +106,7 @@ class VAE():
                 #     batch={'input':batch[0], 'target':batch[0], 'label':batch[1]}
 
                 # Forward pass
-                logp, mean, logv, z = self.model(batch)
+                logp, mean = self.model(batch)
                 batch_size = logp.shape[0]
                 # print(batch_size)
 
@@ -118,9 +118,9 @@ class VAE():
                 # NLL_loss, KL_loss, KL_weight = loss_fn(logp, batch['target'],
                 #                                        batch['length'], mean, logv, self.argdict.anneal_function, step,
                 #                                        self.argdict.k, self.argdict.x0)
-                NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'),  mean, logv)
+                NLL_loss= self.loss_fn(logp, target.to('cuda'))
 
-                loss = (NLL_loss +  KL_loss) / batch_size
+                loss = (NLL_loss) / batch_size
 
                 # backward + optimization
                 if split == 'train':
@@ -130,10 +130,9 @@ class VAE():
                     self.step += 1
 
                 Average_loss.append(loss.item())
-                Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
                 Average_NLL.append(NLL_loss.cpu().detach()/batch_size)
 
-            print(f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean ELBO {np.mean(Average_loss)}, Mean LF {np.mean(Average_NLL)}, Mean KL div {np.mean(Average_KL_Div)}")
+            print(f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean LF {np.mean(Average_NLL)}")
 
     def create_graph(self):
         """First encode all train into the latent space"""
@@ -259,13 +258,14 @@ class VAE():
                     batch[k] = to_var(v)
 
             # Forward pass
-            logp, mean, logv, z = self.model(batch)
-            samples, z = self.model.inference(z=z.squeeze(0))
+            logp, mean = self.model(batch)
+            samples, z = self.model.inference(z=mean.squeeze(0))
             gend=idx2word(samples, i2w=self.datasets['train'].get_i2w(), pad_idx=self.datasets['train'].get_w2i()['<pad>'],
-                     eos_idx=self.datasets['train'].get_w2i()['<eos>'])
+                    eos_idx=self.datasets['train'].get_w2i()['<eos>'])
             sentences.extend(gend)
             ground_truth.extend(batch['sentence'])
         return ground_truth, sentences
+
 
     def interpolate(self, n=5):
         p0=to_var(torch.randn([1, self.argdict['latent_size']]))
