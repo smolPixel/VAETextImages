@@ -228,7 +228,7 @@ class VAE():
 
             # Forward pass
             logp, mean, logv, z = self.model(batch)
-            samples, z = self.model.inference(z=z)
+            samples, z = self.model.inference(z=z.squeeze(0))
             gend=idx2word(samples, i2w=self.datasets['train'].get_i2w(), pad_idx=self.datasets['train'].get_w2i()['<pad>'],
                      eos_idx=self.datasets['train'].get_w2i()['<eos>'])
             # print(gend)
