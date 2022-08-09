@@ -25,6 +25,14 @@ class GPT2():
 	def train(self):
 		pass
 
+	def loss_fn(self, logp, target, mean, logv):
+
+		# Negative Log Likelihood
+		NLL_loss = self.loss_function_basic(logp, target)
+		# BCE = torch.nelf.kl_anneal_function(anneal_function, step, k, self.dataset_length*self.argdict['x0'])
+
+		return NLL_loss
+
 	def test(self):
 		data_loader = DataLoader(
 			dataset=self.datasets['test'],
@@ -45,7 +53,6 @@ class GPT2():
 			# Forward pass
 			outputs=self.model(encodings['input_ids'], labels=encodings['input_ids'].clone())
 			logp=outputs[1]
-			print(logp)
 			logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
 			NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'),  mean, logv)
 
