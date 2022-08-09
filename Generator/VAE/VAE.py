@@ -161,13 +161,6 @@ class VAE():
 
 
         print(self.model)
-
-        # if self.argdict.tensorboard_logging:
-        #     writer = SummaryWriter(os.path.join(self.argdict.logdir, expierment_name(self.argdict, ts)))
-        #     writer.add_text("model", str(model))
-        #     writer.add_text("self.argdict", str(self.argdict))
-        #     writer.add_text("ts", ts)
-
         save_model_path = os.path.join(self.argdict['path'], 'bin')
         # shutil.
         os.makedirs(save_model_path, exist_ok=True)
@@ -185,42 +178,19 @@ class VAE():
             self.run_epoch()
         self.interpolate()
         self.generate_from_train()
-        # self.create_graph()
-        # fds
 
-
-                # if self.argdict.tensorboard_logging:
-                #     writer.add_scalar("%s-Epoch/ELBO" % split.upper(), torch.mean(tracker['ELBO']), epoch)
-
-                # save a dump of all sentences and the encoded latent space
-                # if split == 'valid':
-                #     dump = {'target_sents': tracker['target_sents'], 'z': tracker['z'].tolist()}
-                #     if not os.path.exists(os.path.join('dumps', ts)):
-                #         os.makedirs('dumps/' + ts)
-                #     with open(os.path.join('dumps/' + ts + '/valid_E%i.json' % epoch), 'w') as dump_file:
-                #         json.dump(dump, dump_file)
-
-                # save checkpoint
-                # if split == 'train':
-                #     checkpoint_path = os.path.join(save_model_path, "E%i.pytorch" % epoch)
-                #     torch.save(self.model.state_dict(), checkpoint_path)
-                #     print("Model saved at %s" % checkpoint_path)
 
 
     def test(self):
         data_loader = DataLoader(
             dataset=self.datasets['test'],
             batch_size=64,  # self.argdict.batch_size,
-            shuffle=split == 'train',
+            shuffle=False,
             num_workers=cpu_count(),
             pin_memory=torch.cuda.is_available()
         )
-        # Enable/Disable Dropout
-        if split == 'train':
-            self.model.train()
-            self.dataset_length=len(data_loader)
-        else:
-            self.model.eval()
+
+        self.model.eval()
 
 
         Average_loss=[]
@@ -235,14 +205,6 @@ class VAE():
             NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'),  mean, logv)
 
             loss = (NLL_loss +  KL_loss) / batch_size
-
-            # backward + optimization
-            if split == 'train':
-                self.optimizer.zero_grad()
-                loss.backward()
-                self.optimizer.step()
-                self.step += 1
-
             Average_loss.append(loss.item())
             Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
             Average_NLL.append(NLL_loss.cpu().detach()/batch_size)
