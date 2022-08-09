@@ -52,12 +52,14 @@ class GPT2():
 		Average_KL_Div=[]
 		for iteration, batch in enumerate(data_loader):
 			encodings = self.tokenizer(batch['sentence'], return_tensors="pt", padding=True, truncation=True).to(self.device)
-			target=encodings['input_ids']#[1:]
+			target=encodings['input_ids']
 			batch_size=target.shape[0]
 			# Forward pass
 			outputs=self.model(encodings['input_ids'], labels=encodings['input_ids'].clone())
 			logp=outputs[1]
 			average_nll_gpt.append(outputs[0].detach())
+			print(logp.shape, target.shape)
+			fds
 			logp, target=self.datasets['train'].shape_for_loss_function(logp, target)
 			NLL_loss= self.loss_fn(logp, target)
 			loss = (NLL_loss) / batch_size
