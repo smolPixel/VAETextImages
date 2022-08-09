@@ -17,8 +17,9 @@ class GPT2():
 		device = "cuda:0"
 		model_id = "gpt2-large"
 		model = GPT2LMHeadModel.from_pretrained(model_id).to(device)
-		tokenizer = GPT2TokenizerFast.from_pretrained(model_id)
-		tokenizer.pad_token = tokenizer.eos_token
+		self.tokenizer = GPT2TokenizerFast.from_pretrained(model_id)
+		self.tokenizer.pad_token = self.tokenizer.eos_token
+		return model, None
 
 	def train(self):
 		pass
