@@ -59,7 +59,6 @@ class GPT2():
 			logp=outputs[1]
 			average_nll_gpt.append(outputs[0].detach())
 			logp, target=self.datasets['train'].shape_for_loss_function(logp[:, :-1, :].contiguous(), target[:, 1:])
-			loss_fct = CrossEntropyLoss()
 			NLL_loss= self.loss_fn(logp, target)
 
 			print(NLL_loss)
