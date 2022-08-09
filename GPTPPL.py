@@ -20,7 +20,7 @@ max_length = model.config.n_positions
 stride = 512
 
 bs=32
-for i in tqdm(range(0, len(test['text'], bs))):
+for i in tqdm(range(0, len(test['text']), bs)):
     print(i)
 fds
 
