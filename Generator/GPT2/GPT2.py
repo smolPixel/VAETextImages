@@ -3,7 +3,6 @@ import torch
 from torch.utils.data import DataLoader
 from multiprocessing import cpu_count
 import numpy as np
-from torch.nn import CrossEntropyLoss
 
 class GPT2():
 
@@ -61,7 +60,7 @@ class GPT2():
 			average_nll_gpt.append(outputs[0].detach())
 			logp, target=self.datasets['train'].shape_for_loss_function(logp[:, :-1, :].contiguous(), target[:, 1:])
 			loss_fct = CrossEntropyLoss()
-			NLL_loss= loss_fct(logp, target)
+			NLL_loss= self.loss_fn(logp, target)
 
 			print(NLL_loss)
 			print(outputs[0])
