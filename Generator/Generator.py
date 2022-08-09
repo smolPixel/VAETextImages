@@ -24,6 +24,9 @@ class generator():
         if algo == "LM":
             from Generator.LM.LM import LM
             self.generator=LM(self.argdict, train, dev, test)
+        elif algo == "GPT2":
+            from Generator.GPT2.GPT2 import GPT2
+            self.generator=GPT2(self.argdict, train, dev, test)
         elif algo == "AE":
             from Generator.AE.AE import AE
             self.generator=AE(self.argdict, train, dev, test)
