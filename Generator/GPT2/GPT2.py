@@ -17,7 +17,7 @@ class GPT2():
 	def init_model_dataset(self):
 		self.device = "cuda:0"
 		model_id = "gpt2-large"
-		model = GPT2LMHeadModel.from_pretrained(model_id).to(device)
+		model = GPT2LMHeadModel.from_pretrained(model_id).to(self.device)
 		self.tokenizer = GPT2TokenizerFast.from_pretrained(model_id)
 		self.tokenizer.pad_token = self.tokenizer.eos_token
 		return model, None
