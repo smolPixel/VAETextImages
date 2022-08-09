@@ -23,6 +23,8 @@ bs=32
 for i in tqdm(range(0, len(test['text']), bs)):
     text=test['text'][i:i+bs]
     encodings=tokenizer(text, return_tensors="pt", padding=True, truncation=True)
+    input_ids=encodings['input_ids']
+    target_ids=input_ids.clone()
     outputs = model(input_ids, labels=target_ids)
     neg_log_likelihood=outputs[0]
     print(neg_log_likelihood)
