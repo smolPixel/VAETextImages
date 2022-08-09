@@ -23,7 +23,10 @@ bs=32
 for i in tqdm(range(0, len(test['text']), bs)):
     text=test['text'][i:i+bs]
     encodings=tokenizer(text, return_tensors="pt", padding=True, truncation=True)
-    print(encodings.input_ids.shape)
+    outputs = model(input_ids, labels=target_ids)
+    neg_log_likelihood=outputs[0]
+    print(neg_log_likelihood)
+    gfsd
 fds
 
 
