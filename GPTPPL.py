@@ -22,7 +22,7 @@ stride = 512
 bs=32
 for i in tqdm(range(0, len(test['text']), bs)):
     text=test['text'][i:i+bs]
-    encodings=tokenizer(text, return_tensors="pt", padding=True, truncation=True)
+    encodings=tokenizer(text, return_tensors="pt", padding=True, truncation=True).to(device)
     input_ids=encodings['input_ids']
     target_ids=input_ids.clone()
     outputs = model(input_ids, labels=target_ids)
