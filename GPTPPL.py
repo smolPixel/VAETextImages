@@ -31,7 +31,8 @@ for i in tqdm(range(0, encodings.input_ids.size(1), stride)):
 
     with torch.no_grad():
         outputs = model(input_ids, labels=target_ids)
-        print(outputs)
+        print(outputs[1])
+        print(outputs[1].shape)
         fds
         neg_log_likelihood = outputs[0] * trg_len
 
