@@ -28,7 +28,6 @@ class GPT2():
 	def loss_fn(self, logp, target):
 
 		# Negative Log Likelihood
-		print(self.loss_function_basic)
 		NLL_loss = self.loss_function_basic(logp, target)
 		# BCE = torch.nelf.kl_anneal_function(anneal_function, step, k, self.dataset_length*self.argdict['x0'])
 
@@ -52,16 +51,12 @@ class GPT2():
 		for iteration, batch in enumerate(data_loader):
 			encodings = self.tokenizer(batch['sentence'], return_tensors="pt", padding=True, truncation=True).to(self.device)
 			target=encodings['input_ids']#[1:]
+			batch_size=target.shape[0]
 			# Forward pass
 			outputs=self.model(encodings['input_ids'], labels=encodings['input_ids'].clone())
 			logp=outputs[1]
-			print(logp.shape)
-			print(target)
 			logp, target=self.datasets['train'].shape_for_loss_function(logp, target)
-			print(logp.shape)
-			print(target.shape)
 			NLL_loss= self.loss_fn(logp, target)
-			print(NLL_loss)
 			loss = (NLL_loss) / batch_size
 			Average_loss.append(loss.item())
 			Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
