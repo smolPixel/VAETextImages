@@ -33,7 +33,7 @@ class SST2_dataset(Dataset):
 		argdict['pad_idx']=self.pad_idx
 		argdict['sos_idx']=self.sos_idx
 		argdict['unk_idx']=self.unk_idx
-		self.loss_function=torch.nn.CrossEntropyLoss(ignore_index=self.pad_idx)
+		self.loss_function=torch.nn.NLLLoss(ignore_index=self.pad_idx)
 		index=0
 		mask=len(argdict['categories'])
 		for i, row in data.iterrows():
