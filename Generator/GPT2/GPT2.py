@@ -28,6 +28,7 @@ class GPT2():
 	def loss_fn(self, logp, target):
 
 		# Negative Log Likelihood
+		print(self.loss_function_basic)
 		NLL_loss = self.loss_function_basic(logp, target)
 		# BCE = torch.nelf.kl_anneal_function(anneal_function, step, k, self.dataset_length*self.argdict['x0'])
 
