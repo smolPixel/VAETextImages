@@ -54,7 +54,7 @@ class GPT2():
 			outputs=self.model(encodings['input_ids'], labels=encodings['input_ids'].clone())
 			logp=outputs[1]
 			logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
-			NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'),  mean, logv)
+			NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'))
 
 			loss = (NLL_loss +  KL_loss) / batch_size
 			Average_loss.append(loss.item())
