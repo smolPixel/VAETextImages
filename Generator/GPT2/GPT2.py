@@ -60,6 +60,11 @@ class GPT2():
 			average_nll_gpt.append(outputs[0].detach())
 			logp, target=self.datasets['train'].shape_for_loss_function(logp[:, :-1].contiguous(), target[:, 1:])
 			NLL_loss= self.loss_fn(logp, target)
+
+			print(NLL_loss)
+			print(outputs[0])
+			fds
+
 			loss = (NLL_loss) / batch_size
 			Average_loss.append(loss.item())
 			Average_NLL.append(NLL_loss.cpu().detach()/batch_size)
