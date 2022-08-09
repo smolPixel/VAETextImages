@@ -5,7 +5,7 @@ device = "cuda"
 model_id = "gpt2-large"
 model = GPT2LMHeadModel.from_pretrained(model_id).to(device)
 tokenizer = GPT2TokenizerFast.from_pretrained(model_id)
-
+tokenizer.pad_token = tokenizer.eos_token
 from datasets import load_dataset
 
 test = load_dataset("wikitext", "wikitext-2-raw-v1", split="test")
