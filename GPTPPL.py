@@ -19,6 +19,12 @@ from tqdm import tqdm
 max_length = model.config.n_positions
 stride = 512
 
+bs=32
+for i in tqdm(range(0, len(test['text'], bs))):
+    print(i)
+fds
+
+
 nlls = []
 nll_maison=[]
 for i in tqdm(range(0, encodings.input_ids.size(1), stride)):
