@@ -21,7 +21,8 @@ stride = 512
 
 bs=32
 for i in tqdm(range(0, len(test['text']), bs)):
-    print(i)
+    text=test['text'][i:i+bs]
+    print(len(text))
 fds
 
 
