@@ -211,7 +211,7 @@ class VAE():
 
 
         print(Average_NLL)
-        return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'Mean KL div' :np.mean(Average_KL_Div)}
+        return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'Mean KL div' :np.mean(Average_KL_Div), 'PPL': {torch.exp(torch.mean(Average_NLL))}}
 
     def generate_from_train(self):
         data_loader = DataLoader(
