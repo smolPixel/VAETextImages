@@ -50,7 +50,7 @@ class GPT2():
 		Average_KL_Div=[]
 		for iteration, batch in enumerate(data_loader):
 			encodings = self.tokenizer(batch['sentence'], return_tensors="pt", padding=True, truncation=True).to(self.device)
-			target=encodings['input_ids'][1:]
+			target=encodings['input_ids']#[1:]
 			# Forward pass
 			outputs=self.model(encodings['input_ids'], labels=encodings['input_ids'].clone())
 			logp=outputs[1]
