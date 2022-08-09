@@ -44,7 +44,8 @@ class GPT2():
 			encodings = self.tokenizer(batch['sentence'], return_tensors="pt", padding=True, truncation=True).to(self.device)
 			# Forward pass
 			outputs=self.model(encodings['input_ids'], labels=encodings['input_ids'].clone())
-			print(outputs[1].shape)
+			logp=outputs[1]
+			print(logp)
 			logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
 			NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'),  mean, logv)
 
