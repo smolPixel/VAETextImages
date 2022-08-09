@@ -48,6 +48,7 @@ class GPT2():
 
 		Average_loss=[]
 		Average_NLL=[]
+		average_nll_gpt=[]
 		Average_KL_Div=[]
 		for iteration, batch in enumerate(data_loader):
 			encodings = self.tokenizer(batch['sentence'], return_tensors="pt", padding=True, truncation=True).to(self.device)
@@ -56,6 +57,7 @@ class GPT2():
 			# Forward pass
 			outputs=self.model(encodings['input_ids'], labels=encodings['input_ids'].clone())
 			logp=outputs[1]
+			average_nll_gpt.append(outputs[0])
 			logp, target=self.datasets['train'].shape_for_loss_function(logp, target)
 			NLL_loss= self.loss_fn(logp, target)
 			loss = (NLL_loss) / batch_size
@@ -64,4 +66,5 @@ class GPT2():
 
 
 		print(Average_NLL)
-		return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'Mean KL div' :np.mean(Average_KL_Div), 'PPL': {torch.exp(torch.mean(torch.Tensor(Average_NLL)))}}
+		return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'Mean KL div' :np.mean(Average_KL_Div), 'PPL': {torch.exp(torch.mean(torch.Tensor(Average_NLL)))},
+				'PPL_GPT':torch.exp(torch.mean(torch.Tensor(average_nll_gpt)))}
