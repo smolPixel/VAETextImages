@@ -184,8 +184,8 @@ class VAE():
             self.epoch=epoch
             self.run_epoch()
         self.interpolate()
-        # self.generate_from_train()
-        self.create_graph()
+        self.generate_from_train()
+        # self.create_graph()
         # fds
 
 
