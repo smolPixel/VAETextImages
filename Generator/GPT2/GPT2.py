@@ -53,6 +53,7 @@ class GPT2():
 			# Forward pass
 			outputs=self.model(encodings['input_ids'], labels=encodings['input_ids'].clone())
 			logp=outputs[1]
+			print(logp.shape)
 			logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
 			print(logp.shape)
 			print(target.shape)
