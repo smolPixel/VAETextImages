@@ -1,6 +1,6 @@
 from transformers import GPT2LMHeadModel, GPT2TokenizerFast
 import torch
-
+from torch.utils.data import DataLoader
 
 class GPT2():
 
