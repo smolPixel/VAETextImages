@@ -23,8 +23,56 @@ class GPT2():
 		self.tokenizer.pad_token = self.tokenizer.eos_token
 		return model, None
 
+	def run_epoch(self):
+		for split in self.splits:
+
+			data_loader = DataLoader(
+				dataset=self.datasets[split],
+				batch_size=64,  # self.argdict.batch_size,
+				shuffle=split == 'train',
+				num_workers=cpu_count(),
+				pin_memory=torch.cuda.is_available()
+			)
+
+			# tracker = defaultdict(tensor)
+
+			# Enable/Disable Dropout
+			if split == 'train':
+				self.model.train()
+				self.dataset_length = len(data_loader)
+			else:
+				self.model.eval()
+
+			Average_loss = []
+			Average_NLL = []
+			Average_KL_Div = []
+			for iteration, batch in enumerate(data_loader):
+				# Forward pass
+				encodings = self.tokenizer(batch['sentence'], return_tensors="pt", padding=True, truncation=True).to(self.device)
+				target = encodings['input_ids']
+				batch_size = target.shape[0]
+				outputs=self.model(encodings['input_ids'], labels=encodings['input_ids'].clone())
+				# print(batch_size)
+				loss=outputs[0]
+				# backward + optimization
+				if split == 'train':
+					self.optimizer.zero_grad()
+					loss.backward()
+					self.optimizer.step()
+					self.step += 1
+
+				Average_loss.append(loss.item())
+				Average_NLL.append(NLL_loss.cpu().detach() / batch_size)
+
+			print(
+				f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean ELBO {np.mean(Average_loss)}, Mean LF {np.mean(Average_NLL)}")
+
 	def train(self):
-		pass
+		for epoch in range(self.argdict['nb_epoch']):
+			self.epoch = epoch
+			self.run_epoch()
+		self.interpolate()
+		self.generate_from_train()
 
 	def loss_fn(self, logp, target):
 
