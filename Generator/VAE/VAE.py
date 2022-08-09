@@ -227,7 +227,7 @@ class VAE():
                     batch[k] = to_var(v)
 
             # Forward pass
-            logp, mean, logv, z = self.model(batch['input'], batch['length'])
+            logp, mean, logv, z = self.model(batch['input'])
             samples, z = self.model.inference(z=z)
             gend=idx2word(samples, i2w=self.datasets['train'].get_i2w(), pad_idx=self.datasets['train'].get_w2i()['<pad>'],
                      eos_idx=self.datasets['train'].get_w2i()['<eos>'])
