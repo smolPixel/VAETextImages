@@ -59,7 +59,6 @@ class GPT2():
 			NLL_loss= self.loss_fn(logp, target)
 			loss = (NLL_loss) / batch_size
 			Average_loss.append(loss.item())
-			Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
 			Average_NLL.append(NLL_loss.cpu().detach()/batch_size)
 
 
