@@ -25,7 +25,7 @@ class GPT2():
 	def train(self):
 		pass
 
-	def loss_fn(self, logp, target, mean, logv):
+	def loss_fn(self, logp, target):
 
 		# Negative Log Likelihood
 		NLL_loss = self.loss_function_basic(logp, target)
