@@ -201,9 +201,6 @@ class VAE():
             # Forward pass
             logp, mean, logv, z = self.model(batch)
             batch_size = logp.shape[0]
-            print(batch['input'])
-            print(batch['target'])
-            fds
             logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
             NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'),  mean, logv)
 
