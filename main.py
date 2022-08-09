@@ -28,7 +28,8 @@ def main(argdict):
     train, dev, test=create_datasets(argdict)
     Gen = generator(argdict, train, dev, test)
     Gen.train()
-    Gen.test()
+    metrics=Gen.test()
+    print(metrics)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Experiments for VAE')
