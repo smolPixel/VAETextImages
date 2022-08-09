@@ -52,7 +52,7 @@ class generator():
         #Weight graph
 
     def test(self):
-        self.generator.test()
+        return self.generator.test()
 
     def encode(self):
         return self.generator.encode()
