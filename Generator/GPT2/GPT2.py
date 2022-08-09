@@ -50,11 +50,14 @@ class GPT2():
 		Average_KL_Div=[]
 		for iteration, batch in enumerate(data_loader):
 			encodings = self.tokenizer(batch['sentence'], return_tensors="pt", padding=True, truncation=True).to(self.device)
+			target=encodings['input_ids']
+			print(target.shape)
+			fds
 			# Forward pass
 			outputs=self.model(encodings['input_ids'], labels=encodings['input_ids'].clone())
 			logp=outputs[1]
 			print(logp.shape)
-			logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
+			logp, target=self.datasets['train'].shape_for_loss_function(logp, target)
 			print(logp.shape)
 			print(target.shape)
 			NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'))
