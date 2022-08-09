@@ -22,9 +22,8 @@ stride = 512
 bs=32
 for i in tqdm(range(0, len(test['text']), bs)):
     text=test['text'][i:i+bs]
-    encodings=tokenizer(text, return_tensors="pt")
-    print(encodings)
-    print(encodings.shape)
+    encodings=tokenizer(text, return_tensors="pt", padding=True, truncation=True)
+    print(encodings.input_ids.shape)
 fds
 
 
