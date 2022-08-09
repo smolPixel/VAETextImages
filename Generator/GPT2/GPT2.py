@@ -31,7 +31,7 @@ class GPT2():
 				batch_size=64,  # self.argdict.batch_size,
 				shuffle=split == 'train',
 				num_workers=cpu_count(),
-				pin_memory=torch.cuda.is_available()
+				pin_memory=False
 			)
 
 			# tracker = defaultdict(tensor)
@@ -70,8 +70,6 @@ class GPT2():
 		for epoch in range(self.argdict['nb_epoch']):
 			self.epoch = epoch
 			self.run_epoch()
-		self.interpolate()
-		self.generate_from_train()
 
 	def loss_fn(self, logp, target):
 
