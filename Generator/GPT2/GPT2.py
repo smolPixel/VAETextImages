@@ -57,7 +57,7 @@ class GPT2():
 			# Forward pass
 			outputs=self.model(encodings['input_ids'], labels=encodings['input_ids'].clone())
 			logp=outputs[1]
-			average_nll_gpt.append(outputs[0])
+			average_nll_gpt.append(outputs[0].detach())
 			logp, target=self.datasets['train'].shape_for_loss_function(logp, target)
 			NLL_loss= self.loss_fn(logp, target)
 			loss = (NLL_loss) / batch_size
