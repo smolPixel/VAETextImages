@@ -3,6 +3,7 @@ import torch
 from torch.utils.data import DataLoader
 from multiprocessing import cpu_count
 import numpy as np
+from torch.nn import CrossEntropyLoss
 
 class GPT2():
 
