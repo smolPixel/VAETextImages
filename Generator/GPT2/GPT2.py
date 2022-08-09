@@ -66,5 +66,6 @@ class GPT2():
 
 
 		print(Average_NLL)
+		print(average_nll_gpt)
 		return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'Mean KL div' :np.mean(Average_KL_Div), 'PPL': {torch.exp(torch.mean(torch.Tensor(Average_NLL)))},
 				'PPL_GPT':torch.exp(torch.mean(torch.Tensor(average_nll_gpt)))}
