@@ -25,4 +25,35 @@ class GPT2():
 		pass
 
 	def test(self):
-		fds
+		data_loader = DataLoader(
+            dataset=self.datasets['test'],
+            batch_size=16,  # self.argdict.batch_size,
+            shuffle=False,
+            num_workers=cpu_count(),
+            pin_memory=torch.cuda.is_available()
+        )
+
+        self.model.eval()
+
+
+        Average_loss=[]
+        Average_NLL=[]
+        Average_KL_Div=[]
+        for iteration, batch in enumerate(data_loader):
+			print(batch)
+			fds
+			encodings = tokenizer(btext, return_tensors="pt", padding=True, truncation=True, max_length=128).to(device)
+            # Forward pass
+            logp, mean, logv, z = self.model(batch)
+            batch_size = logp.shape[0]
+            logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
+            NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'),  mean, logv)
+
+            loss = (NLL_loss +  KL_loss) / batch_size
+            Average_loss.append(loss.item())
+            Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
+            Average_NLL.append(NLL_loss.cpu().detach()/batch_size)
+
+
+        print(Average_NLL)
+        return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'Mean KL div' :np.mean(Average_KL_Div), 'PPL': {torch.exp(torch.mean(torch.Tensor(Average_NLL)))}}
