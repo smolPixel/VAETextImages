@@ -60,7 +60,7 @@ class GPT2():
 					loss.backward()
 					self.optimizer.step()
 
-				Average_loss.append(loss.item())
+				Average_loss.append(loss.item().detach())
 				Average_NLL.append(outputs[0].cpu().detach() / batch_size)
 
 			print(
