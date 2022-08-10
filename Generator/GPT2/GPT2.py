@@ -81,7 +81,7 @@ class GPT2():
 	def test(self):
 		data_loader = DataLoader(
 			dataset=self.datasets['test'],
-			batch_size=16,  # self.argdict.batch_size,
+			batch_size=4,  # self.argdict.batch_size,
 			shuffle=False,
 			num_workers=1,
 			pin_memory=torch.cuda.is_available()
