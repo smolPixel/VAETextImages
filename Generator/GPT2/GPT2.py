@@ -60,11 +60,11 @@ class GPT2():
 					loss.backward()
 					self.optimizer.step()
 
-				Average_loss.append(loss.item().detach())
+				# Average_loss.append(loss.item().cpu())
 				Average_NLL.append(outputs[0].cpu().detach() / batch_size)
 
 			print(
-				f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean ELBO {np.mean(Average_loss)}, Mean LF {np.mean(Average_NLL)}")
+				f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean LF {np.mean(Average_NLL)}")
 
 	def train(self):
 		for epoch in range(self.argdict['nb_epoch']):
