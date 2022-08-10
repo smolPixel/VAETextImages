@@ -63,8 +63,7 @@ class GPT2():
 				# Average_loss.append(loss.item().cpu())
 				Average_NLL.append(outputs[0].cpu().detach() / batch_size)
 
-			print(
-				f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean LF {np.mean(Average_NLL)}")
+			print(f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean LF {np.mean(Average_NLL)}")
 
 	def train(self):
 		for epoch in range(self.argdict['nb_epoch']):
@@ -84,7 +83,7 @@ class GPT2():
 			dataset=self.datasets['test'],
 			batch_size=16,  # self.argdict.batch_size,
 			shuffle=False,
-			num_workers=cpu_count(),
+			num_workers=1,
 			pin_memory=torch.cuda.is_available()
 		)
 
