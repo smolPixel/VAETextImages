@@ -28,7 +28,7 @@ class GPT2():
 
 			data_loader = DataLoader(
 				dataset=self.datasets[split],
-				batch_size=16,  # self.argdict.batch_size,
+				batch_size=8,  # self.argdict.batch_size,
 				shuffle=split == 'train',
 				num_workers=cpu_count(),
 				pin_memory=False
@@ -47,6 +47,7 @@ class GPT2():
 			Average_NLL = []
 			Average_KL_Div = []
 			for iteration, batch in enumerate(data_loader):
+				print(torch.cuda.memory_allocated())
 				# Forward pass
 				encodings = self.tokenizer(batch['sentence'], return_tensors="pt", padding=True, truncation=True).to(self.device)
 				target = encodings['input_ids']
