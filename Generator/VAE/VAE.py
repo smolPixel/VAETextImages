@@ -19,7 +19,7 @@ from Generator.VAE.model import VAE_model
 from Encoders.encoder import encoder
 from Decoders.decoder import decoder
 
-
+from metrics import calc_mi
 
 class VAE():
 
@@ -196,6 +196,7 @@ class VAE():
         Average_loss=[]
         Average_NLL=[]
         Average_KL_Div=[]
+        MIs=[]
         for iteration, batch in enumerate(data_loader):
 
             # Forward pass
@@ -208,6 +209,9 @@ class VAE():
             Average_loss.append(loss.item())
             Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
             Average_NLL.append(NLL_loss.cpu().detach())
+            MIs.append(calc_mi(z, mean, logv))
+            print(MIs)
+            fds
 
 
         print(Average_NLL)
