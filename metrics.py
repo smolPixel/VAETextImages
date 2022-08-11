@@ -6,6 +6,11 @@ def calc_mi(z, mu, logv):
 	 I(x, z) = E_xE_{q(z|x)}log(q(z|x)) - E_xE_{q(z|x)}log(q(z))
 	 Returns: Float
 	 """
+
+	print(z.shape)
+	nz=z.shape[1]
+	bs=z.shape[0]
+
 	# E_{q(z|x)}log(q(z|x)) = -0.5*nz*log(2*\pi) - 0.5*(1+logvar).sum(-1)
 	neg_entropy = (
 			-0.5 * nz * math.log(2 * math.pi) - 0.5 * (1 + logvar).sum(-1)
