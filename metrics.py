@@ -15,13 +15,12 @@ def calc_mi(z, mu, logv):
 			-0.5 * nz * math.log(2 * math.pi) - 0.5 * (1 + logv).sum(-1)
 	).mean()
 
-	print(neg_entropy)
-
 	# [z_batch, 1, nz]
 	# z_samples = model.t5.reparameterize(mu, logvar)
 	# z_samples = z_samples.unsqueeze(1)
 
 	# [1, x_batch, nz]
+	print(mu.shape)
 	mu, logvar = mu.unsqueeze(0), logvar.unsqueeze(0)
 	var = logvar.exp()
 
