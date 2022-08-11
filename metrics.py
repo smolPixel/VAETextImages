@@ -7,7 +7,7 @@ def calc_mi(z, mu, logv):
 	 Returns: Float
 	 """
 
-	nz=z.shape[-1]
+	nz=z.shape[2]
 	bs=z.shape[1]
 
 	# E_{q(z|x)}log(q(z|x)) = -0.5*nz*log(2*\pi) - 0.5*(1+logvar).sum(-1)
@@ -20,9 +20,9 @@ def calc_mi(z, mu, logv):
 	# z_samples = z_samples.unsqueeze(1)
 
 	# [1, x_batch, nz]
-	print(mu.shape)
-	mu, logvar = mu.unsqueeze(0), logvar.unsqueeze(0)
-	var = logvar.exp()
+	# print(mu.shape)
+	# mu, logvar = mu.unsqueeze(0), logvar.unsqueeze(0)
+	var = logv.exp()
 
 	# (z_batch, x_batch, nz)
 	dev = z_samples - mu
