@@ -27,7 +27,7 @@ def calc_mi(z, mu, logv):
 
 	# E_{q(z|x)}log(q(z|x)) = -0.5*nz*log(2*\pi) - 0.5*(1+logvar).sum(-1)
 	neg_entropy = (
-			-0.5 * nz * math.log(2 * math.pi) - 0.5 * (1 + logv).sum(-1)
+			-0.5 * nz * math.log(2 * math.pi) - 0.5 * (logv).sum(-1)
 	).mean()
 
 	# [z_batch, 1, nz]
