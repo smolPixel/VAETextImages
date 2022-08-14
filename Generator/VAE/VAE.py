@@ -214,9 +214,10 @@ class VAE():
             # print(MIs)
             # fds
 
-        print(MIs)
+        # print(MIs)
         print(Average_NLL)
-        return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'Mean KL div' :np.mean(Average_KL_Div), 'PPL': {torch.exp(torch.mean(torch.Tensor(Average_NLL)))}}
+        return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'Mean KL div' :np.mean(Average_KL_Div), 'PPL': {torch.exp(torch.mean(torch.Tensor(Average_NLL)))},
+                'MI': {np.mean(MIs)}}
 
     def get_aggregate(self):
         dico={}
