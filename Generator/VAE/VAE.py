@@ -233,7 +233,7 @@ class VAE():
 
         self.model.eval()
         # print(f"The dataset length is {len(data_loader.dataset)}")
-        print(len(train))
+        print(len(self.datasets['train']))
         mus = torch.zeros(len(data_loader.dataset), self.params['latent_size'])
         logvars = torch.zeros(len(data_loader.dataset), self.params['latent_size'])
         counter = 0
