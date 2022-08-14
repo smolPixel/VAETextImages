@@ -45,7 +45,7 @@ class VAE_model(nn.Module):
         z = z * std + mean
         # print(z.shape)
 
-        return z
+        return z, mean, logv
 
     def inference(self,  n=4, z=None):
 
