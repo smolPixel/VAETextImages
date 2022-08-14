@@ -40,6 +40,8 @@ def calc_mi(z, mu, logv, aggregate):
 	var = logv.exp()
 
 	# (z_batch, x_batch, nz)
+	print(z)
+	fds
 	dev = z - mu
 
 	# (z_batch, x_batch)
