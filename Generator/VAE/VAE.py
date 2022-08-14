@@ -233,12 +233,9 @@ class VAE():
 
         self.model.eval()
         # print(f"The dataset length is {len(data_loader.dataset)}")
-        dataset = torch.zeros(len(data_loader.dataset), self.params['latent_size'])
+        print(len(train))
         mus = torch.zeros(len(data_loader.dataset), self.params['latent_size'])
         logvars = torch.zeros(len(data_loader.dataset), self.params['latent_size'])
-        labels = torch.zeros(len(data_loader.dataset))
-        true_labels = torch.zeros(len(data_loader.dataset))
-        sentences = []
         counter = 0
         for iteration, batch in enumerate(data_loader):
             # print("Oh la la banana")
