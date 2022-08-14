@@ -209,12 +209,12 @@ class VAE():
             Average_loss.append(loss.item())
             Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
             Average_NLL.append(NLL_loss.cpu().detach())
-            aggr=self.get_aggregate()
-            MIs.append(calc_mi(z, mean, logv, aggr))
-            print(MIs)
-            fds
+            # aggr=self.get_aggregate()
+            MIs.append(calc_mi(z, mean, logv))
+            # print(MIs)
+            # fds
 
-
+        print(MIs)
         print(Average_NLL)
         return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'Mean KL div' :np.mean(Average_KL_Div), 'PPL': {torch.exp(torch.mean(torch.Tensor(Average_NLL)))}}
 
