@@ -22,6 +22,8 @@ def calc_mi(z, mu, logv):
 	 Returns: Float
 	 """
 
+	print("MI calcul might not be ideal")
+
 	nz=z.shape[2]
 	bs=z.shape[1]
 
