@@ -16,7 +16,7 @@ def log_sum_exp(value, dim=None, keepdim=False):
         sum_exp = torch.sum(torch.exp(value - m))
         return m + torch.log(sum_exp)
 
-def calc_mi(z, mu, logv, aggregate):
+def calc_mi(z, mu, logv):
 	"""Approximate the mutual information between x and z
 	 I(x, z) = E_xE_{q(z|x)}log(q(z|x)) - E_xE_{q(z|x)}log(q(z))
 	 Returns: Float
@@ -40,8 +40,6 @@ def calc_mi(z, mu, logv, aggregate):
 	var = logv.exp()
 
 	# (z_batch, x_batch, nz)
-	print(z)
-	fds
 	dev = z - mu
 
 	# (z_batch, x_batch)
