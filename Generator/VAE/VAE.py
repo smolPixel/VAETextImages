@@ -223,7 +223,7 @@ class VAE():
     def get_aggregate(self):
         dico={}
         data_loader = DataLoader(
-            dataset=self.train(),
+            dataset=self.datasets['train'],
             batch_size=64,  # self.argdict.batch_size,
             shuffle=False,
             num_workers=cpu_count(),
