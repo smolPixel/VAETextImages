@@ -250,12 +250,8 @@ class VAE():
             z, mu, logvar = self.model.encode(batch['input'])
             # print(batch_size)
             # print(z.shape)
-            dataset[counter:counter + batch_size] = z
             mus[counter:counter + batch_size] = mu
             logvars[counter:counter + batch_size] = logvar
-            labels[counter:counter + batch_size] = batch['label']
-            true_labels[counter:counter + batch_size] = batch['true_label']
-            sentences.extend(batch['sentence'])
             counter += batch_size
         # print(dataset)
         dico[f"mus"] = mus
