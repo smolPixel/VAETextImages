@@ -209,6 +209,9 @@ class VAE():
             Average_loss.append(loss.item())
             Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
             Average_NLL.append(NLL_loss.cpu().detach())
+            aggr=self.get_aggregate()
+            print(aggr)
+            fds
             MIs.append(calc_mi(z, mean, logv))
             print(MIs)
             fds
@@ -216,6 +219,53 @@ class VAE():
 
         print(Average_NLL)
         return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'Mean KL div' :np.mean(Average_KL_Div), 'PPL': {torch.exp(torch.mean(torch.Tensor(Average_NLL)))}}
+
+    def get_aggregate(self):
+        dico={}
+        data_loader = DataLoader(
+            dataset=self.train(),
+            batch_size=64,  # self.argdict.batch_size,
+            shuffle=False,
+            num_workers=cpu_count(),
+            pin_memory=torch.cuda.is_available()
+        )
+        # Enable/Disable Dropout
+
+        self.model.eval()
+        # print(f"The dataset length is {len(data_loader.dataset)}")
+        dataset = torch.zeros(len(data_loader.dataset), self.params['latent_size'])
+        mus = torch.zeros(len(data_loader.dataset), self.params['latent_size'])
+        logvars = torch.zeros(len(data_loader.dataset), self.params['latent_size'])
+        labels = torch.zeros(len(data_loader.dataset))
+        true_labels = torch.zeros(len(data_loader.dataset))
+        sentences = []
+        counter = 0
+        for iteration, batch in enumerate(data_loader):
+            # print("Oh la la banana")
+            batch_size = batch['input'].size(0)
+            # print(batch['input'].shape)
+            for k, v in batch.items():
+                if torch.is_tensor(v):
+                    batch[k] = to_var(v)
+            #
+            # print(batch['input'])
+            # print(batch['input'].shape)
+            z, mu, logvar = self.model.encode(batch['input'])
+            # print(batch_size)
+            # print(z.shape)
+            dataset[counter:counter + batch_size] = z
+            mus[counter:counter + batch_size] = mu
+            logvars[counter:counter + batch_size] = logvar
+            labels[counter:counter + batch_size] = batch['label']
+            true_labels[counter:counter + batch_size] = batch['true_label']
+            sentences.extend(batch['sentence'])
+            counter += batch_size
+        # print(dataset)
+        dico[f"mus"] = mus
+        dico[f"logvars"] = logvars
+        # torch.save(labels, f"bin/labels_{split}.pt")
+        # torch.save(dataset, f"bin/encoded_{split}.pt")
+        return dico
 
     def generate_from_train(self):
         data_loader = DataLoader(
