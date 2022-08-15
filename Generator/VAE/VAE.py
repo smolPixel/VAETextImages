@@ -203,7 +203,7 @@ class VAE():
             # Forward pass
             logp, mean, logv, z = self.model(batch)
             #Keeping track of the means for AU
-            mus.append(mean.detach())
+            mus.append(mean.detach().squeeze(0))
             batch_size = logp.shape[0]
             logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
             NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'),  mean, logv)
