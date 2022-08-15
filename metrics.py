@@ -23,9 +23,10 @@ def calc_mi(z, mu, logv):
 	 """
 
 	print("MI calcul might not be ideal")
-
-	nz=z.shape[-1]
-	bs=z.shape[0]
+	print(z.shape)
+	fds
+	nz=z.shape[-2]
+	bs=z.shape[1]
 
 	# E_{q(z|x)}log(q(z|x)) = -0.5*nz*log(2*\pi) - 0.5*(1+logvar).sum(-1)
 	neg_entropy = (
