@@ -24,6 +24,8 @@ def calc_mi(z, mu, logv):
 
 	print("MI calcul might not be ideal")
 
+	print(z.shape)
+
 	nz=z.shape[2]
 	bs=z.shape[1]
 
