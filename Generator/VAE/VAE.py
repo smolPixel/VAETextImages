@@ -219,7 +219,7 @@ class VAE():
 
         # print(MIs)
         AU=calc_au(mus)
-        print(Average_NLL)
+        print(AU)
         return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'Mean KL div' :np.mean(Average_KL_Div), 'PPL': {torch.exp(torch.mean(torch.Tensor(Average_NLL)))},
                 'MI': {np.mean(MIs)}}
 
