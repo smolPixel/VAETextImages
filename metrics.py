@@ -26,8 +26,8 @@ def calc_mi(z, mu, logv):
 
 	print(z.shape)
 
-	nz=z.shape[2]
-	bs=z.shape[1]
+	nz=z.shape[-1]
+	bs=z.shape[0]
 
 	# E_{q(z|x)}log(q(z|x)) = -0.5*nz*log(2*\pi) - 0.5*(1+logvar).sum(-1)
 	neg_entropy = (
