@@ -59,7 +59,7 @@ def calc_au(mus, delta=0.01):
 	"""compute the number of active units"""
 
 
-	# print(mus.shape)
+	print([m.shape for m in mus])
 	# mus = torch.vstack(mus)
 	mus=torch.cat(mus, dim=0)
 	print(mus)
