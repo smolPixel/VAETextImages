@@ -51,6 +51,7 @@ def calc_mi(z, mu, logv):
 
 	# log q(z): aggregate posterior
 	# [z_batch]
+	print(log_density)
 	log_qz = log_sum_exp(log_density, dim=1) - math.log(bs)
 
 	return (neg_entropy - log_qz.mean(-1)).item()
