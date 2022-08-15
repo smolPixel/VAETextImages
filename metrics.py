@@ -54,3 +54,18 @@ def calc_mi(z, mu, logv):
 	log_qz = log_sum_exp(log_density, dim=1) - math.log(bs)
 
 	return (neg_entropy - log_qz.mean(-1)).item()
+
+def calc_au(mus, delta=0.01):
+    """compute the number of active units"""
+
+
+
+    mus = torch.vstack(all_mus)
+	print(mus)
+	fds
+    mu_mean = mus.mean(dim=0)
+
+    vars = (mus - mu_mean).pow(2)
+    au_var = vars.mean(dim=0)
+
+    return (au_var >= delta).sum().item(), au_var
