@@ -2,19 +2,19 @@ import math
 import torch
 
 def log_sum_exp(value, dim=None, keepdim=False):
-    """Numerically stable implementation of the operation
-    value.exp().sum(dim, keepdim).log()
-    """
-    if dim is not None:
-        m, _ = torch.max(value, dim=dim, keepdim=True)
-        value0 = value - m
-        if keepdim is False:
-            m = m.squeeze(dim)
-        return m + torch.log(torch.sum(torch.exp(value0), dim=dim, keepdim=keepdim))
-    else:
-        m = torch.max(value)
-        sum_exp = torch.sum(torch.exp(value - m))
-        return m + torch.log(sum_exp)
+	"""Numerically stable implementation of the operation
+	value.exp().sum(dim, keepdim).log()
+	"""
+	if dim is not None:
+		m, _ = torch.max(value, dim=dim, keepdim=True)
+		value0 = value - m
+		if keepdim is False:
+			m = m.squeeze(dim)
+		return m + torch.log(torch.sum(torch.exp(value0), dim=dim, keepdim=keepdim))
+	else:
+		m = torch.max(value)
+		sum_exp = torch.sum(torch.exp(value - m))
+		return m + torch.log(sum_exp)
 
 def calc_mi(z, mu, logv):
 	"""Approximate the mutual information between x and z
@@ -56,16 +56,16 @@ def calc_mi(z, mu, logv):
 	return (neg_entropy - log_qz.mean(-1)).item()
 
 def calc_au(mus, delta=0.01):
-    """compute the number of active units"""
+	"""compute the number of active units"""
 
 
 
-    mus = torch.vstack(all_mus)
+	mus = torch.vstack(all_mus)
 	print(mus)
 	fds
-    mu_mean = mus.mean(dim=0)
+	mu_mean = mus.mean(dim=0)
 
-    vars = (mus - mu_mean).pow(2)
-    au_var = vars.mean(dim=0)
+	vars = (mus - mu_mean).pow(2)
+	au_var = vars.mean(dim=0)
 
-    return (au_var >= delta).sum().item(), au_var
+	return (au_var >= delta).sum().item(), au_var
