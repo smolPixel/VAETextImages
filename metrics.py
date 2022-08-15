@@ -60,7 +60,7 @@ def calc_au(mus, delta=0.01):
 
 
 
-	mus = torch.vstack(all_mus)
+	mus = torch.vstack(mus)
 	print(mus)
 	fds
 	mu_mean = mus.mean(dim=0)
