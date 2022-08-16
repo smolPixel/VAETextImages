@@ -8,7 +8,7 @@ algo: "VAE"
 encoder: "Linear"
 decoder: "Linear"
 nb_epoch: 30
-latent_size: 5
+latent_size: 15
 
 embedding_size: 300
 hidden_size_encoder: [512, 256]
