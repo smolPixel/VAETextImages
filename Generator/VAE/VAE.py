@@ -18,7 +18,7 @@ from Generator.utils import to_var, idx2word, expierment_name
 from Generator.VAE.model import VAE_model
 from Encoders.encoder import encoder
 from Decoders.decoder import decoder
-
+from sklearn.svm import LinearSVC
 from metrics import calc_mi, calc_au
 
 class VAE():
