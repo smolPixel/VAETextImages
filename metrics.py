@@ -39,7 +39,7 @@ def calc_mi(z, mu, logv):
 
 	# [1, x_batch, nz]
 	# print(mu.shape)
-	mu, logvar = mu.unsqueeze(0), logvar.unsqueeze(0)
+	mu, logvar = mu.unsqueeze(0), logv.unsqueeze(0)
 	var = logv.exp()
 
 	# (z_batch, x_batch, nz)
