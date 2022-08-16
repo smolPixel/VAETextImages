@@ -219,9 +219,16 @@ class VAE():
 
         # print(MIs)
         AU=calc_au(mus)
+        encoded = Gen.encode()
+        X = encoded['encoded_test']
+        Y = encoded['labels_test']
+
+        svc = LinearSVC()
+        svc.fit(X, Y)
+        sep=svc.score(X, Y)
         # print(AU)
         return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'Mean KL div' :np.mean(Average_KL_Div), 'PPL': {torch.exp(torch.mean(torch.Tensor(Average_NLL)))},
-                'MI': {np.mean(MIs)}, 'Active Units': AU[0]}
+                'Separability': sep, 'MI': {np.mean(MIs)}, 'Active Units': AU[0]}
 
     def get_aggregate(self):
         dico={}
