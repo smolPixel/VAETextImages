@@ -378,11 +378,7 @@ class VAE():
                     #
                     # print(batch['input'])
                     # print(batch['input'].shape)
-                    z = self.model.encode(batch['input'])
-                    # print(batch_size)
-                    # print(z.shape)
-                    print("bitch")
-                    print(z)
+                    z, _, _ = self.model.encode(batch['input'])
                     dataset[counter:counter + batch_size] = z
                     labels[counter:counter + batch_size] = batch['label']
                     counter += batch_size
