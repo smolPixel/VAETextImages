@@ -8,7 +8,7 @@ algo: "VAE_Annealing"
 encoder: "GRU"
 decoder: "GRU"
 nb_epoch: 30
-latent_size: 5
+latent_size: 15
 hidden_size: 512
 embedd_size: 300
 num_layers: 1

@@ -116,6 +116,55 @@ class VAE_Annealing():
                 Average_NLL.append(NLL_loss.cpu().detach()/batch_size)
             print(f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean ELBO {np.mean(Average_loss)}, Mean NLL {np.mean(Average_NLL)}, Mean KL div {np.mean(Average_KL_Div)} KL Weight {KL_weight}")
 
+    def test(self):
+        data_loader = DataLoader(
+            dataset=self.datasets['test'],
+            batch_size=64,  # self.argdict.batch_size,
+            shuffle=False,
+            num_workers=cpu_count(),
+            pin_memory=torch.cuda.is_available()
+        )
+
+        self.model.eval()
+
+
+        Average_loss=[]
+        Average_NLL=[]
+        Average_KL_Div=[]
+        MIs=[]
+        mus=[]
+        for iteration, batch in enumerate(data_loader):
+
+            # Forward pass
+            logp, mean, logv, z = self.model(batch)
+            #Keeping track of the means for AU
+            mus.append(mean.detach().squeeze(0))
+            batch_size = logp.shape[0]
+            logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
+            NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'),  mean, logv)
+
+            loss = (NLL_loss +  KL_loss) / batch_size
+            Average_loss.append(loss.item())
+            Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
+            Average_NLL.append(NLL_loss.cpu().detach())
+            # aggr=self.get_aggregate()
+            MIs.append(calc_mi(z, mean, logv))
+            # print(MIs)
+            # fds
+
+        # print(MIs)
+        AU=calc_au(mus)
+        encoded = self.encode()
+        X = encoded['encoded_test']
+        Y = encoded['labels_test']
+
+        svc = LinearSVC()
+        svc.fit(X, Y)
+        sep=svc.score(X, Y)
+        # print(AU)
+        return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'Mean KL div' :np.mean(Average_KL_Div), 'PPL': {torch.exp(torch.mean(torch.Tensor(Average_NLL)))},
+                'Separability': sep, 'MI': {np.mean(MIs)}, 'Active Units': AU[0]}
+
     def create_graph(self):
         """First encode all train into the latent space"""
         encoded = self.encode()
