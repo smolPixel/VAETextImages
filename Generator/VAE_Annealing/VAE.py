@@ -18,7 +18,7 @@ from Generator.utils import to_var, idx2word, expierment_name
 from Generator.VAE_Annealing.model import VAE_Annealing_model
 from Encoders.encoder import encoder
 from Decoders.decoder import decoder
-
+from metrics import calc_au, calc_mi
 
 
 class VAE_Annealing():
