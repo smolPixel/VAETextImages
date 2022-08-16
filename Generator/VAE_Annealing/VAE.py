@@ -20,6 +20,7 @@ from Encoders.encoder import encoder
 from Decoders.decoder import decoder
 from metrics import calc_au, calc_mi
 
+from sklearn.svm import LinearSVC
 
 class VAE_Annealing():
 
