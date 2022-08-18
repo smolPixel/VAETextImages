@@ -31,6 +31,7 @@ class VAE():
         # optimizers
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)  # self.argdict.learning_rate)
         self.loss_function_basic=train.loss_function
+        self.loss_function_ppl=torch.nn.CrossEntropyLoss(ignore_index=self.pad_idx, reduction='mean')
 
     def init_model_dataset(self):
         self.step = 0
@@ -198,6 +199,7 @@ class VAE():
         Average_KL_Div=[]
         MIs=[]
         mus=[]
+        NLL_mean_for_ppl=[]
         for iteration, batch in enumerate(data_loader):
 
             # Forward pass
@@ -208,10 +210,13 @@ class VAE():
             logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
             NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'),  mean, logv)
 
+            NLL_mean=self.loss_function_ppl(logp, target.to('cuda'))
+
             loss = (NLL_loss +  KL_loss) / batch_size
             Average_loss.append(loss.item())
             Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
             Average_NLL.append(NLL_loss.cpu().detach())
+            NLL_mean_for_ppl.append(NLL_mean_for_ppl.cpu().detach())
             # aggr=self.get_aggregate()
             MIs.append(calc_mi(z, mean, logv))
             # print(MIs)
@@ -227,7 +232,7 @@ class VAE():
         svc.fit(X, Y)
         sep=svc.score(X, Y)
         # print(AU)
-        return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'Mean KL div' :np.mean(Average_KL_Div), 'PPL': {torch.exp(torch.mean(torch.Tensor(Average_NLL)))},
+        return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'Mean KL div' :np.mean(Average_KL_Div), 'PPL': {torch.exp(torch.mean(torch.Tensor(NLL_mean_for_ppl)))},
                 'Separability': sep, 'MI': {np.mean(MIs)}, 'Active Units': AU[0]}
 
     def get_aggregate(self):
