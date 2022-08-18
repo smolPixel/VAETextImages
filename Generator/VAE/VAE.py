@@ -216,7 +216,7 @@ class VAE():
             Average_loss.append(loss.item())
             Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
             Average_NLL.append(NLL_loss.cpu().detach())
-            NLL_mean_for_ppl.append(NLL_mean_for_ppl.cpu().detach())
+            NLL_mean_for_ppl.append(NLL_mean.cpu().detach())
             # aggr=self.get_aggregate()
             MIs.append(calc_mi(z, mean, logv))
             # print(MIs)
