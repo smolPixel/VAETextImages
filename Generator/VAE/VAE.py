@@ -31,7 +31,7 @@ class VAE():
         # optimizers
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)  # self.argdict.learning_rate)
         self.loss_function_basic=train.loss_function
-        self.loss_function_ppl=torch.nn.CrossEntropyLoss(ignore_index=self.pad_idx, reduction='mean')
+        self.loss_function_ppl=torch.nn.CrossEntropyLoss(ignore_index=train.pad_idx, reduction='mean')
 
     def init_model_dataset(self):
         self.step = 0
