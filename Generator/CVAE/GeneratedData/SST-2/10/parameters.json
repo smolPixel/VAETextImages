@@ -1,0 +1,1 @@
+{"dataset": "SST-2", "classifier": "lstm", "computer": "home", "split": 1.0, "retrain": false, "dataset_size": 10, "nb_epoch_VAE": 10, "test_dss_vs_split": false, "pathIn": "/media/frederic/DAGlue/jiant-v1-legacy/data", "pathOut": "/media/frederic/DAGlue/data"}

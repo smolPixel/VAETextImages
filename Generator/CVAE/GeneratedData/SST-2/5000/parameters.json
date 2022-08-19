@@ -1,0 +1,1 @@
+{"dataset": "SST-2", "classifier": "xgboost", "computer": "home", "split": 0.5, "retrain": false, "dataset_size": 5000, "nb_epoch_VAE": 20, "pathIn": "/media/frederic/DAGlue/jiant-v1-legacy/data", "pathOut": "/media/frederic/DAGlue/content/exp/tasks/data"}
