@@ -358,7 +358,7 @@ class AE():
         for iteration, batch in enumerate(data_loader):
 
             # Forward pass
-            logp, mean, logv, z = self.model(batch)
+            logp, mean = self.model(batch)
             #Keeping track of the means for AU
             mus.append(mean.detach().squeeze(0))
             batch_size = logp.shape[0]
