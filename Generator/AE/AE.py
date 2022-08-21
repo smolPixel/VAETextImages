@@ -363,7 +363,8 @@ class AE():
             mus.append(mean.detach().squeeze(0))
             batch_size = logp.shape[0]
             logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
-            NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'))
+
+            NLL_loss = self.loss_fn(logp, target.to('cuda'))
 
             NLL_mean=self.loss_function_ppl(logp, target.to('cuda'))
 
