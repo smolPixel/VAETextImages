@@ -184,28 +184,6 @@ class AE():
             self.epoch=epoch
             self.run_epoch()
         self.interpolate()
-        # self.generate_from_train()
-        # self.create_graph()
-        # fds
-
-
-                # if self.argdict.tensorboard_logging:
-                #     writer.add_scalar("%s-Epoch/ELBO" % split.upper(), torch.mean(tracker['ELBO']), epoch)
-
-                # save a dump of all sentences and the encoded latent space
-                # if split == 'valid':
-                #     dump = {'target_sents': tracker['target_sents'], 'z': tracker['z'].tolist()}
-                #     if not os.path.exists(os.path.join('dumps', ts)):
-                #         os.makedirs('dumps/' + ts)
-                #     with open(os.path.join('dumps/' + ts + '/valid_E%i.json' % epoch), 'w') as dump_file:
-                #         json.dump(dump, dump_file)
-
-                # save checkpoint
-                # if split == 'train':
-                #     checkpoint_path = os.path.join(save_model_path, "E%i.pytorch" % epoch)
-                #     torch.save(self.model.state_dict(), checkpoint_path)
-                #     print("Model saved at %s" % checkpoint_path)
-
 
     def generate_from_train(self):
         data_loader = DataLoader(
@@ -369,13 +347,13 @@ class AE():
 
             NLL_mean=self.loss_function_ppl(logp, target.to('cuda'))
 
-            loss = (NLL_loss +  KL_loss) / batch_size
+            loss = (NLL_loss ) / batch_size
             Average_loss.append(loss.item())
-            Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
+            # Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
             Average_NLL.append(NLL_loss.cpu().detach())
             NLL_mean_for_ppl.append(NLL_mean.cpu().detach())
             # aggr=self.get_aggregate()
-            MIs.append(calc_mi(z, mean, logv))
+            # MIs.append(calc_mi(z, mean, logv))
             # print(MIs)
             # fds
 
@@ -389,5 +367,5 @@ class AE():
         svc.fit(X, Y)
         sep=svc.score(X, Y)
         # print(AU)
-        return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'Mean KL div' :np.mean(Average_KL_Div), 'PPL': {torch.exp(torch.mean(torch.Tensor(NLL_mean_for_ppl)))},
-                'Separability': sep, 'MI': {np.mean(MIs)}, 'Active Units': AU[0]}
+        return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'PPL': {torch.exp(torch.mean(torch.Tensor(NLL_mean_for_ppl)))},
+                'Separability': sep, 'Active Units': AU[0]}
