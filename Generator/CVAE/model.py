@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from Generators.utils import to_var
+from Generator.utils import to_var
 
 
 class CVAE(nn.Module):
