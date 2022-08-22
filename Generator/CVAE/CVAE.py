@@ -22,25 +22,12 @@ class CVAE(pl.LightningModule):
         super().__init__()
         self.argdict=argdict
         self.splits=['train', 'dev', 'test']
-        self.datasets = datasets
-        self.datasetsLabelled = datasetLabelled
+        self.datasets={'train':train, 'dev':dev, 'test':test}
         self.model, self.params=self.init_model_dataset()
         # optimizers
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)  # self.argdict.learning_rate)
-        self.loss_function_discriminator = torch.nn.CrossEntropyLoss()
-        self.step=0
-        self.epoch = 0
-        #Classifier is there purely to evaluate the efficiency of our system
-        self.classifier=classifier
-        self.device_for_gen=None
-        if argdict['gpus']==[0]:
-            self.device_for_gen='cuda:0'
-        if argdict['gpus']==[1]:
-            self.device_for_gen='cuda:1'
-        if argdict['gpus']==[2]:
-            self.device_for_gen='cuda:2'
-        if argdict['gpus']==[3]:
-            self.device_for_gen='cuda:3'
+        self.loss_function_basic=train.loss_function
+        self.loss_function_ppl = torch.nn.CrossEntropyLoss(ignore_index=train.pad_idx, reduction='mean')
 
 
 
