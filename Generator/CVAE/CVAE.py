@@ -12,7 +12,6 @@ from collections import OrderedDict, defaultdict
 from sklearn.metrics import accuracy_score
 
 from Generator.utils import to_var, idx2word, expierment_name
-from Generator.CVAE.model import CVAE as CVAE_algo
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import Callback, ModelCheckpoint
 from Generator.CVAE.model import CVAE_model
