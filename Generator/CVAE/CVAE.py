@@ -18,7 +18,7 @@ from pytorch_lightning.callbacks import Callback, ModelCheckpoint
 
 class CVAE(pl.LightningModule):
 
-    def __init__(self, argdict, datasets, datasetLabelled, classifier):
+    def __init__(self, argdict, train, dev, test):
         super().__init__()
         self.argdict=argdict
         self.splits=['train', 'dev', 'test']
