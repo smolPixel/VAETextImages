@@ -4,50 +4,15 @@ from Generator.utils import to_var
 
 
 class CVAE_model(nn.Module):
-	def __init__(self, vocab_size, embedding_size, rnn_type, hidden_size, word_dropout, embedding_dropout, latent_size,
-				sos_idx, eos_idx, pad_idx, unk_idx, max_sequence_length, num_classes, num_layers=1, bidirectional=False):
+	def __init__(self, argdict, encoder, decoder):
 
 		super().__init__()
+		self.argdict = argdict
 		self.tensor = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.Tensor
 
-		self.max_sequence_length = max_sequence_length
-		self.sos_idx = sos_idx
-		self.eos_idx = eos_idx
-		self.pad_idx = pad_idx
-		self.unk_idx = unk_idx
-
-		self.latent_size = latent_size
-
-		self.rnn_type = rnn_type
-		self.bidirectional = bidirectional
-		self.num_layers = num_layers
-		self.hidden_size = hidden_size
-
-		self.embedding = nn.Embedding(vocab_size, embedding_size)
-		self.word_dropout_rate = word_dropout
-		self.embedding_dropout = nn.Dropout(p=embedding_dropout)
-		self.num_classes=num_classes
-
-		if rnn_type == 'rnn':
-			rnn = nn.RNN
-		elif rnn_type == 'gru':
-			rnn = nn.GRU
-		# elif rnn_type == 'lstm':
-		#     rnn = nn.LSTM
-		else:
-			raise ValueError()
-
-		self.encoder_rnn = rnn(embedding_size, hidden_size, num_layers=num_layers, bidirectional=self.bidirectional,
-							   batch_first=True)
-		self.decoder_rnn = rnn(embedding_size+self.num_classes, hidden_size, num_layers=num_layers, bidirectional=self.bidirectional,
-							   batch_first=True)
-
-		self.hidden_factor = (2 if bidirectional else 1) * num_layers
-
-		self.hidden2mean = nn.Linear(hidden_size * self.hidden_factor, latent_size)
-		self.hidden2logv = nn.Linear(hidden_size * self.hidden_factor, latent_size)
-		self.latent2hidden = nn.Linear(latent_size+self.num_classes, hidden_size * self.hidden_factor)
-		self.outputs2vocab = nn.Linear(hidden_size * (2 if bidirectional else 1), vocab_size)
+		self.encoder = encoder
+		self.decoder = decoder
+		self.num_classes=len(argdict["categories"])
 
 	def forward(self, input_sequence, labels):
 		#We need to add labels to input sequence
