@@ -15,6 +15,9 @@ from Generator.utils import to_var, idx2word, expierment_name
 from Generator.CVAE.model import CVAE as CVAE_algo
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import Callback, ModelCheckpoint
+from Generator.CVAE.model import CVAE_model
+from Encoders.encoder import encoder
+from Decoders.decoder import decoder
 
 class CVAE(pl.LightningModule):
 
@@ -37,29 +40,18 @@ class CVAE(pl.LightningModule):
         return optimizer
 
     def init_model_dataset(self):
-        splits = ['train', 'dev']  # + (['test'] if self.argdict.test else [])
+        enco=encoder(self.argdict)#vocab_size=self.datasets['train'].vocab_size, embedding_size=300, hidden_size=self.argdict['hidden_size'], latent_size=self.argdict['latent_size'])
+        deco=decoder(self.argdict)
 
         params = dict(
-            vocab_size=self.datasetsLabelled['train'].vocab_size,
-            sos_idx=self.datasetsLabelled['train'].sos_idx,
-            eos_idx=self.datasetsLabelled['train'].eos_idx,
-            pad_idx=self.datasetsLabelled['train'].pad_idx,
-            unk_idx=self.datasetsLabelled['train'].unk_idx,
-            max_sequence_length=60,  # self.argdict.max_sequence_length,
-            num_classes=len(self.argdict['categories']),
-            embedding_size=300,  # self.argdict.embedding_size,
-            rnn_type='gru',  # self.argdict.rnn_type,
-            hidden_size=self.argdict['hidden_size_algo'],
-            word_dropout=self.argdict['word_dropout'],  # self.argdict.word_dropout,
-            embedding_dropout=self.argdict['dropout_algo'],  # self.argdict.embedding_dropout,
-            latent_size=self.argdict['latent_size'],
-            num_layers=self.argdict['num_layers_algo'],
-            bidirectional=False  # self.argdict.bidirectional
+            argdict=self.argdict,
+            encoder=enco,
+            decoder=deco
         )
-        model = CVAE_algo(**params)
+
+        model = CVAE_model(**params)
         if torch.cuda.is_available():
             model = model.cuda()
-
 
         return model, params
 

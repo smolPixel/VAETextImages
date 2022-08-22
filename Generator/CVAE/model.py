@@ -3,7 +3,7 @@ import torch.nn as nn
 from Generator.utils import to_var
 
 
-class CVAE(nn.Module):
+class CVAE_model(nn.Module):
 	def __init__(self, vocab_size, embedding_size, rnn_type, hidden_size, word_dropout, embedding_dropout, latent_size,
 				sos_idx, eos_idx, pad_idx, unk_idx, max_sequence_length, num_classes, num_layers=1, bidirectional=False):
 
