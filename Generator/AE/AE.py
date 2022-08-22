@@ -19,7 +19,7 @@ from Generator.AE.model import AE_model
 from Encoders.encoder import encoder
 from Decoders.decoder import decoder
 from metrics import calc_mi, calc_au
-
+from sklearn.svm import LinearSVC
 
 class AE():
 
