@@ -22,7 +22,7 @@ class CVAE(pl.LightningModule):
     def __init__(self, argdict, datasets, datasetLabelled, classifier):
         super().__init__()
         self.argdict=argdict
-        self.splits=['train', 'dev']
+        self.splits=['train', 'dev', 'test']
         self.datasets = datasets
         self.datasetsLabelled = datasetLabelled
         self.model, self.params=self.init_model_dataset()
