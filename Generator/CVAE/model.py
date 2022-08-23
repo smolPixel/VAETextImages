@@ -18,7 +18,6 @@ class CVAE_model(nn.Module):
 
 		input_sequence = batch['input']
 		labels= batch['label']
-		print(labels)
 
 		batch_size = input_sequence.size(0)
 		mean, logv = self.encoder(input_sequence)
@@ -26,6 +25,8 @@ class CVAE_model(nn.Module):
 
 		z = to_var(torch.randn([batch_size, self.argdict['latent_size']]))
 		z = z * std + mean
+		print(z.shape)
+		fds
 		#last two dims
 		logp = self.decoder(input_sequence, z)
 
