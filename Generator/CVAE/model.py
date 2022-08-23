@@ -18,6 +18,7 @@ class CVAE_model(nn.Module):
 
 		input_sequence = batch['input']
 		labels= batch['label']
+		print(labels)
 
 		batch_size = input_sequence.size(0)
 		mean, logv = self.encoder(input_sequence)
