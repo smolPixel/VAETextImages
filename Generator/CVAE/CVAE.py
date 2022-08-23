@@ -168,7 +168,8 @@ class CVAE(pl.LightningModule):
         for iteration, batch in enumerate(data_loader):
 
             # Forward pass
-            logp, mean, logv, z = self.model(batch['input'], batch['label'])
+            logp, mean, logv, z = self.model(batch)
+            fds
             #Keeping track of the means for AU
             mus.append(mean.detach().squeeze(0))
             batch_size = logp.shape[0]

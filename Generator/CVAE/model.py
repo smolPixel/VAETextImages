@@ -14,133 +14,22 @@ class CVAE_model(nn.Module):
 		self.decoder = decoder
 		self.num_classes=len(argdict["categories"])
 
-	def forward(self, input_sequence, labels):
-		#We need to add labels to input sequence
+	def forward(self, batch):
+
+		input_sequence = batch['input']
+		labels= batch['labels']
+
 		batch_size = input_sequence.size(0)
-
-		# ENCODER
-		input_embedding = self.embedding(input_sequence)
-		labels = labels.unsqueeze(1).cuda()
-		ll = torch.zeros((batch_size, self.num_classes)).cuda()
-		ll.scatter_(1, labels, 1)
-		llEmbeddings=ll.unsqueeze(1).expand(-1, input_embedding.shape[1], -1)
-		_, hidden = self.encoder_rnn(input_embedding)
-
-		if self.bidirectional or self.num_layers > 1:
-			# flatten hidden state
-			hidden = hidden.view(batch_size, self.hidden_size*self.hidden_factor)
-		else:
-			hidden = hidden.squeeze()
-
-		# REPARAMETERIZATION
-		mean = self.hidden2mean(hidden)
-		logv = self.hidden2logv(hidden)
+		mean, logv = self.encoder(input_sequence)
 		std = torch.exp(0.5 * logv)
 
-		z = to_var(torch.randn([batch_size, self.latent_size]))
+		z = to_var(torch.randn([batch_size, self.argdict['latent_size']]))
 		z = z * std + mean
+		#last two dims
+		logp = self.decoder(input_sequence, z)
 
-		ll = torch.zeros((batch_size, self.num_classes)).cuda()
-		ll.scatter_(1, labels, 1)
-		z=torch.cat([z, ll], dim=1)
-
-		# DECODER
-		hidden = self.latent2hidden(z)
-
-		hidden = hidden.view(batch_size, self.hidden_factor, self.hidden_size)
-		hidden = torch.transpose(hidden, 0, 1)
-		hidden = hidden.contiguous()
-
-
-
-		# decoder input
-		if self.word_dropout_rate > 0:
-			# randomly replace decoder input with <unk>
-			prob = torch.rand(input_sequence.size())
-			if torch.cuda.is_available():
-				prob=prob.cuda()
-			prob[(input_sequence.data - self.sos_idx) * (input_sequence.data - self.pad_idx) == 0] = 1
-			decoder_input_sequence = input_sequence.clone()
-			decoder_input_sequence[prob < self.word_dropout_rate] = self.unk_idx
-			input_embedding = self.embedding(decoder_input_sequence)
-		input_embedding = self.embedding_dropout(input_embedding)
-		input_embedding = torch.cat([input_embedding, llEmbeddings], dim=2)
-		outputs, _ = self.decoder_rnn(input_embedding, hidden)
-
-		b,s,_ = outputs.size()
-		logp = nn.functional.log_softmax(self.outputs2vocab(outputs), dim=-1)
 		return logp, mean, logv, z
 
-	# def inference(self, n=4, z=None, cat=0):
-	#     if z is None:
-	#         batch_size = n
-	#         z = to_var(torch.randn([batch_size, self.latent_size]))
-	#     else:
-	#         batch_size = z.size(0)
-	#
-	#     # Convert to one hot and concat
-	#     ll = torch.zeros((batch_size, self.num_classes)).cuda()
-	#     ll[:, cat] = 1
-	#     z = torch.cat([z, ll], dim=1)
-	#     # print(z)
-	#
-	#     hidden = self.latent2hidden(z)
-	#
-	#     hidden = hidden.view(batch_size, self.hidden_factor, self.hidden_size)
-	#     hidden = torch.transpose(hidden, 0, 1)
-	#     hidden = hidden.contiguous()
-	#
-	#     # required for dynamic stopping of sentence generation
-	#     sequence_idx = torch.arange(0, batch_size, out=self.tensor()).long()  # all idx of batch
-	#     # all idx of batch which are still generating
-	#     sequence_running = torch.arange(0, batch_size, out=self.tensor()).long()
-	#     sequence_mask = torch.ones(batch_size, out=self.tensor()).bool()
-	#     # idx of still generating sequences with respect to current loop
-	#     running_seqs = torch.arange(0, batch_size, out=self.tensor()).long()
-	#
-	#     generations = self.tensor(batch_size, self.max_sequence_length).fill_(self.pad_idx).long()
-	#
-	#     t = 0
-	#     while t < self.max_sequence_length and len(running_seqs) > 0:
-	#
-	#         if t == 0:
-	#             input_sequence = to_var(torch.Tensor(batch_size).fill_(self.sos_idx).long())
-	#
-	#         input_sequence = input_sequence.unsqueeze(1)
-	#
-	#         input_embedding = self.embedding(input_sequence)
-	#         ll = torch.zeros((input_embedding.shape[0], self.num_classes)).cuda()
-	#         ll[:, cat] = 1
-	#
-	#         input_embedding = torch.cat([input_embedding, ll.unsqueeze(1)], dim=2)
-	#
-	#         output, hidden = self.decoder_rnn(input_embedding, hidden)
-	#
-	#         logits = self.outputs2vocab(output)
-	#
-	#         input_sequence = self._sample(logits)
-	#
-	#         # save next input
-	#         generations = self._save_sample(generations, input_sequence, sequence_running, t)
-	#
-	#         # update gloabl running sequence
-	#         sequence_mask[sequence_running] = (input_sequence != self.eos_idx)
-	#         sequence_running = sequence_idx.masked_select(sequence_mask)
-	#
-	#         # update local running sequences
-	#         running_mask = (input_sequence != self.eos_idx).data
-	#         running_seqs = running_seqs.masked_select(running_mask)
-	#
-	#         # prune input and hidden state according to local update
-	#         if len(running_seqs) > 0:
-	#             input_sequence = input_sequence[running_seqs]
-	#             hidden = hidden[:, running_seqs]
-	#
-	#             running_seqs = torch.arange(0, len(running_seqs), out=self.tensor()).long()
-	#
-	#         t += 1
-	#
-	#     return generations, z
 
 	def encode(self, input_sequence, labels):
 		batch_size = input_sequence.size(0)
