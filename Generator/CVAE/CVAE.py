@@ -17,6 +17,8 @@ from pytorch_lightning.callbacks import Callback, ModelCheckpoint
 from Generator.CVAE.model import CVAE_model
 from Encoders.encoder import encoder
 from Decoders.decoder import decoder
+from metrics import calc_au, calc_mi
+
 
 class CVAE(pl.LightningModule):
 
@@ -115,75 +117,6 @@ class CVAE(pl.LightningModule):
         self.log("KL Div Dev", KL_loss/batch_size, on_epoch=True, prog_bar=True)
         self.log("NLL Dev", NLL_loss/batch_size, on_epoch=True, prog_bar=True)
         return loss
-    #
-    # def run_epoch(self):
-    #     tensor = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.Tensor
-    #     for split in self.splits:
-    #
-    #         data_loader = DataLoader(
-    #             dataset=self.datasetsLabelled[split],
-    #             batch_size=32,  # self.argdict.batch_size,
-    #             shuffle=split == 'train',
-    #             num_workers=cpu_count(),
-    #             pin_memory=torch.cuda.is_available()
-    #         )
-    #
-    #         tracker = defaultdict(tensor)
-    #
-    #         # Enable/Disable Dropout
-    #         if split == 'train':
-    #             self.model.train()
-    #             self.dataset_length = len(data_loader)
-    #         else:
-    #             self.model.eval()
-    #
-    #         for iteration, batch in enumerate(data_loader):
-    #
-    #             batch_size = batch['input'].size(0)
-    #
-    #             for k, v in batch.items():
-    #                 if torch.is_tensor(v):
-    #                     batch[k] = to_var(v)
-    #
-    #             # Forward pass
-    #             # print(batch['label'].shape)
-    #             logp, mean, logv, z = self.model(batch['input'],  batch['label'])
-    #
-    #             # loss calculation
-    #             # NLL_loss, KL_loss, KL_weight = loss_fn(logp, batch['target'],
-    #             #                                        batch['length'], mean, logv, self.argdict.anneal_function, step,
-    #             #                                        self.argdict.k, self.argdict.x0)
-    #             NLL_loss, KL_loss, KL_weight = self.loss_fn(logp, batch['target'],
-    #                                                         batch['length'], mean, logv, 'logistic', self.step,
-    #                                                         0.0025)
-    #
-    #             loss = (NLL_loss + KL_weight * KL_loss) / batch_size
-    #
-    #             # backward + optimization
-    #             if split == 'train':
-    #                 self.optimizer.zero_grad()
-    #                 loss.backward()
-    #                 self.optimizer.step()
-    #                 self.step += 1
-    #
-    #             tracker['ELBO'] = torch.cat((tracker['ELBO'], loss.data.view(1, -1)), dim=0)
-    #
-    #             if iteration % 50 == 0 or iteration + 1 == len(data_loader):
-    #                 print("%s Batch %04d/%i, Loss %9.4f, NLL-Loss %9.4f, KL-Loss %9.4f, KL-Weight %6.3f"
-    #                       % (
-    #                           split.upper(), iteration, len(data_loader) - 1, loss.item(), NLL_loss.item() / batch_size,
-    #                           KL_loss.item() / batch_size, KL_weight))
-    #
-    #             if split == 'valid':
-    #                 if 'target_sents' not in tracker:
-    #                     tracker['target_sents'] = list()
-    #                 tracker['target_sents'] += idx2word(batch['target'].data, i2w=self.datasets['train'].get_i2w(),
-    #                                                     pad_idx=self.datasets['train'].pad_idx)
-    #                 tracker['z'] = torch.cat((tracker['z'], z.data), dim=0)
-    #
-    #         print("%s Epoch %02d/%i, Mean ELBO %9.4f" % (split.upper(), self.epoch, self.argdict['nb_epoch_algo'], tracker['ELBO'].mean()))
-    #         # print("%s Epoch %02d/%i, Mean ELBO %9.4f" % (split.upper(), self.epoch, self.argdict['nb_epoch_algo'], 0))
-    #
 
     def train_test(self):
         ts = time.strftime('%Y-%b-%d-%H:%M:%S', time.gmtime())
@@ -209,75 +142,63 @@ class CVAE(pl.LightningModule):
         )
 
         self.trainer.fit(self, train_loader, dev_loader)
-        # if self.argdict.tensorboard_logging:
-        #     writer = SummaryWriter(os.path.join(self.argdict.logdir, expierment_name(self.argdict, ts)))
-        #     writer.add_text("model", str(model))
-        #     writer.add_text("self.argdict", str(self.argdict))
-        #     writer.add_text("ts", ts)
 
-        # save_model_path = os.path.join(self.argdict['pathFolder'], 'bin')
-        # shutil.
-        # os.makedirs(save_model_path, exist_ok=True)
-
-        # with open(os.path.join(save_model_path, 'model_params.json'), 'w') as f:
-        #     json.dump(self.params, f, indent=4)
-
-        # tensor = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.Tensor
-        # step = 0
-        # for epoch in range(self.argdict.epochs):
-        # for epoch in range(self.argdict['nb_epoch_algo']):
-        #     self.epoch=epoch
-        #     self.run_epoch()
         self.interpolate()
         self.generate_from_train()
         self.evaluate_accuracy()
-        # fds
-    # def train_test(self):
-    #     ts = time.strftime('%Y-%b-%d-%H:%M:%S', time.gmtime())
-    #
-    #
-    #     # print(self.model)
-    #
-    #     # if self.argdict.tensorboard_logging:
-    #     #     writer = SummaryWriter(os.path.join(self.argdict.logdir, expierment_name(self.argdict, ts)))
-    #     #     writer.add_text("model", str(model))
-    #     #     writer.add_text("self.argdict", str(self.argdict))
-    #     #     writer.add_text("ts", ts)
-    #
-    #     save_model_path = os.path.join(self.argdict['pathFolder'], 'bin')
-    #     # shutil.
-    #     os.makedirs(save_model_path, exist_ok=True)
-    #
-    #     # with open(os.path.join(save_model_path, 'model_params.json'), 'w') as f:
-    #     #     json.dump(self.params, f, indent=4)
-    #
-    #
-    #
-    #     # tensor = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.Tensor
-    #     # step = 0
-    #     # for epoch in range(self.argdict.epochs):
-    #     for epoch in range(self.argdict['nb_epoch_algo']):
-    #         self.epoch=epoch
-    #         self.run_epoch()
-    #     self.interpolate()
-    #     self.evaluate_accuracy()
 
-                # if self.argdict.tensorboard_logging:
-                #     writer.add_scalar("%s-Epoch/ELBO" % split.upper(), torch.mean(tracker['ELBO']), epoch)
+    def test(self):
+        data_loader = DataLoader(
+            dataset=self.datasets['test'],
+            batch_size=64,  # self.argdict.batch_size,
+            shuffle=False,
+            num_workers=cpu_count(),
+            pin_memory=torch.cuda.is_available()
+        )
 
-                # save a dump of all sentences and the encoded latent space
-                # if split == 'valid':
-                #     dump = {'target_sents': tracker['target_sents'], 'z': tracker['z'].tolist()}
-                #     if not os.path.exists(os.path.join('dumps', ts)):
-                #         os.makedirs('dumps/' + ts)
-                #     with open(os.path.join('dumps/' + ts + '/valid_E%i.json' % epoch), 'w') as dump_file:
-                #         json.dump(dump, dump_file)
+        self.model.eval()
 
-                # save checkpoint
-                # if split == 'train':
-                #     checkpoint_path = os.path.join(save_model_path, "E%i.pytorch" % epoch)
-                #     torch.save(self.model.state_dict(), checkpoint_path)
-                #     print("Model saved at %s" % checkpoint_path)
+
+        Average_loss=[]
+        Average_NLL=[]
+        Average_KL_Div=[]
+        MIs=[]
+        mus=[]
+        NLL_mean_for_ppl=[]
+        for iteration, batch in enumerate(data_loader):
+
+            # Forward pass
+            logp, mean, logv, z = self.model(batch)
+            #Keeping track of the means for AU
+            mus.append(mean.detach().squeeze(0))
+            batch_size = logp.shape[0]
+            logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
+            NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'),  mean, logv)
+
+            NLL_mean=self.loss_function_ppl(logp, target.to('cuda'))
+
+            loss = (NLL_loss +  KL_loss) / batch_size
+            Average_loss.append(loss.item())
+            Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
+            Average_NLL.append(NLL_loss.cpu().detach())
+            NLL_mean_for_ppl.append(NLL_mean.cpu().detach())
+            # aggr=self.get_aggregate()
+            MIs.append(calc_mi(z, mean, logv))
+            # print(MIs)
+            # fds
+
+        # print(MIs)
+        AU=calc_au(mus)
+        encoded = self.encode()
+        X = encoded['encoded_test']
+        Y = encoded['labels_test']
+
+        svc = LinearSVC()
+        svc.fit(X, Y)
+        sep=svc.score(X, Y)
+        # print(AU)
+        return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'Mean KL div' :np.mean(Average_KL_Div), 'PPL': {torch.exp(torch.mean(torch.Tensor(NLL_mean_for_ppl)))},
+                'Separability': sep, 'MI': {np.mean(MIs)}, 'Active Units': AU[0]}
 
     def evaluate_accuracy(self):
         self.classifier.requires_grad=False
