@@ -169,7 +169,7 @@ class CVAE(pl.LightningModule):
 
             # Forward pass
             logp, mean, logv, z = self.model(batch)
-            print(z)
+            
             #Keeping track of the means for AU
             mus.append(mean.detach().squeeze(0))
             batch_size = logp.shape[0]
