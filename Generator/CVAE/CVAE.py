@@ -32,7 +32,7 @@ class CVAE(pl.LightningModule):
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)  # self.argdict.learning_rate)
         self.loss_function_basic=train.loss_function
         self.loss_function_ppl = torch.nn.CrossEntropyLoss(ignore_index=train.pad_idx, reduction='mean')
-
+        self.step=0
 
 
 
@@ -169,7 +169,7 @@ class CVAE(pl.LightningModule):
 
             # Forward pass
             logp, mean, logv, z = self.model(batch)
-            
+
             #Keeping track of the means for AU
             mus.append(mean.detach().squeeze(0))
             batch_size = logp.shape[0]
