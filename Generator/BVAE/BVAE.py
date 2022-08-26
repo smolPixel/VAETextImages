@@ -15,7 +15,7 @@ from sklearn.metrics import accuracy_score
 
 # from Generators.VAE.ptb import PTB
 from Generator.utils import to_var, idx2word, expierment_name
-from Generator.VAE.model import VAE_model
+from Generator.BVAE.model import VAE_model
 from Encoders.encoder import encoder
 from Decoders.decoder import decoder
 
