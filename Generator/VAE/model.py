@@ -33,7 +33,7 @@ class VAE_model(nn.Module):
 
         return logp, mean, logv, z
 
-    def encode(self, input_sequence):
+    def encode(self, input_sequence, labels):
         # print("HIHIOHOHO")
         # print(input_sequence.shape)
         batch_size = input_sequence.size(0)
@@ -47,7 +47,7 @@ class VAE_model(nn.Module):
         z = to_var(torch.randn([batch_size, self.argdict['latent_size']]))
         z = z * std + mean
         # print(z.shape)
-        labels=batch['label']
+        # labels=batch['label']
         z[:, :, -1]=labels
         return z, mean, logv
 

@@ -357,7 +357,7 @@ class CVAE():
                     #
                     # print(batch['input'])
                     # print(batch['input'].shape)
-                    z, _, _ = self.model.encode(batch['input'])
+                    z, _, _ = self.model.encode(batch['input'], batch['label'])
                     dataset[counter:counter + batch_size] = z
                     labels[counter:counter + batch_size] = batch['label']
                     counter += batch_size
