@@ -18,6 +18,8 @@ class VAE_model(nn.Module):
 
     def forward(self, batch):
 
+
+        print(batch)
         input_sequence=batch['input']
 
         batch_size = input_sequence.size(0)
