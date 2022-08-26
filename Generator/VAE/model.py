@@ -33,7 +33,7 @@ class VAE_model(nn.Module):
 
         return logp, mean, logv, z
 
-    def encode(self, input_sequence, labels):
+    def encode(self, input_sequence):
         # print("HIHIOHOHO")
         # print(input_sequence.shape)
         batch_size = input_sequence.size(0)
@@ -48,7 +48,7 @@ class VAE_model(nn.Module):
         z = z * std + mean
         # print(z.shape)
         # labels=batch['label']
-        z[:, :, -1]=labels
+        # z[:, :, -1]=labels
         return z, mean, logv
 
     def inference(self,  n=4, z=None):
