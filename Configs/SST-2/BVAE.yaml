@@ -7,7 +7,7 @@ max_length: 0
 algo: "BVAE"
 encoder: "GRU"
 decoder: "GRU"
-nb_epoch: 30
+nb_epoch: 1 #30
 latent_size: 5
 beta: 5
 
