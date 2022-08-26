@@ -31,6 +31,7 @@ class BVAE():
         # optimizers
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)  # self.argdict.learning_rate)
         self.loss_function_basic=train.loss_function
+        self.loss_function_ppl=torch.nn.CrossEntropyLoss(ignore_index=train.pad_idx, reduction='mean')
 
     def init_model_dataset(self):
         self.step = 0
@@ -308,7 +309,7 @@ class BVAE():
         # print(samples)
         # print('----------SAMPLES----------')
         return idx2word(samples, i2w=self.datasets['train'].get_i2w(), pad_idx=self.datasets['train'].get_w2i()['<pad>'], eos_idx=self.datasets['train'].get_w2i()['<eos>'])
-    
+
     def test(self):
         data_loader = DataLoader(
             dataset=self.datasets['test'],
