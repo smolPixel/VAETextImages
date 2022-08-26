@@ -63,13 +63,7 @@ class CVAE(pl.LightningModule):
             return min(1, step / x0)
 
     def loss_fn(self, logp, target, mean, logv, anneal_function, step, k):
-        NLL = torch.nn.NLLLoss(ignore_index=self.datasetsLabelled['train'].pad_idx, reduction='sum')
-        # cut-off unnecessary padding from target, and flatten
-        target = target.contiguous().view(-1)
-        logp = logp.view(-1, logp.size(2))
-
-        # Negative Log Likelihood
-        NLL_loss = NLL(logp, target)
+        NLL_loss = self.loss_function_basic(logp, target)
 
         # KL Divergence
         KL_loss = -0.5 * torch.sum(1 + logv - mean.pow(2) - logv.exp())
