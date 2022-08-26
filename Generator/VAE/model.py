@@ -19,7 +19,6 @@ class VAE_model(nn.Module):
     def forward(self, batch):
 
 
-        print(batch)
         input_sequence=batch['input']
 
         batch_size = input_sequence.size(0)
@@ -30,6 +29,8 @@ class VAE_model(nn.Module):
         z = z * std + mean
         labels=batch['label']
         print(z.shape)
+        z[:, :, -1]=labels
+        print(z)
         fds
         logp = self.decoder(input_sequence, z)
 
