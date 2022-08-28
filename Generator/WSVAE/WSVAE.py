@@ -47,7 +47,7 @@ class WSVAE():
 
         argdict_decoder=copy.deepcopy(self.argdict)
         #Need to modify here because the decoder takes more than just the latent space
-        argdict_decoder['latent_size']=argdict_decoder['latent_size']+2
+        argdict_decoder['latent_size']=argdict_decoder['latent_size']
         deco=decoder(argdict_decoder)
         discri=discriminator(self.argdict)
 
@@ -304,7 +304,7 @@ class WSVAE():
 
         self.interpolate()
         # self.generate_from_train()
-        self.create_graph()
+        # self.create_graph()
 
     def generate_from_train(self):
         data_loader = DataLoader(
