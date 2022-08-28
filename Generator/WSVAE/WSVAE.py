@@ -210,9 +210,6 @@ class WSVAE():
                 loss_discriminator = self.loss_function_discriminator(output_discriminator, batch['label'].cuda())
                 preds.extend(torch.round(torch.sigmoid(output_discriminator)).view(-1).tolist())
                 ground_truth.extend(batch['label'].cpu().tolist())
-                print(ground_truth)
-                print(preds)
-                fds
                 #Getting reconstruction loss
                 #Why not optimize on the difference of mu and logv directly
                 # print("WARNING THIS SHOULD BE DONE AFTER GETTING ENCODER LOSS")
