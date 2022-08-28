@@ -256,7 +256,6 @@ class WSVAE():
                 Average_loss.append(loss_generator.item())
                 Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
                 Average_NLL.append(NLL_loss.cpu().detach()/batch_size)
-            print(ground_truth, preds)
             print(f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean ELBO {np.mean(Average_loss)}, Mean LF {np.mean(Average_NLL)}, Mean KL div {np.mean(Average_KL_Div)}"
                   f"Acc recon {accuracy_score(ground_truth, preds)}")
 
