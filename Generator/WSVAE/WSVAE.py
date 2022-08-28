@@ -212,8 +212,8 @@ class WSVAE():
                 print(len(batch['label']))
                 preds.extend(torch.round(torch.sigmoid(output_discriminator)).view(-1).tolist())
                 ground_truth.extend(batch['label'].cpu().tolist())
-                print(preds)
-                print(ground_truth)
+                print(len(preds))
+                print(len(ground_truth))
                 fds
                 #Getting reconstruction loss
                 #Why not optimize on the difference of mu and logv directly
