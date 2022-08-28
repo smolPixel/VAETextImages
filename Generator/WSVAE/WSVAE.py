@@ -209,7 +209,7 @@ class WSVAE():
                 output_discriminator = self.model.discriminate(softmaxed_gumbeled)
                 loss_discriminator = self.loss_function_discriminator(output_discriminator, batch['label'].cuda())
                 preds.extend(torch.round(torch.sigmoid(output_discriminator).cpu().detach()))
-                ground_truth.extend(batch['label'])
+                ground_truth.extend(batch['label'].item())
 
                 #Getting reconstruction loss
                 #Why not optimize on the difference of mu and logv directly
