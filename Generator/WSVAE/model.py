@@ -31,7 +31,6 @@ class WSVAE_model(nn.Module):
             c=nn.functional.one_hot(c, num_classes=2).cuda().unsqueeze(0)
  
         else:
-            print(self.discriminator(batch['input']))
             c=F.gumbel_softmax(self.discriminator(batch['input']), tau=1, hard=True, dim=-1).unsqueeze(0)
             # c = torch.softmax(self.discriminator(batch['input']), dim=-1)
         #
