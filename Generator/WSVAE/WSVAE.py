@@ -208,13 +208,8 @@ class WSVAE():
                 softmaxed_gumbeled = F.gumbel_softmax(logp, tau=1, hard=True, dim=-1)
                 output_discriminator = self.model.discriminate(softmaxed_gumbeled)
                 loss_discriminator = self.loss_function_discriminator(output_discriminator, batch['label'].cuda())
-                print(output_discriminator.shape)
-                print(len(batch['label']))
                 preds.extend(torch.argmax(torch.softmax(output_discriminator, dim=-1), dim=-1).view(-1).tolist())
                 ground_truth.extend(batch['label'].cpu().tolist())
-                print(len(preds))
-                print(len(ground_truth))
-                fds
                 #Getting reconstruction loss
                 #Why not optimize on the difference of mu and logv directly
                 # print("WARNING THIS SHOULD BE DONE AFTER GETTING ENCODER LOSS")
