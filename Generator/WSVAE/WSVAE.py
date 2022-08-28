@@ -210,7 +210,7 @@ class WSVAE():
                 loss_discriminator = self.loss_function_discriminator(output_discriminator, batch['label'].cuda())
                 print(output_discriminator.shape)
                 print(len(batch['label']))
-                preds.extend(torch.argmax(torch.softmax(output_discriminator), dim=-1).view(-1).tolist())
+                preds.extend(torch.argmax(torch.softmax(output_discriminator, dim=-1), dim=-1).view(-1).tolist())
                 ground_truth.extend(batch['label'].cpu().tolist())
                 print(len(preds))
                 print(len(ground_truth))
