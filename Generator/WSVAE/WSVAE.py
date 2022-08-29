@@ -271,7 +271,6 @@ class WSVAE():
             self.epoch=epoch
             self.run_epoch(pretraining=True)
 
-        fd
         #Until convergence
         print("Change for until convergence")
         for i in range(self.argdict['nb_epoch']):
