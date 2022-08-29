@@ -174,7 +174,7 @@ class WSVAE():
                 # fds
                 print(f"Epoch {epoch} split {split}, accuracy {accuracy_score(ground_truth, preds)}, loss {np.mean(losses)}")
 
-    def train_gen_enc(self):
+    def train_generator(self):
         #Line 4 of the algo 1
         for split in self.splits:
             data_loader = DataLoader(
@@ -267,9 +267,9 @@ class WSVAE():
             self.train_discriminator()
             #Train the generator with equation 8, which is sum of the VAE loss, the attribute c loss which is the expectation over p(z)p(c) that the discriminator can recover the correct c,
             #abd the z loss where we check whether the encoder can recover the correct z code
-            #Instruction 4
+            #Because of the difficulty of path gradient calculation it is better to split it in two steps:
             self.run_epoch(pretraining=False)
-            self.train_gen_enc()
+            self.train_generator()
 
         self.interpolate()
         # self.generate_from_train()
