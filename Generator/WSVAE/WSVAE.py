@@ -217,7 +217,7 @@ class WSVAE():
                 #Why not optimize on the difference of mu and logv directly
                 # print("WARNING THIS SHOULD BE DONE AFTER GETTING ENCODER LOSS")
                 encoded_generated=self.model.encode(softmaxed_gumbeled)
-                z_normal_encoded= encoded_generated#[:, :, :-2]
+                z_normal_encoded= encoded_generated[:, :, :-2]
                 # print(z_normal_encoded.shape)
                 # print(z_normal.shape)
 
@@ -236,8 +236,6 @@ class WSVAE():
                     self.optimizer_encoder.step()
                     self.optimizer_decoder.step()
                     self.step+=1
-                print(z_normal_encoded.shape)
-                print(z_normal)
                 loss_encoder = self.loss_function_encoder(z_normal_encoded, z_normal)
                 loss_generator=loss_discriminator/batch_size
                 loss_generator+=loss_encoder/batch_size
