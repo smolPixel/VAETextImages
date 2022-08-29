@@ -159,8 +159,8 @@ class WSVAE():
                 for iteration, batch in enumerate(data_loader):
                     output=self.model.discriminator.forward(batch['input'])
                     # print(output)
-                    # print(output.shape)
-                    # print(batch['label'])
+                    print(output.shape)
+                    print(batch['label'])
                     loss=self.loss_function_discriminator(output, batch['label'].cuda())
                     # print(torch.argmax(torch.softmax(output, dim=-1).cpu().detach(), dim=-1))
                     preds.extend(torch.argmax(torch.softmax(output, dim=-1).cpu().detach(), dim=-1).tolist())
