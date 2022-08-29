@@ -27,7 +27,7 @@ class WSVAE():
 
     def __init__(self, argdict, train, dev, test):
         self.argdict=argdict
-        self.splits=['train', 'dev']
+        self.splits=['train', 'dev', 'test']
         self.datasets={'train':train, 'dev':dev, 'test':test}
         self.model, self.params=self.init_model_dataset()
         # optimizers
