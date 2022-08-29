@@ -161,7 +161,7 @@ class WSVAE():
                     # print(output)
                     # print(output.shape)
                     # print(batch['label'])
-                    loss=self.loss_function_discriminator(output.float(), batch['label'].long().cuda())
+                    loss=self.loss_function_discriminator(output, batch['label'].long().cuda())
                     # print(torch.argmax(torch.softmax(output, dim=-1).cpu().detach(), dim=-1))
                     preds.extend(torch.argmax(torch.softmax(output, dim=-1).cpu().detach(), dim=-1).tolist())
                     ground_truth.extend(batch['label'])
@@ -212,7 +212,7 @@ class WSVAE():
                 #Getting discriminator loss
                 softmaxed_gumbeled = F.gumbel_softmax(logp, tau=1, hard=True, dim=-1)
                 output_discriminator = self.model.discriminate(softmaxed_gumbeled)
-                loss_discriminator = self.loss_function_discriminator(output_discriminator, batch['label'].cuda())
+                loss_discriminator = self.loss_function_discriminator(output_discriminator, batch['label'].long().cuda())
                 preds.extend(torch.argmax(torch.softmax(output_discriminator, dim=-1), dim=-1).view(-1).tolist())
                 ground_truth.extend(batch['label'].cpu().tolist())
                 #Getting reconstruction loss
