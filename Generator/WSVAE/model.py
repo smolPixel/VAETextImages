@@ -17,7 +17,7 @@ class WSVAE_model(nn.Module):
         self.decoder=decoder
         self.discriminator=discriminator
 
-    def forward(self, batch, pretraining=True):
+    def forward(self, batch, pretraining=False):
 
         input_sequence=batch['input']
 

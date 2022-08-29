@@ -133,6 +133,8 @@ class WSVAE():
             print(f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean ELBO {np.mean(Average_loss)}, Mean LF {np.mean(Average_NLL)}, Mean KL div {np.mean(Average_KL_Div)}")
 
     def train_discriminator(self):
+        #Equation 11: Sum of labelled and unlabelled examples. For now, only labelled
+        print("Warning, not adapadted for semi supervised yet")
         for epoch in range(self.argdict['nb_epoch_discriminator']):
             for split in self.splits:
                 data_loader = DataLoader(
@@ -173,6 +175,7 @@ class WSVAE():
                 print(f"Epoch {epoch} split {split}, accuracy {accuracy_score(ground_truth, preds)}, loss {np.mean(losses)}")
 
     def train_gen_enc(self):
+        #Line 4 of the algo 1
         for split in self.splits:
             data_loader = DataLoader(
                 dataset=self.datasets[split],
@@ -217,39 +220,33 @@ class WSVAE():
                 z_normal_encoded= encoded_generated#[:, :, :-2]
                 # print(z_normal_encoded.shape)
                 # print(z_normal.shape)
-                loss_encoder=self.loss_function_encoder(z_normal_encoded, z_normal)
 
 
                 #Regular loss
                 logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
                 NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'),  mean, logv)
 
-                # loss = (NLL_loss +  KL_loss) / batch_size
+                #Equation 8: Lg= LVAE (eq 4 + Loss discriminator + loss attribute generator
+                loss_vae=(NLL_loss +  KL_loss) / batch_size
 
-                #Minimize Eq 8= Eq 4 (standard VAE) + Eq 6 (reconstruction of c) + Eq 7 (reconstruction of z)
-                #Equation
-                loss_encoder=(NLL_loss +  KL_loss) / batch_size
-                # backward + optimization
-                # if split == 'train':
-                #     # self.optimizer.zero_grad()
-                #     self.optimizer_encoder.zero_grad()
-                #     loss_encoder.backward(retain_graph=True)
-                #     # self.optimizer.step()
-                #     self.optimizer_encoder.step()
-                #     self.step += 1
-
-                loss_generator=(NLL_loss +  KL_loss) / batch_size
-                loss_generator+=loss_discriminator/batch_size
+                if split=='train':
+                    self.optimizer_encoder.zero_grad()
+                    self.optimizer_decoder.zero_grad()
+                    loss_vae.backward()
+                    self.optimizer_encoder.step()
+                    self.optimizer_decoder.step()
+                    self.step+=1
+                loss_encoder = self.loss_function_encoder(z_normal_encoded, z_normal)
+                loss_generator==loss_discriminator/batch_size
                 loss_generator+=loss_encoder/batch_size
 
                 # backward + optimization
                 if split == 'train':
+                    #There's difficulty with the traversal path here.
                     # self.optimizer.zero_grad()
-                    self.optimizer_encoder.zero_grad()
                     self.optimizer_decoder.zero_grad()
                     loss_generator.backward()
                     # self.optimizer.step()
-                    self.optimizer_encoder.step()
                     self.optimizer_decoder.step()
                     self.step += 1
 
