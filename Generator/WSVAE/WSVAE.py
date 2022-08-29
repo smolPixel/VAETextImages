@@ -236,8 +236,10 @@ class WSVAE():
                     self.optimizer_encoder.step()
                     self.optimizer_decoder.step()
                     self.step+=1
+                print(z_normal_encoded.shape)
+                print(z_normal)
                 loss_encoder = self.loss_function_encoder(z_normal_encoded, z_normal)
-                loss_generator==loss_discriminator/batch_size
+                loss_generator=loss_discriminator/batch_size
                 loss_generator+=loss_encoder/batch_size
 
                 # backward + optimization
