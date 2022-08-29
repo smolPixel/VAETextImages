@@ -259,28 +259,6 @@ class WSVAE():
             print(f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean ELBO {np.mean(Average_loss)}, Mean LF {np.mean(Average_NLL)}, Mean KL div {np.mean(Average_KL_Div)}"
                   f"Acc recon {accuracy_score(ground_truth, preds)}")
 
-
-    def create_graph(self):
-        """First encode all train into the latent space"""
-        encoded=self.encode()
-        from sklearn.manifold import TSNE
-        tsne = TSNE(n_components=2)
-
-        features = tsne.fit_transform(encoded['encoded_train'])
-        x=features[:, 0]
-        y=features[:, 1]
-        labs=encoded['labels_train']
-        # sentences=encoded['sentences_train']
-        dico={}
-        for i in range(len(labs)):
-            dico[i]={'x':x[i], 'y':y[i], 'labs':labs[i].item(), 'points':encoded['encoded_train'][i].tolist()}
-
-
-        df = pd.DataFrame.from_dict(dico, orient='index')
-        print(df)
-        df.to_csv(f'graph_{self.argdict["dataset"]}.tsv', sep='\t')
-        sdffd
-
     def train(self):
         print(self.model)
         save_model_path = os.path.join(self.argdict['path'], 'bin')
@@ -288,6 +266,7 @@ class WSVAE():
         os.makedirs(save_model_path, exist_ok=True)
 
         #Pretraining the VAE
+        #Instruction 1
         for epoch in range(self.argdict['nb_epoch']):
             self.epoch=epoch
             self.run_epoch(pretraining=True)
@@ -297,9 +276,11 @@ class WSVAE():
         for i in range(self.argdict['nb_epoch']):
             print(f'---{i}----')
             #Train the discriminator by Eq 11 - Only labelled part for now
+            #Instruction 3
             self.train_discriminator()
             #Train the generator with equation 8, which is sum of the VAE loss, the attribute c loss which is the expectation over p(z)p(c) that the discriminator can recover the correct c,
             #abd the z loss where we check whether the encoder can recover the correct z code
+            #Instruction 4
             self.train_gen_enc()
 
         self.interpolate()
