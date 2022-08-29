@@ -158,7 +158,7 @@ class WSVAE():
                 losses=[]
                 for iteration, batch in enumerate(data_loader):
                     output=self.model.discriminator.forward(batch['input'])
-                    # print(output)
+                    print(output)
                     print(output.shape)
                     print(batch['label'])
                     loss=self.loss_function_discriminator(output, batch['label'].long().cuda())
