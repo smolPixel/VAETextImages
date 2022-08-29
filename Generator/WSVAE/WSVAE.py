@@ -227,28 +227,18 @@ class WSVAE():
                 NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'),  mean, logv)
 
                 #Equation 8: Lg= LVAE (eq 4 + Loss discriminator + loss attribute generator
-                loss_vae=(NLL_loss +  KL_loss) / batch_size
+                # loss_vae=(NLL_loss +  KL_loss) / batch_size
 
-                if split=='train':
-                    self.optimizer_encoder.zero_grad()
-                    self.optimizer_decoder.zero_grad()
-                    loss_vae.backward()
-                    self.optimizer_encoder.step()
-                    self.optimizer_decoder.step()
-                    self.step+=1
-                loss_encoder = self.loss_function_encoder(z_normal_encoded, z_normal)
-                loss_generator=loss_discriminator/batch_size
-                loss_generator+=loss_encoder/batch_size
+                loss_generator = self.loss_function_encoder(z_normal_encoded, z_normal)/batch_size
+                loss_generator+=loss_discriminator/batch_size
 
                 # backward + optimization
-                if split == 'train':
-                    #There's difficulty with the traversal path here.
-                    # self.optimizer.zero_grad()
+                #Optimization is difficult
+                if split=='train':
                     self.optimizer_decoder.zero_grad()
                     loss_generator.backward()
-                    # self.optimizer.step()
                     self.optimizer_decoder.step()
-                    self.step += 1
+                    self.step+=1
 
                 Average_loss.append(loss_generator.item())
                 Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
@@ -278,6 +268,7 @@ class WSVAE():
             #Train the generator with equation 8, which is sum of the VAE loss, the attribute c loss which is the expectation over p(z)p(c) that the discriminator can recover the correct c,
             #abd the z loss where we check whether the encoder can recover the correct z code
             #Instruction 4
+            self.run_epoch(pretraining=False)
             self.train_gen_enc()
 
         self.interpolate()
