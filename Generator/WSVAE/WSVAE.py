@@ -262,7 +262,7 @@ class WSVAE():
 
         #Until convergence
         print("Change for until convergence")
-        for i in range(self.argdict['nb_epoch']):
+        for i in range(self.argdict['nb_epoch_fine_tuning']):
             print(f'---{i}----')
             #Train the discriminator by Eq 11 - Only labelled part for now
             #Instruction 3
