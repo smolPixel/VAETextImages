@@ -31,7 +31,10 @@ class VAE():
         # optimizers
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)  # self.argdict.learning_rate)
         self.loss_function_basic=train.loss_function
-        self.loss_function_ppl=torch.nn.CrossEntropyLoss(ignore_index=train.pad_idx, reduction='mean')
+        if argdict['dataset'] in ['SST2']:
+            self.loss_function_ppl=torch.nn.CrossEntropyLoss(ignore_index=train.pad_idx, reduction='mean')
+        else:
+            self.loss_function_ppl=self.loss_function_basic
 
     def init_model_dataset(self):
         self.step = 0
@@ -94,17 +97,6 @@ class VAE():
             Average_NLL=[]
             Average_KL_Div=[]
             for iteration, batch in enumerate(data_loader):
-
-                # print(batch)
-                # batch_size = batch['input'].size(0)
-                #
-                # for k, v in batch.items():
-                #     if torch.is_tensor(v):
-                #         batch[k] = to_var(v)
-                # print("warning, preprocessing should be moved to data loader")
-                # if self.argdict['dataset']=="MNIST":
-                #
-                #     batch={'input':batch[0], 'target':batch[0], 'label':batch[1]}
 
                 # Forward pass
                 logp, mean, logv, z = self.model(batch)
