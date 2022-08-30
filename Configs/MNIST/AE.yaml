@@ -5,12 +5,15 @@ dataset_size: 0
 random_seed: 42
 max_length: 0
 algo: "AE"
-encoder: "GRU"
-decoder: "GRU"
-nb_epoch: 4
-latent_size: 15
-hidden_size: 1024
-embedd_size: 300
+encoder: "Linear"
+decoder: "Linear"
+nb_epoch: 30
+latent_size: 5
+beta: 5
+
+embedding_size: 300
+hidden_size_encoder: [512, 256]
+hidden_size_decoder: [256, 512]
 num_layers: 1
 batch_size: 64
 dropout: 0.3
