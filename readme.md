@@ -13,3 +13,6 @@ TODO
 
 ###CVAE
 VAE where some dimensions of the latent space are taken to force some attribute, ex: the class.
+
+###WSVAE
+VAE as described in "Toward Controlled Generation of Text" (https://arxiv.org/pdf/1703.00955.pdf), with encoder, decoder, and discriminator.
