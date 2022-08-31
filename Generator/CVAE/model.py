@@ -27,8 +27,10 @@ class CVAE_model(nn.Module):
 		z = z * std + mean
 		if len(z.shape)==3:
 			z[:, :, -1]=labels
-		else:
+		elif len(z.shape)==2:
 			z[:, -1]=labels
+		else:
+			raise ValueError()
 		#last two dims
 		logp = self.decoder(input_sequence, z)
 
@@ -59,7 +61,12 @@ class CVAE_model(nn.Module):
 
 		z = to_var(torch.randn([batch_size, self.latent_size]))
 		z = z * std + mean
-
+		if len(z.shape)==3:
+			z[:, :, -1]=labels
+		elif len(z.shape)==2:
+			z[:, -1]=labels
+		else:
+			raise ValueError()
 		return z
 
 	def inference(self,  n=4, z=None, cat=0):
