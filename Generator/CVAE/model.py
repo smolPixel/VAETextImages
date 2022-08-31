@@ -52,7 +52,7 @@ class CVAE_model(nn.Module):
 			z[:, -1] = labels
 		else:
 			raise ValueError()
-		return z
+		return z, mean, logv
 
 	def inference(self, z, labels):
 
