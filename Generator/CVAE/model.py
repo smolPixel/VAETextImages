@@ -71,10 +71,6 @@ class CVAE_model(nn.Module):
 
 	def inference(self, z, labels):
 
-		print(z)
-		print(labels)
-		fds
-
 		if len(z.shape) == 3:
 			z[:, :, -1] = labels
 		elif len(z.shape) == 2:
