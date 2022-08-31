@@ -312,7 +312,7 @@ class CVAE():
             ground_truth.extend(batch['sentence'])
         return ground_truth, sentences
 
-    def interpolate(self, n=5):
+    def interpolate(self, n=5, classe=0):
         p0=to_var(torch.randn([1, self.argdict['latent_size']]))
         p1=to_var(torch.randn([1, self.argdict['latent_size']]))
         points=torch.zeros(n, self.argdict['latent_size'])
@@ -323,6 +323,8 @@ class CVAE():
             px=(1-ratio)*p0+ratio*p1
             points[i]=px
         points=points.cuda()
+        print(points.shape)
+        fds
         samples, z = self.model.inference(n=n, z=points)
         self.datasets['train'].process_generated(samples)
         # generated = idx2word(samples, i2w=self.datasets['train'].get_i2w(), pad_idx=self.datasets['train'].get_w2i()['<pad>'], eos_idx=self.datasets['train'].get_w2i()['<eos>'])
