@@ -324,7 +324,7 @@ class CVAE():
             points[i]=px
         points=points.cuda()
         classe=torch.zeros((n))+classe
-        samples, z = self.model.inference(z=points, classe=classe)
+        samples, z = self.model.inference(z=points, labels=classe)
         self.datasets['train'].process_generated(samples)
         # generated = idx2word(samples, i2w=self.datasets['train'].get_i2w(), pad_idx=self.datasets['train'].get_w2i()['<pad>'], eos_idx=self.datasets['train'].get_w2i()['<eos>'])
         # print("Interpolation:")
