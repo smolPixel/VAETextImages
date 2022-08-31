@@ -45,7 +45,7 @@ class CVAE():
             encoder=enco,
             decoder=deco
         )
-        model = VAE_model(**params)
+        model = CVAE_model(**params)
         if torch.cuda.is_available():
             model = model.cuda()
 
