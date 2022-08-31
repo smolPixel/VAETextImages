@@ -31,7 +31,10 @@ class CVAE():
         # optimizers
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)  # self.argdict.learning_rate)
         self.loss_function_basic=train.loss_function
-        self.loss_function_ppl=torch.nn.CrossEntropyLoss(ignore_index=train.pad_idx, reduction='mean')
+        if argdict['dataset'] in ['SST2']:
+            self.loss_function_ppl = torch.nn.CrossEntropyLoss(ignore_index=train.pad_idx, reduction='mean')
+        else:
+            self.loss_function_ppl = self.loss_function_basic
 
     def init_model_dataset(self):
         self.step = 0
@@ -189,7 +192,7 @@ class CVAE():
             loss = (NLL_loss +  KL_loss) / batch_size
             Average_loss.append(loss.item())
             Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
-            Average_NLL.append(NLL_loss.cpu().detach())
+            Average_NLL.append(NLL_loss.cpu().detach()/batch_size)
             NLL_mean_for_ppl.append(NLL_mean.cpu().detach())
             # aggr=self.get_aggregate()
             MIs.append(calc_mi(z, mean, logv))
