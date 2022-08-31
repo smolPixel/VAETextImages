@@ -8,7 +8,7 @@ algo: "BVAE"
 encoder: "Linear"
 decoder: "Linear"
 nb_epoch: 30
-latent_size: 5
+latent_size: 15
 beta: 5
 
 embedding_size: 300
