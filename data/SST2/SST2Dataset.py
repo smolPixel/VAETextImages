@@ -28,7 +28,7 @@ class SST2_dataset(Dataset):
 		self.vocab_object = vocab
 		self.tokenizer = tokenizer
 		self.pad_idx = self.vocab_object['<pad>']
-		self.sos_idx = self.vocab_object['<sos>']
+		self.sos_idx = self.vocab_object['<bos>']
 		self.eos_idx = self.vocab_object['<eos>']
 		self.unk_idx = self.vocab_object['<unk>']
 		print(self.pad_idx, self.sos_idx, self.eos_idx, self.unk_idx)
