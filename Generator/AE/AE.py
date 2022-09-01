@@ -376,6 +376,7 @@ class AE():
         tokenized=self.datasets['train'].batch_tokenize_and_pad(sentences)
         batch={"input":tokenized}
         mean=self.model.encode(tokenized)
+        print(mean.shape)
         samples, z = self.model.inference(n=2, z=mean)
         print(self.datasets['train'].process_generated(samples))
 
