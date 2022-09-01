@@ -9,10 +9,13 @@ class discriminator(nn.Module):
 		self.argdict=argdict
 		# self.datasets=datasets
 
-		encoder=self.argdict['discriminator']
-		if encoder.lower()=="gru":
+		discri=self.argdict['discriminator']
+		if discri.lower()=="gru":
 			from Discriminators.GRU import GRU_Discriminator
 			self.model=GRU_Discriminator(argdict)
+		elif discri.lower()=="linear":
+			from Discriminators.Linear import Linear_Discriminator
+			self.model=Linear_Discriminator(argdict)
 
 
 
