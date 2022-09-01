@@ -371,7 +371,7 @@ class AE():
         sep=svc.score(X, Y)
 
         #Reconstruction
-        sentences=["<bos> This is an excellent movie <eos>", "<bos> I hated this movie so much I couldn't finish it <eos>"]
+        sentences=["<sos> This is an excellent movie <eos>", "<sos> I hated this movie so much I couldn't finish it <eos>"]
         tokenized=self.datasets['train'].batch_tokenize_and_pad(sentences)
         print(tokenized)
 
