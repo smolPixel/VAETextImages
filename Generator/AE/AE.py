@@ -374,11 +374,9 @@ class AE():
         #Reconstruction
         sentences=["<bos> This is an excellent movie <eos>".lower(), "<bos> I hated this movie so much I couldn't finish it <eos>".lower()]
         tokenized=self.datasets['train'].batch_tokenize_and_pad(sentences)
-        batch={"input":tokenized}
-        mean=self.model.encode(tokenized).squeeze(0)
+s        mean=self.model.encode(tokenized).squeeze(0)
         samples, z = self.model.inference(n=2, z=mean)
-        print("sdfa")
-        print(self.datasets['train'].process_generated(samples))
+        self.datasets['train'].process_generated(samples)
 
         # print(AU)
         return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'PPL': {torch.exp(torch.mean(torch.Tensor(NLL_mean_for_ppl)))},
