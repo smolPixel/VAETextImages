@@ -341,6 +341,7 @@ class AE():
 
             # Forward pass
             print(batch)
+            print(batch['input'].shape)
             logp, mean = self.model(batch)
             #Keeping track of the means for AU
             mus.append(mean.detach().squeeze(0))
