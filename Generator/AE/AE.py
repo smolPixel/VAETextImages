@@ -375,7 +375,8 @@ class AE():
         tokenized=self.datasets['train'].batch_tokenize_and_pad(sentences)
         batch={"input":tokenized}
         mean=self.model.encode(tokenized)
-        print(mean)
+        samples, z = self.model.inference(n=2, z=mean)
+        print(self.datasets['train'].process_generated(samples))
 
         # print(AU)
         return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'PPL': {torch.exp(torch.mean(torch.Tensor(NLL_mean_for_ppl)))},
