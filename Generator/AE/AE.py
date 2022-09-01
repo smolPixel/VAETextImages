@@ -340,8 +340,6 @@ class AE():
         for iteration, batch in enumerate(data_loader):
 
             # Forward pass
-            print(batch)
-            print(batch['input'].shape)
             logp, mean = self.model(batch)
             #Keeping track of the means for AU
             mus.append(mean.detach().squeeze(0))
@@ -376,8 +374,8 @@ class AE():
         sentences=["<bos> This is an excellent movie <eos>".lower(), "<bos> I hated this movie so much I couldn't finish it <eos>".lower()]
         tokenized=self.datasets['train'].batch_tokenize_and_pad(sentences)
         batch={"input":tokenized}
-        logp, mean=self.model(batch)
-        print(logp)
+        mean=self.encode(tokenized)
+        print(mean)
 
         # print(AU)
         return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'PPL': {torch.exp(torch.mean(torch.Tensor(NLL_mean_for_ppl)))},
