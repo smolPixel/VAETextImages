@@ -61,6 +61,14 @@ class SST2_dataset(Dataset):
 			array[i]=input
 		return array.long()
 
+	def test_reconstruction(self, model):
+		sentences = ["<bos> This is an excellent movie <eos>".lower(),
+					 "<bos> I hated this movie so much I couldn't finish it <eos>".lower()]
+		tokenized = self.batch_tokenize_and_pad(sentences)
+		mean = model.encode(tokenized).squeeze(0)
+		samples, z = model.inference(n=2, z=mean)
+		self.process_generated(samples)
+
 
 	def get_unlabelled(self):
 		dico={key:value for key, value in self.data.items() if value['label']==2}

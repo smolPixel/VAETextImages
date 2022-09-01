@@ -372,6 +372,8 @@ class AE():
         sep=svc.score(X, Y)
 
         #Reconstruction
+        #This part should be handled in the dataset, as it is heavily dataset dependant (duh)
+        self.datasets['train'].test_reconstruction(self.model)
         sentences=["<bos> This is an excellent movie <eos>".lower(), "<bos> I hated this movie so much I couldn't finish it <eos>".lower()]
         tokenized=self.datasets['train'].batch_tokenize_and_pad(sentences)
         mean=self.model.encode(tokenized).squeeze(0)
