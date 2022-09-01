@@ -14,5 +14,5 @@ embedd_size: 300
 num_layers: 1
 batch_size: 64
 dropout: 0.3
-word_dropout: 0
+word_dropout: 0.05
 x0: 15
