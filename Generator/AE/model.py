@@ -19,7 +19,7 @@ class AE_model(nn.Module):
     def forward(self, batch):
 
         input_sequence=batch['input']
-
+        print(input_sequence.shape)
         batch_size = input_sequence.size(0)
         mean, logv=self.encoder(input_sequence)
         logp = self.decoder(input_sequence, mean)
@@ -29,6 +29,7 @@ class AE_model(nn.Module):
         # print("HIHIOHOHO")
         # print(input_sequence.shape)
         batch_size = input_sequence.size(0)
+        print(input_sequence.shape)
         # sorted_lengths, sorted_idx = torch.sort(length, descending=True)
         # input_sequence = input_sequence[sorted_idx]
 
