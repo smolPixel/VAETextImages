@@ -52,11 +52,14 @@ class SST2_dataset(Dataset):
 	def batch_tokenize_and_pad(self, sentences):
 		bs=len(sentences)
 		array=torch.zeros((bs, self.max_len))
-		for sent in sentences:
+		for i, sent in enumerate(sentences):
 			tokenized_text = self.tokenizer.tokenize(sent)
 			input = self.vocab_object(tokenized_text)
-			print(input)
-			fd
+			input = self.data[item]['input'][:self.max_len]
+			input.extend([self.pad_idx] * (self.max_len - len(input)))
+			input=torch.Tensor(input)
+			array[i]=input
+		return array
 
 
 	def get_unlabelled(self):
