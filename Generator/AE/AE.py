@@ -377,6 +377,7 @@ class AE():
         batch={"input":tokenized}
         mean=self.model.encode(tokenized).squeeze(0)
         samples, z = self.model.inference(n=2, z=mean)
+        print("sdfa")
         print(self.datasets['train'].process_generated(samples))
 
         # print(AU)
