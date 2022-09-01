@@ -374,7 +374,7 @@ class AE():
         #Reconstruction
         sentences=["<bos> This is an excellent movie <eos>".lower(), "<bos> I hated this movie so much I couldn't finish it <eos>".lower()]
         tokenized=self.datasets['train'].batch_tokenize_and_pad(sentences)
-s        mean=self.model.encode(tokenized).squeeze(0)
+        mean=self.model.encode(tokenized).squeeze(0)
         samples, z = self.model.inference(n=2, z=mean)
         self.datasets['train'].process_generated(samples)
 
