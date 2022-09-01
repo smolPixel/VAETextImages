@@ -369,6 +369,12 @@ class AE():
         svc = LinearSVC()
         svc.fit(X, Y)
         sep=svc.score(X, Y)
+
+        #Reconstruction
+        sentences=["<bos> This is an excellent movie <eos>", "<bos> I hated this movie so much I couldn't finish it <eos>"]
+        tokenized=self.datasets['train']
+
+
         # print(AU)
         return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'PPL': {torch.exp(torch.mean(torch.Tensor(NLL_mean_for_ppl)))},
                 'Separability': sep, 'Active Units': AU[0]}

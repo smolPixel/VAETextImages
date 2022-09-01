@@ -6,6 +6,7 @@ import numpy as np
 from collections import defaultdict
 from torch.utils.data import Dataset
 import pandas as pd
+import torch
 from nltk.tokenize import TweetTokenizer
 from process_data import *
 from torchtext.vocab import build_vocab_from_iterator
@@ -47,6 +48,16 @@ class SST2_dataset(Dataset):
 
 	# def tokenize_and_vectorize(self, sentences):
 	#     """Takes an array of sentences and return encoded data"""
+
+	def batch_tokenize_and_pad(self, sentences):
+		bs=len(sentences)
+		array=torch.zeros((bs, self.max_len))
+		for sent in sentences:
+			tokenized_text = self.tokenizer.tokenize(sent)
+			input = self.vocab_object(tokenized_text)
+			print(input)
+			fd
+
 
 	def get_unlabelled(self):
 		dico={key:value for key, value in self.data.items() if value['label']==2}
