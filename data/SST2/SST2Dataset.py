@@ -59,7 +59,7 @@ class SST2_dataset(Dataset):
 			input.extend([self.pad_idx] * (self.max_len - len(input)))
 			input=torch.Tensor(input)
 			array[i]=input
-		return array
+		return array.long()
 
 
 	def get_unlabelled(self):
