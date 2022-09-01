@@ -39,7 +39,10 @@ class WSVAE():
         # self.loss_function_discriminator=torch.nn.BCEWithLogitsLoss()
         self.loss_function_discriminator=torch.nn.CrossEntropyLoss()
         self.loss_function_encoder=torch.nn.L1Loss()
-        self.loss_function_ppl = torch.nn.CrossEntropyLoss(ignore_index=train.pad_idx, reduction='mean')
+        if argdict['dataset'] in ['SST2']:
+            self.loss_function_ppl=torch.nn.CrossEntropyLoss(ignore_index=train.pad_idx, reduction='mean')
+        else:
+            self.loss_function_ppl=self.loss_function_basic
 
     def init_model_dataset(self):
         self.step = 0
