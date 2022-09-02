@@ -7,9 +7,8 @@ max_length: 0
 algo: "AE"
 encoder: "Linear"
 decoder: "Linear"
-nb_epoch: 15
+nb_epoch: 1 #15
 latent_size: 15
-beta: 5
 
 embedding_size: 300
 hidden_size_encoder: [512, 256]

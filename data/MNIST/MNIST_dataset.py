@@ -27,6 +27,17 @@ class MNIST_dataset(Dataset):
 			plt.imsave(f'Temp/{i}.png', img.cpu().detach().view(28, 28))
 		# fds
 
+	def test_reconstruction(self, model):
+		#First, get imgs of a 7 and a 0, which are fairly different
+		for dat in self.data:
+			print(dat)
+		sentences = ["<bos> This is an excellent movie <eos>".lower(),
+					 "<bos> I hated this movie so much I couldn't finish it <eos>".lower()]
+		tokenized = self.batch_tokenize_and_pad(sentences)
+		mean = model.encode(tokenized).squeeze(0)
+		samples, z = model.inference(n=2, z=mean)
+		self.process_generated(samples)
+
 
 	def reset_index(self):
 		new_dat = {}
