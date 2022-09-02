@@ -22,10 +22,14 @@ class MNIST_dataset(Dataset):
 			self.data[index] = {'input': input, 'label':label, 'target':input}
 			index+=1
 
-	def process_generated(self, exo):
+	def process_generated(self, exo, names=None):
 		# print(exo)
 		for i, img in enumerate(exo):
-			plt.imsave(f'Temp/{i}.png', img.cpu().detach().view(28, 28), cmap='gray_r')
+			if names is None:
+				name=i
+			else:
+				name=names[i]
+			plt.imsave(f'Temp/{name}.png', img.cpu().detach().view(28, 28), cmap='gray_r')
 		# fds
 
 	def test_reconstruction(self, model):
@@ -38,8 +42,7 @@ class MNIST_dataset(Dataset):
 		self.process_generated([dat['input'], dat1['input']])
 		mean = model.encode(dat_to_pass)
 		samples, z = model.inference(n=2, z=mean)
-		print(samples.shape)
-		self.process_generated(samples)
+		self.process_generated(samples, names=['generated7', 'generated0'])
 
 
 	def reset_index(self):
