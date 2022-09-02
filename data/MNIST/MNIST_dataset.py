@@ -34,7 +34,8 @@ class MNIST_dataset(Dataset):
 
 		dat=self.data[54993]
 		dat1=self.data[54498]
-		print(dat0)
+		print(dat)
+		print(dat1)
 		sentences = ["<bos> This is an excellent movie <eos>".lower(),
 					 "<bos> I hated this movie so much I couldn't finish it <eos>".lower()]
 		tokenized = self.batch_tokenize_and_pad(sentences)
