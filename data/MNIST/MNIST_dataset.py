@@ -32,7 +32,7 @@ class MNIST_dataset(Dataset):
 		# for key, item in self.data.items():
 		# 	print(key, item['label'])
 
-		dat=self.data['54993']
+		dat=self.data[54993]
 		dat1=self.data['59498']
 		print(dat0)
 		sentences = ["<bos> This is an excellent movie <eos>".lower(),
