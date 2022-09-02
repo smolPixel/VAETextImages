@@ -33,8 +33,8 @@ class MNIST_dataset(Dataset):
 		# for key, item in self.data.items():
 		# 	print(key, item['label'])
 
-		for i in range(10):
-			print(self.data[i]['label'])
+		for i in range(20):
+			print(i, self.data[i]['label'])
 
 		dat=self.data[54993]
 		dat1=self.data[54498]
