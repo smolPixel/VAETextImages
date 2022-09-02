@@ -29,8 +29,8 @@ class MNIST_dataset(Dataset):
 
 	def test_reconstruction(self, model):
 		#First, get imgs of a 7 and a 0, which are fairly different
-		for dat in self.data:
-			print(dat)
+		for key, item in self.data.items():
+			print(key, item['label'])
 		sentences = ["<bos> This is an excellent movie <eos>".lower(),
 					 "<bos> I hated this movie so much I couldn't finish it <eos>".lower()]
 		tokenized = self.batch_tokenize_and_pad(sentences)
