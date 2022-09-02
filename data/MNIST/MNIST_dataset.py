@@ -35,7 +35,7 @@ class MNIST_dataset(Dataset):
 
 		dat=self.data[54993]
 		dat1=self.data[54498]
-		self.process_generated([dat, dat1])
+		self.process_generated([dat['input'], dat1['input']])
 		fds
 		sentences = ["<bos> This is an excellent movie <eos>".lower(),
 					 "<bos> I hated this movie so much I couldn't finish it <eos>".lower()]
