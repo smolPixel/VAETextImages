@@ -34,6 +34,8 @@ class MNIST_dataset(Dataset):
 		# 	print(key, item['label'])
 		dat=self.data[1]
 		dat1=self.data[11]
+		dat_to_pass=torch.stack((dat['input'], dat1['input']), dim=-1)
+		pritn(dat_to_pass.shape)
 		self.process_generated([dat['input'], dat1['input']])
 		fds
 		sentences = ["<bos> This is an excellent movie <eos>".lower(),
