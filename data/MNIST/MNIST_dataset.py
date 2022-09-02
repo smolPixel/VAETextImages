@@ -31,6 +31,10 @@ class MNIST_dataset(Dataset):
 		#First, get imgs of a 7 and a 0, which are fairly different
 		for key, item in self.data.items():
 			print(key, item['label'])
+
+		dat=self.data[54993]
+		dat1=self.data[59498]
+		print(dat0)
 		sentences = ["<bos> This is an excellent movie <eos>".lower(),
 					 "<bos> I hated this movie so much I couldn't finish it <eos>".lower()]
 		tokenized = self.batch_tokenize_and_pad(sentences)
