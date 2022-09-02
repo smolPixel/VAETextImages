@@ -33,6 +33,9 @@ class MNIST_dataset(Dataset):
 		# for key, item in self.data.items():
 		# 	print(key, item['label'])
 
+		for i in range(10):
+			print(self.data[i]['label'])
+
 		dat=self.data[54993]
 		dat1=self.data[54498]
 		self.process_generated([dat['input'], dat1['input']])
