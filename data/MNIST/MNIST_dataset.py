@@ -29,8 +29,8 @@ class MNIST_dataset(Dataset):
 
 	def test_reconstruction(self, model):
 		#First, get imgs of a 7 and a 0, which are fairly different
-		for key, item in self.data.items():
-			print(key, item['label'])
+		# for key, item in self.data.items():
+		# 	print(key, item['label'])
 
 		dat=self.data['54993']
 		dat1=self.data['59498']
