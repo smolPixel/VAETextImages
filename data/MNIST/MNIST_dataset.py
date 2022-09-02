@@ -5,6 +5,7 @@ from process_data import *
 from torchtext.vocab import build_vocab_from_iterator
 from torchvision import datasets, transforms
 import copy
+import torch
 import matplotlib.pyplot as plt
 #
 class MNIST_dataset(Dataset):
@@ -34,8 +35,8 @@ class MNIST_dataset(Dataset):
 
 		dat=self.data[54993]
 		dat1=self.data[54498]
-		print(dat)
-		print(dat1)
+		self.process_generated([dat, dat1])
+		fds
 		sentences = ["<bos> This is an excellent movie <eos>".lower(),
 					 "<bos> I hated this movie so much I couldn't finish it <eos>".lower()]
 		tokenized = self.batch_tokenize_and_pad(sentences)
