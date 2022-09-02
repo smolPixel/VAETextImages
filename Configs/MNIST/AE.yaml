@@ -7,7 +7,7 @@ max_length: 0
 algo: "AE"
 encoder: "Linear"
 decoder: "Linear"
-nb_epoch: 1 #15
+nb_epoch: 15
 latent_size: 15
 
 embedding_size: 300
