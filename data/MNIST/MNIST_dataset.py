@@ -35,14 +35,10 @@ class MNIST_dataset(Dataset):
 		dat=self.data[1]
 		dat1=self.data[11]
 		dat_to_pass=torch.stack((dat['input'], dat1['input']), dim=0)
-		print(dat_to_pass.shape)
 		self.process_generated([dat['input'], dat1['input']])
-		fds
-		sentences = ["<bos> This is an excellent movie <eos>".lower(),
-					 "<bos> I hated this movie so much I couldn't finish it <eos>".lower()]
-		tokenized = self.batch_tokenize_and_pad(sentences)
-		mean = model.encode(tokenized).squeeze(0)
+		mean = model.encode(dat_to_pass)
 		samples, z = model.inference(n=2, z=mean)
+		print(samples.shape)
 		self.process_generated(samples)
 
 
