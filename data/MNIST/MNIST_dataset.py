@@ -25,7 +25,7 @@ class MNIST_dataset(Dataset):
 	def process_generated(self, exo):
 		# print(exo)
 		for i, img in enumerate(exo):
-			plt.imsave(f'Temp/{i}.png', img.cpu().detach().view(28, 28))
+			plt.imsave(f'Temp/{i}.png', img.cpu().detach().view(28, 28), cmap='gray_r')
 		# fds
 
 	def test_reconstruction(self, model):
