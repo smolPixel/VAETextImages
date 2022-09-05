@@ -26,8 +26,8 @@ class encoder(nn.Module):
 		self.logps=[]
 
 
-	def forward(self, input):
-		mean, logp=self.model(input)
+	def forward(self, batch, append_labels=False):
+		mean, logp=self.model(batch, append_labels)
 		mean_norm=torch.norm(mean, dim=-1)
 		self.means.append(torch.mean(mean_norm).item())
 		logp_norm=torch.norm(logp, dim=-1)

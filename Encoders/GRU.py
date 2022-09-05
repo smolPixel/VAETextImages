@@ -15,7 +15,9 @@ class GRU_Encoder(nn.Module):
 		self.hidden2mean = nn.Linear(argdict['hidden_size'], argdict['latent_size'])
 		self.hidden2logv = nn.Linear(argdict['hidden_size'], argdict['latent_size'])
 
-	def forward(self, input_sequence):
+	def forward(self, batch, append_labels=False):
+		print(batch, append_labels)
+		fds
 		input_sequence=input_sequence.to('cuda')
 		if isinstance(input_sequence, torch.LongTensor) or (
 				torch.cuda.is_available() and isinstance(input_sequence, torch.cuda.LongTensor)):
