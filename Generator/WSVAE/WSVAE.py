@@ -227,11 +227,11 @@ class WSVAE():
                 #Why not optimize on the difference of mu and logv directly
                 # print("WARNING THIS SHOULD BE DONE AFTER GETTING ENCODER LOSS")
                 encoded_generated=self.model.encode(softmaxed_gumbeled)
-                z_normal_encoded= encoded_generated[:, :, :-2]
+                # z_normal_encoded= encoded_generated[:, :, :-2]
                 if len(z.shape)==3:
-                    z_normal_encoded= encoded_generated[:, :, :-]
+                    z_normal_encoded= encoded_generated[:, :, :-1]
                 elif len(z.shape)==2:
-                    z_normal_encoded= encoded_generated[:, :-2]
+                    z_normal_encoded= encoded_generated[:, :-1]
                 else:
                     raise ValueError
                 # print(z_normal_encoded.shape)
