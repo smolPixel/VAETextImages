@@ -23,361 +23,361 @@ from metrics import calc_mi, calc_au
 
 class CVAE():
 
-    def __init__(self, argdict, train, dev, test):
-        self.argdict=argdict
-        self.splits=['train', 'dev', 'test']
-        self.datasets={'train':train, 'dev':dev, 'test':test}
-        self.model, self.params=self.init_model_dataset()
-        # optimizers
-        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)  # self.argdict.learning_rate)
-        self.loss_function_basic=train.loss_function
-        if argdict['dataset'] in ['SST2']:
-            self.loss_function_ppl = torch.nn.CrossEntropyLoss(ignore_index=train.pad_idx, reduction='mean')
-        else:
-            self.loss_function_ppl = self.loss_function_basic
+	def __init__(self, argdict, train, dev, test):
+		self.argdict=argdict
+		self.splits=['train', 'dev', 'test']
+		self.datasets={'train':train, 'dev':dev, 'test':test}
+		self.model, self.params=self.init_model_dataset()
+		# optimizers
+		self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)  # self.argdict.learning_rate)
+		self.loss_function_basic=train.loss_function
+		if argdict['dataset'] in ['SST2']:
+			self.loss_function_ppl = torch.nn.CrossEntropyLoss(ignore_index=train.pad_idx, reduction='mean')
+		else:
+			self.loss_function_ppl = self.loss_function_basic
 
-    def init_model_dataset(self):
-        self.step = 0
-        self.epoch = 0
+	def init_model_dataset(self):
+		self.step = 0
+		self.epoch = 0
 		print(self.argdict)
 		fds
-        enco=encoder(self.argdict)#vocab_size=self.datasets['train'].vocab_size, embedding_size=300, hidden_size=self.argdict['hidden_size'], latent_size=self.argdict['latent_size'])
-        deco=decoder(self.argdict)
+		enco=encoder(self.argdict)#vocab_size=self.datasets['train'].vocab_size, embedding_size=300, hidden_size=self.argdict['hidden_size'], latent_size=self.argdict['latent_size'])
+		deco=decoder(self.argdict)
 
-        params = dict(
-            argdict=self.argdict,
-            encoder=enco,
-            decoder=deco
-        )
-        model = CVAE_Classic_model(**params)
-        if torch.cuda.is_available():
-            model = model.cuda()
+		params = dict(
+			argdict=self.argdict,
+			encoder=enco,
+			decoder=deco
+		)
+		model = CVAE_Classic_model(**params)
+		if torch.cuda.is_available():
+			model = model.cuda()
 
-        return model, params
-
-
-    def loss_fn(self, logp, target,  mean, logv):
-        NLL_loss = self.loss_function_basic(logp, target)
-        # BCE = torch.nn.functional.binary_cross_entropy(logp, target.view(-1, 784), reduction='sum')
-        # KL Divergence
-        KL_loss = -0.5 * torch.sum(1 + logv - mean.pow(2) - logv.exp())
-        # KL_weight = self.kl_anneal_function(anneal_function, step, k, self.dataset_length*self.argdict['x0'])
-
-        return NLL_loss, KL_loss
-        # return BCE, KL_loss
-
-    def run_epoch(self):
-        for split in self.splits:
-
-            data_loader = DataLoader(
-                dataset=self.datasets[split],
-                batch_size=64,  # self.argdict.batch_size,
-                shuffle=split == 'train',
-                num_workers=cpu_count(),
-                pin_memory=torch.cuda.is_available()
-            )
-
-            # tracker = defaultdict(tensor)
-
-            # Enable/Disable Dropout
-            if split == 'train':
-                self.model.train()
-                self.dataset_length=len(data_loader)
-            else:
-                self.model.eval()
+		return model, params
 
 
-            Average_loss=[]
-            Average_NLL=[]
-            Average_KL_Div=[]
-            for iteration, batch in enumerate(data_loader):
-                # Forward pass
-                logp, mean, logv, z = self.model(batch)
-                batch_size = logp.shape[0]
-                # print(batch_size)
+	def loss_fn(self, logp, target,  mean, logv):
+		NLL_loss = self.loss_function_basic(logp, target)
+		# BCE = torch.nn.functional.binary_cross_entropy(logp, target.view(-1, 784), reduction='sum')
+		# KL Divergence
+		KL_loss = -0.5 * torch.sum(1 + logv - mean.pow(2) - logv.exp())
+		# KL_weight = self.kl_anneal_function(anneal_function, step, k, self.dataset_length*self.argdict['x0'])
 
-                logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
-                NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'),  mean, logv)
+		return NLL_loss, KL_loss
+		# return BCE, KL_loss
 
-                loss = (NLL_loss +  KL_loss) / batch_size
+	def run_epoch(self):
+		for split in self.splits:
 
-                # backward + optimization
-                if split == 'train':
-                    self.optimizer.zero_grad()
-                    loss.backward()
-                    self.optimizer.step()
-                    self.step += 1
+			data_loader = DataLoader(
+				dataset=self.datasets[split],
+				batch_size=64,  # self.argdict.batch_size,
+				shuffle=split == 'train',
+				num_workers=cpu_count(),
+				pin_memory=torch.cuda.is_available()
+			)
 
-                Average_loss.append(loss.item())
-                Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
-                Average_NLL.append(NLL_loss.cpu().detach()/batch_size)
+			# tracker = defaultdict(tensor)
 
-            print(f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean ELBO {np.mean(Average_loss)}, Mean LF {np.mean(Average_NLL)}, Mean KL div {np.mean(Average_KL_Div)}")
-
-    def create_graph(self):
-        """First encode all train into the latent space"""
-        encoded=self.encode()
-        from sklearn.manifold import TSNE
-        tsne = TSNE(n_components=2)
-
-        features = tsne.fit_transform(encoded['encoded_train'])
-        x=features[:, 0]
-        y=features[:, 1]
-        labs=encoded['labels_train']
-        # sentences=encoded['sentences_train']
-        dico={}
-        for i in range(len(labs)):
-            dico[i]={'x':x[i], 'y':y[i], 'labs':labs[i].item(), 'points':encoded['encoded_train'][i].tolist()}
+			# Enable/Disable Dropout
+			if split == 'train':
+				self.model.train()
+				self.dataset_length=len(data_loader)
+			else:
+				self.model.eval()
 
 
-        df = pd.DataFrame.from_dict(dico, orient='index')
-        print(df)
-        df.to_csv(f'graph_{self.argdict["dataset"]}.tsv', sep='\t')
-        sdffd
+			Average_loss=[]
+			Average_NLL=[]
+			Average_KL_Div=[]
+			for iteration, batch in enumerate(data_loader):
+				# Forward pass
+				logp, mean, logv, z = self.model(batch)
+				batch_size = logp.shape[0]
+				# print(batch_size)
 
-    def train(self):
-        ts = time.strftime('%Y-%b-%d-%H:%M:%S', time.gmtime())
+				logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
+				NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'),  mean, logv)
+
+				loss = (NLL_loss +  KL_loss) / batch_size
+
+				# backward + optimization
+				if split == 'train':
+					self.optimizer.zero_grad()
+					loss.backward()
+					self.optimizer.step()
+					self.step += 1
+
+				Average_loss.append(loss.item())
+				Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
+				Average_NLL.append(NLL_loss.cpu().detach()/batch_size)
+
+			print(f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean ELBO {np.mean(Average_loss)}, Mean LF {np.mean(Average_NLL)}, Mean KL div {np.mean(Average_KL_Div)}")
+
+	def create_graph(self):
+		"""First encode all train into the latent space"""
+		encoded=self.encode()
+		from sklearn.manifold import TSNE
+		tsne = TSNE(n_components=2)
+
+		features = tsne.fit_transform(encoded['encoded_train'])
+		x=features[:, 0]
+		y=features[:, 1]
+		labs=encoded['labels_train']
+		# sentences=encoded['sentences_train']
+		dico={}
+		for i in range(len(labs)):
+			dico[i]={'x':x[i], 'y':y[i], 'labs':labs[i].item(), 'points':encoded['encoded_train'][i].tolist()}
 
 
-        print(self.model)
-        save_model_path = os.path.join(self.argdict['path'], 'bin')
-        # shutil.
-        os.makedirs(save_model_path, exist_ok=True)
+		df = pd.DataFrame.from_dict(dico, orient='index')
+		print(df)
+		df.to_csv(f'graph_{self.argdict["dataset"]}.tsv', sep='\t')
+		sdffd
 
-        # with open(os.path.join(save_model_path, 'model_params.json'), 'w') as f:
-        #     json.dump(self.params, f, indent=4)
+	def train(self):
+		ts = time.strftime('%Y-%b-%d-%H:%M:%S', time.gmtime())
 
 
+		print(self.model)
+		save_model_path = os.path.join(self.argdict['path'], 'bin')
+		# shutil.
+		os.makedirs(save_model_path, exist_ok=True)
 
-        # tensor = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.Tensor
-        # step = 0
-        # for epoch in range(self.argdict.epochs):
-        for epoch in range(self.argdict['nb_epoch']):
-            self.epoch=epoch
-            self.run_epoch()
-        self.interpolate()
-        # self.generate_from_train()
+		# with open(os.path.join(save_model_path, 'model_params.json'), 'w') as f:
+		#     json.dump(self.params, f, indent=4)
 
 
 
-    def test(self):
-        data_loader = DataLoader(
-            dataset=self.datasets['test'],
-            batch_size=64,  # self.argdict.batch_size,
-            shuffle=False,
-            num_workers=cpu_count(),
-            pin_memory=torch.cuda.is_available()
-        )
-
-        self.model.eval()
+		# tensor = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.Tensor
+		# step = 0
+		# for epoch in range(self.argdict.epochs):
+		for epoch in range(self.argdict['nb_epoch']):
+			self.epoch=epoch
+			self.run_epoch()
+		self.interpolate()
+		# self.generate_from_train()
 
 
-        Average_loss=[]
-        Average_NLL=[]
-        Average_KL_Div=[]
-        MIs=[]
-        mus=[]
-        NLL_mean_for_ppl=[]
-        for iteration, batch in enumerate(data_loader):
 
-            # Forward pass
-            logp, mean, logv, z = self.model(batch)
-            #Keeping track of the means for AU
-            mus.append(mean.detach().squeeze(0))
-            batch_size = logp.shape[0]
-            logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
-            NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'),  mean, logv)
+	def test(self):
+		data_loader = DataLoader(
+			dataset=self.datasets['test'],
+			batch_size=64,  # self.argdict.batch_size,
+			shuffle=False,
+			num_workers=cpu_count(),
+			pin_memory=torch.cuda.is_available()
+		)
 
-            NLL_mean=self.loss_function_ppl(logp, target.to('cuda'))
+		self.model.eval()
 
-            loss = (NLL_loss +  KL_loss) / batch_size
-            Average_loss.append(loss.item())
-            Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
-            Average_NLL.append(NLL_loss.cpu().detach()/batch_size)
-            NLL_mean_for_ppl.append(NLL_mean.cpu().detach())
-            # aggr=self.get_aggregate()
-            MIs.append(calc_mi(z, mean, logv))
-            # print(MIs)
-            # fds
 
-        # print(MIs)
-        AU=calc_au(mus)
-        encoded = self.encode()
-        X = encoded['encoded_test']
-        Y = encoded['labels_test']
+		Average_loss=[]
+		Average_NLL=[]
+		Average_KL_Div=[]
+		MIs=[]
+		mus=[]
+		NLL_mean_for_ppl=[]
+		for iteration, batch in enumerate(data_loader):
 
-        svc = LinearSVC()
-        svc.fit(X, Y)
-        sep=svc.score(X, Y)
-        # print(AU)
-        return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'Mean KL div' :np.mean(Average_KL_Div), 'PPL': {torch.exp(torch.mean(torch.Tensor(NLL_mean_for_ppl)))},
-                'Separability': sep, 'MI': {np.mean(MIs)}, 'Active Units': AU[0]}
+			# Forward pass
+			logp, mean, logv, z = self.model(batch)
+			#Keeping track of the means for AU
+			mus.append(mean.detach().squeeze(0))
+			batch_size = logp.shape[0]
+			logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
+			NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'),  mean, logv)
 
-    def get_aggregate(self):
-        dico={}
-        data_loader = DataLoader(
-            dataset=self.datasets['train'],
-            batch_size=64,  # self.argdict.batch_size,
-            shuffle=False,
-            num_workers=cpu_count(),
-            pin_memory=torch.cuda.is_available()
-        )
-        # Enable/Disable Dropout
+			NLL_mean=self.loss_function_ppl(logp, target.to('cuda'))
 
-        self.model.eval()
-        # print(f"The dataset length is {len(data_loader.dataset)}")
-        print(len(self.datasets['train']))
-        mus = torch.zeros(len(self.datasets['train']), self.argdict['latent_size'])
-        logvars = torch.zeros(len(self.datasets['train']), self.argdict['latent_size'])
-        counter = 0
-        for iteration, batch in enumerate(data_loader):
-            # print("Oh la la banana")
-            batch_size = batch['input'].size(0)
-            # print(batch['input'].shape)
-            for k, v in batch.items():
-                if torch.is_tensor(v):
-                    batch[k] = to_var(v)
-            #
-            # print(batch['input'])
-            # print(batch['input'].shape)
-            z, mu, logvar = self.model.encode(batch['input'])
-            # print(batch_size)
-            # print(z.shape)
-            mus[counter:counter + batch_size] = mu
-            logvars[counter:counter + batch_size] = logvar
-            counter += batch_size
-        # print(dataset)
-        dico[f"mus"] = mus
-        dico[f"logvars"] = logvars
-        # torch.save(labels, f"bin/labels_{split}.pt")
-        # torch.save(dataset, f"bin/encoded_{split}.pt")
-        return dico
+			loss = (NLL_loss +  KL_loss) / batch_size
+			Average_loss.append(loss.item())
+			Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
+			Average_NLL.append(NLL_loss.cpu().detach()/batch_size)
+			NLL_mean_for_ppl.append(NLL_mean.cpu().detach())
+			# aggr=self.get_aggregate()
+			MIs.append(calc_mi(z, mean, logv))
+			# print(MIs)
+			# fds
 
-    def generate_from_train(self):
-        data_loader = DataLoader(
-            dataset=self.datasets['train'],
-            batch_size=2,  # self.argdict.batch_size,
-            shuffle=False,
-            num_workers=cpu_count(),
-            pin_memory=torch.cuda.is_available()
-        )
+		# print(MIs)
+		AU=calc_au(mus)
+		encoded = self.encode()
+		X = encoded['encoded_test']
+		Y = encoded['labels_test']
 
-        self.model.eval()
+		svc = LinearSVC()
+		svc.fit(X, Y)
+		sep=svc.score(X, Y)
+		# print(AU)
+		return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'Mean KL div' :np.mean(Average_KL_Div), 'PPL': {torch.exp(torch.mean(torch.Tensor(NLL_mean_for_ppl)))},
+				'Separability': sep, 'MI': {np.mean(MIs)}, 'Active Units': AU[0]}
 
-        for iteration, batch in enumerate(data_loader):
+	def get_aggregate(self):
+		dico={}
+		data_loader = DataLoader(
+			dataset=self.datasets['train'],
+			batch_size=64,  # self.argdict.batch_size,
+			shuffle=False,
+			num_workers=cpu_count(),
+			pin_memory=torch.cuda.is_available()
+		)
+		# Enable/Disable Dropout
 
-            batch_size = batch['input'].size(0)
-            # print(batch)
-            for k, v in batch.items():
-                if torch.is_tensor(v):
-                    batch[k] = to_var(v)
+		self.model.eval()
+		# print(f"The dataset length is {len(data_loader.dataset)}")
+		print(len(self.datasets['train']))
+		mus = torch.zeros(len(self.datasets['train']), self.argdict['latent_size'])
+		logvars = torch.zeros(len(self.datasets['train']), self.argdict['latent_size'])
+		counter = 0
+		for iteration, batch in enumerate(data_loader):
+			# print("Oh la la banana")
+			batch_size = batch['input'].size(0)
+			# print(batch['input'].shape)
+			for k, v in batch.items():
+				if torch.is_tensor(v):
+					batch[k] = to_var(v)
+			#
+			# print(batch['input'])
+			# print(batch['input'].shape)
+			z, mu, logvar = self.model.encode(batch['input'])
+			# print(batch_size)
+			# print(z.shape)
+			mus[counter:counter + batch_size] = mu
+			logvars[counter:counter + batch_size] = logvar
+			counter += batch_size
+		# print(dataset)
+		dico[f"mus"] = mus
+		dico[f"logvars"] = logvars
+		# torch.save(labels, f"bin/labels_{split}.pt")
+		# torch.save(dataset, f"bin/encoded_{split}.pt")
+		return dico
 
-            # Forward pass
-            logp, mean, logv, z = self.model(batch)
-            samples, z = self.model.inference(z=z.squeeze(0))
-            gend=idx2word(samples, i2w=self.datasets['train'].get_i2w(), pad_idx=self.datasets['train'].get_w2i()['<pad>'],
-                     eos_idx=self.datasets['train'].get_w2i()['<eos>'])
-            # print(gend)
-            for sent, gen in zip(batch['sentence'], gend):
-                print(f"Original sentence: {sent}, generated: {gen}")
-            break
+	def generate_from_train(self):
+		data_loader = DataLoader(
+			dataset=self.datasets['train'],
+			batch_size=2,  # self.argdict.batch_size,
+			shuffle=False,
+			num_workers=cpu_count(),
+			pin_memory=torch.cuda.is_available()
+		)
 
-    def encode_decode(self):
-        #Encodes and decodes all the training dataset
-        data_loader = DataLoader(
-            dataset=self.datasets['dev'],
-            batch_size=2,  # self.argdict.batch_size,
-            shuffle=False,
-            num_workers=cpu_count(),
-            pin_memory=torch.cuda.is_available()
-        )
+		self.model.eval()
 
-        self.model.eval()
-        sentences=[]
-        ground_truth=[]
+		for iteration, batch in enumerate(data_loader):
 
-        for iteration, batch in enumerate(data_loader):
+			batch_size = batch['input'].size(0)
+			# print(batch)
+			for k, v in batch.items():
+				if torch.is_tensor(v):
+					batch[k] = to_var(v)
 
-            batch_size = batch['input'].size(0)
-            # print(batch)
-            for k, v in batch.items():
-                if torch.is_tensor(v):
-                    batch[k] = to_var(v)
+			# Forward pass
+			logp, mean, logv, z = self.model(batch)
+			samples, z = self.model.inference(z=z.squeeze(0))
+			gend=idx2word(samples, i2w=self.datasets['train'].get_i2w(), pad_idx=self.datasets['train'].get_w2i()['<pad>'],
+					 eos_idx=self.datasets['train'].get_w2i()['<eos>'])
+			# print(gend)
+			for sent, gen in zip(batch['sentence'], gend):
+				print(f"Original sentence: {sent}, generated: {gen}")
+			break
 
-            # Forward pass
-            logp, mean, logv, z = self.model(batch)
-            samples, z = self.model.inference(z=z.squeeze(0))
-            gend=idx2word(samples, i2w=self.datasets['train'].get_i2w(), pad_idx=self.datasets['train'].get_w2i()['<pad>'],
-                     eos_idx=self.datasets['train'].get_w2i()['<eos>'])
-            sentences.extend(gend)
-            ground_truth.extend(batch['sentence'])
-        return ground_truth, sentences
+	def encode_decode(self):
+		#Encodes and decodes all the training dataset
+		data_loader = DataLoader(
+			dataset=self.datasets['dev'],
+			batch_size=2,  # self.argdict.batch_size,
+			shuffle=False,
+			num_workers=cpu_count(),
+			pin_memory=torch.cuda.is_available()
+		)
 
-    def interpolate(self, n=5, classe=0):
-        p0=to_var(torch.randn([1, self.argdict['latent_size']]))
-        p1=to_var(torch.randn([1, self.argdict['latent_size']]))
-        points=torch.zeros(n, self.argdict['latent_size'])
-        points[0]=p0
-        points[n-1]=p1
-        for i in range(n):
-            ratio=i/n
-            px=(1-ratio)*p0+ratio*p1
-            points[i]=px
-        points=points.cuda()
-        classe=torch.zeros((n))+classe
-        samples, z = self.model.inference(z=points, labels=classe)
-        self.datasets['train'].process_generated(samples)
-        # generated = idx2word(samples, i2w=self.datasets['train'].get_i2w(), pad_idx=self.datasets['train'].get_w2i()['<pad>'], eos_idx=self.datasets['train'].get_w2i()['<eos>'])
-        # print("Interpolation:")
-        # for sent in generated:
-        #     print("------------------")
-        #     print(sent)
+		self.model.eval()
+		sentences=[]
+		ground_truth=[]
 
-    def encode(self):
-        with torch.no_grad():
-            dico={}
-            for split in self.splits:
-                data_loader = DataLoader(
-                    dataset=self.datasets[split],
-                    batch_size=64,#self.argdict.batch_size,
-                    shuffle=False,
-                    num_workers=cpu_count(),
-                    pin_memory=torch.cuda.is_available()
-                )
-                # Enable/Disable Dropout
+		for iteration, batch in enumerate(data_loader):
 
-                self.model.eval()
-                # print(f"The dataset length is {len(data_loader.dataset)}")
-                dataset = torch.zeros(len(data_loader.dataset), self.argdict['latent_size'])
-                labels = torch.zeros(len(data_loader.dataset))
-                sentences=[]
-                counter = 0
-                for iteration, batch in enumerate(data_loader):
-                    # print("Oh la la banana")
-                    batch_size = batch['input'].size(0)
-                    # print(batch['input'].shape)
-                    for k, v in batch.items():
-                        if torch.is_tensor(v):
-                            batch[k] = to_var(v)
-                    #
-                    # print(batch['input'])
-                    # print(batch['input'].shape)
-                    z, _, _ = self.model.encode(batch['input'], batch['label'])
-                    dataset[counter:counter + batch_size] = z
-                    labels[counter:counter + batch_size] = batch['label']
-                    counter += batch_size
-                # print(dataset)
-                dico[f"labels_{split}"]=labels
-                dico[f"encoded_{split}"]=dataset
-                # torch.save(labels, f"bin/labels_{split}.pt")
-                # torch.save(dataset, f"bin/encoded_{split}.pt")
-            return dico
+			batch_size = batch['input'].size(0)
+			# print(batch)
+			for k, v in batch.items():
+				if torch.is_tensor(v):
+					batch[k] = to_var(v)
 
-    def generate(self, datapoints, labels):
-        #Generates from fixed datapoints
-        self.model.eval()
+			# Forward pass
+			logp, mean, logv, z = self.model(batch)
+			samples, z = self.model.inference(z=z.squeeze(0))
+			gend=idx2word(samples, i2w=self.datasets['train'].get_i2w(), pad_idx=self.datasets['train'].get_w2i()['<pad>'],
+					 eos_idx=self.datasets['train'].get_w2i()['<eos>'])
+			sentences.extend(gend)
+			ground_truth.extend(batch['sentence'])
+		return ground_truth, sentences
 
-        samples, z = self.model.inference(z=datapoints)
-        # print(samples)
-        # print('----------SAMPLES----------')
-        return idx2word(samples, i2w=self.datasets['train'].get_i2w(), pad_idx=self.datasets['train'].get_w2i()['<pad>'], eos_idx=self.datasets['train'].get_w2i()['<eos>'])
+	def interpolate(self, n=5, classe=0):
+		p0=to_var(torch.randn([1, self.argdict['latent_size']]))
+		p1=to_var(torch.randn([1, self.argdict['latent_size']]))
+		points=torch.zeros(n, self.argdict['latent_size'])
+		points[0]=p0
+		points[n-1]=p1
+		for i in range(n):
+			ratio=i/n
+			px=(1-ratio)*p0+ratio*p1
+			points[i]=px
+		points=points.cuda()
+		classe=torch.zeros((n))+classe
+		samples, z = self.model.inference(z=points, labels=classe)
+		self.datasets['train'].process_generated(samples)
+		# generated = idx2word(samples, i2w=self.datasets['train'].get_i2w(), pad_idx=self.datasets['train'].get_w2i()['<pad>'], eos_idx=self.datasets['train'].get_w2i()['<eos>'])
+		# print("Interpolation:")
+		# for sent in generated:
+		#     print("------------------")
+		#     print(sent)
+
+	def encode(self):
+		with torch.no_grad():
+			dico={}
+			for split in self.splits:
+				data_loader = DataLoader(
+					dataset=self.datasets[split],
+					batch_size=64,#self.argdict.batch_size,
+					shuffle=False,
+					num_workers=cpu_count(),
+					pin_memory=torch.cuda.is_available()
+				)
+				# Enable/Disable Dropout
+
+				self.model.eval()
+				# print(f"The dataset length is {len(data_loader.dataset)}")
+				dataset = torch.zeros(len(data_loader.dataset), self.argdict['latent_size'])
+				labels = torch.zeros(len(data_loader.dataset))
+				sentences=[]
+				counter = 0
+				for iteration, batch in enumerate(data_loader):
+					# print("Oh la la banana")
+					batch_size = batch['input'].size(0)
+					# print(batch['input'].shape)
+					for k, v in batch.items():
+						if torch.is_tensor(v):
+							batch[k] = to_var(v)
+					#
+					# print(batch['input'])
+					# print(batch['input'].shape)
+					z, _, _ = self.model.encode(batch['input'], batch['label'])
+					dataset[counter:counter + batch_size] = z
+					labels[counter:counter + batch_size] = batch['label']
+					counter += batch_size
+				# print(dataset)
+				dico[f"labels_{split}"]=labels
+				dico[f"encoded_{split}"]=dataset
+				# torch.save(labels, f"bin/labels_{split}.pt")
+				# torch.save(dataset, f"bin/encoded_{split}.pt")
+			return dico
+
+	def generate(self, datapoints, labels):
+		#Generates from fixed datapoints
+		self.model.eval()
+
+		samples, z = self.model.inference(z=datapoints)
+		# print(samples)
+		# print('----------SAMPLES----------')
+		return idx2word(samples, i2w=self.datasets['train'].get_i2w(), pad_idx=self.datasets['train'].get_w2i()['<pad>'], eos_idx=self.datasets['train'].get_w2i()['<eos>'])
