@@ -65,6 +65,8 @@ if __name__ == '__main__':
         categories = ["NotIro", "Iro"]
     elif argsdict['dataset'] == "IronyB":
         categories = ["Clash", "Situational", "Other", "NotIro"]
+    elif argsdict['dataset'] == "MPhasisDe":
+        categories = ["negative", "positive"]
     elif argsdict['dataset'] == 'MNIST':
         categories = [0,1,2,3,4,5,6,7,8,9]
     else:
