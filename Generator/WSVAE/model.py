@@ -29,7 +29,7 @@ class WSVAE_model(nn.Module):
         if pretraining:
             # c = torch.multinomial(torch.Tensor([0.5, 0.5]), batch_size, replacement=True)
             # c=nn.functional.one_hot(c, num_classes=2).cuda()
-            c=torch.randint(10, (batch_size))
+            c=torch.randint(10, (1, batch_size))
             print(c)
             fds
         else:
