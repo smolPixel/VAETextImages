@@ -33,6 +33,8 @@ class WSVAE_model(nn.Module):
 
         else:
             c=F.gumbel_softmax(self.discriminator(batch['input']), tau=1, hard=True, dim=-1).unsqueeze(0)
+            c=torch.argmax(c, input=-1)
+            print(c.shape)
             # c = torch.softmax(self.discriminator(batch['input']), dim=-1)
         #
         z = to_var(torch.randn([batch_size, std.shape[-1]]))
@@ -40,8 +42,8 @@ class WSVAE_model(nn.Module):
         if len(z.shape) == 3:
             z[:, :, -1] = c
         elif len(z.shape) == 2:
-            print(torch.argmax(c, dim=-1).shape)
-            z[:, -1] = torch.argmax(c, dim=-1)
+            # print(torch.argmax(c, dim=-1).shape)
+            z[:, -1] = c
         else:
             raise ValueError()
         logp = self.decoder(input_sequence, z)
