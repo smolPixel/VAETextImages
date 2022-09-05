@@ -27,9 +27,11 @@ class WSVAE_model(nn.Module):
         # clogvar, zlogvar = logv[:, :, -1], logv[:, :, :-1]
         std = torch.exp(0.5 * logv)
         if pretraining:
-            c = torch.multinomial(torch.Tensor([0.5, 0.5]), batch_size, replacement=True)
-            c=nn.functional.one_hot(c, num_classes=2).cuda()
- 
+            # c = torch.multinomial(torch.Tensor([0.5, 0.5]), batch_size, replacement=True)
+            # c=nn.functional.one_hot(c, num_classes=2).cuda()
+            c=torch.randint(0, 10, batch_size)
+            print(c)
+            fds
         else:
             c=F.gumbel_softmax(self.discriminator(batch['input']), tau=1, hard=True, dim=-1).unsqueeze(0)
             # c = torch.softmax(self.discriminator(batch['input']), dim=-1)
