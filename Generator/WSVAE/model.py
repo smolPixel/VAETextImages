@@ -37,6 +37,7 @@ class WSVAE_model(nn.Module):
         z = to_var(torch.randn([batch_size, std.shape[-1]]))
         z = z * std + mean
         print(c.shape)
+        print(z.shape)
         z[:, :, -2: ]=c
         logp = self.decoder(input_sequence, z)
 
