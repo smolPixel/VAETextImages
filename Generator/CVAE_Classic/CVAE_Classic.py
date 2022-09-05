@@ -21,7 +21,7 @@ from Decoders.decoder import decoder
 from sklearn.svm import LinearSVC
 from metrics import calc_mi, calc_au
 
-class CVAE():
+class CVAE_Classic():
 
 	def __init__(self, argdict, train, dev, test):
 		self.argdict=argdict
