@@ -210,7 +210,12 @@ class WSVAE():
                 logp, mean, logv, z = self.model(batch, pretraining=False)
                 batch_size = logp.shape[0]
                 # print(batch_size)
-                z_normal, c = z[:, :, :-2], z[:, :, -2:]
+                if len(z.shape)==3:
+                    z_normal, c = z[:, :, :-1], z[:, :, -1:]
+                elif len(z.shape)==2:
+                    z_normal, c = z[:,  :-1], z[:, -1:]
+                else:
+                    raise ValueError
 
                 #Getting discriminator loss
                 softmaxed_gumbeled = F.gumbel_softmax(logp, tau=1, hard=True, dim=-1)
