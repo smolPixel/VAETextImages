@@ -426,7 +426,7 @@ class WSVAE():
             loss = (NLL_loss +  KL_loss) / batch_size
             Average_loss.append(loss.item())
             Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
-            Average_NLL.append(NLL_loss.cpu().detach())
+            Average_NLL.append(NLL_loss.cpu().detach()/batch_size)
             NLL_mean_for_ppl.append(NLL_mean.cpu().detach())
             # aggr=self.get_aggregate()
             MIs.append(calc_mi(z, mean, logv))

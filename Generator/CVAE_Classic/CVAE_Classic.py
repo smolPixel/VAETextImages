@@ -15,13 +15,13 @@ from sklearn.metrics import accuracy_score
 
 # from Generators.VAE.ptb import PTB
 from Generator.utils import to_var, idx2word, expierment_name
-from Generator.CVAE.model import CVAE_model
+from Generator.CVAE_Classic.model import CVAE_Classic_model
 from Encoders.encoder import encoder
 from Decoders.decoder import decoder
 from sklearn.svm import LinearSVC
 from metrics import calc_mi, calc_au
 
-class CVAE_Classic():
+class CVAE():
 
     def __init__(self, argdict, train, dev, test):
         self.argdict=argdict
@@ -48,7 +48,7 @@ class CVAE_Classic():
             encoder=enco,
             decoder=deco
         )
-        model = CVAE_model(**params)
+        model = CVAE_Classic_model(**params)
         if torch.cuda.is_available():
             model = model.cuda()
 
