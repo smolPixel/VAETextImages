@@ -62,25 +62,27 @@ class WSVAE_model(nn.Module):
 
         z = to_var(torch.randn([batch_size, self.argdict['latent_size']]))
         # cmu, zmu = mean[:, :, -1], mean[:, :, :-1]
+        # if len(z.shape) == 3:
+        #     cmu, zmu = mean[:, :, -1], mean[:, :, :-1]
+        #     clogvar, zlogvar = logv[:, :, -1], logv[:, :, :-1]
+        # elif len(z.shape) == 2:
+        #     # print(torch.argmax(c, dim=-1).shape)
+        #     cmu, zmu = mean[:, -1], mean[:, :-1]
+        #     clogvar, zlogvar = logv[:, -1], logv[:, :-1]
+        # else:
+        #     raise ValueError()
+        # clogvar, zlogvar = logv[:, :, -1], logv[:, :, :-1]
+        z = to_var(torch.randn([batch_size, std.shape[-1]]))
+        z = z * std + mean
+        c = F.gumbel_softmax(self.discriminator(input_sequence), tau=1, hard=True, dim=-1).unsqueeze(0)
+        c = torch.argmax(c, dim=-1)
         if len(z.shape) == 3:
-            cmu, zmu = mean[:, :, -1], mean[:, :, :-1]
-            clogvar, zlogvar = logv[:, :, -1], logv[:, :, :-1]
+            z[:, :, -1] = c
         elif len(z.shape) == 2:
             # print(torch.argmax(c, dim=-1).shape)
-            cmu, zmu = mean[:, -1], mean[:, :-1]
-            clogvar, zlogvar = logv[:, -1], logv[:, :-1]
+            z[:, -1] = c
         else:
             raise ValueError()
-        # clogvar, zlogvar = logv[:, :, -1], logv[:, :, :-1]
-        zstd = torch.exp(0.5 * zlogvar)
-        # c = torch.sigmoid(clogvar).unsqueeze(-1)
-        #
-        z = to_var(torch.randn([batch_size, zstd.shape[-1]]))
-        z = z * zstd + zmu
-        # c = torch.bernoulli(c)
-        c = F.gumbel_softmax(self.discriminator(input_sequence), tau=1, hard=True, dim=-1).unsqueeze(0)
-        c = torch.argmax(c, dim=-1).squeeze(0)
-        z = torch.cat((z, c), dim=-1)
         # print(z.shape)
 
         return z
