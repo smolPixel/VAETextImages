@@ -29,9 +29,8 @@ class WSVAE_model(nn.Module):
         if pretraining:
             # c = torch.multinomial(torch.Tensor([0.5, 0.5]), batch_size, replacement=True)
             # c=nn.functional.one_hot(c, num_classes=2).cuda()
-            c=torch.randint(10, (1, batch_size))
-            print(c)
-            fds
+            c=torch.randint(self.argdict['num_classes'], (1, batch_size))
+
         else:
             c=F.gumbel_softmax(self.discriminator(batch['input']), tau=1, hard=True, dim=-1).unsqueeze(0)
             # c = torch.softmax(self.discriminator(batch['input']), dim=-1)
@@ -40,7 +39,7 @@ class WSVAE_model(nn.Module):
         z = z * std + mean
         print(c.shape)
         print(z.shape)
-        z[:, :, -2: ]=c
+        z[:, :, -1]=c
         logp = self.decoder(input_sequence, z)
 
         return logp, mean, logv, z
