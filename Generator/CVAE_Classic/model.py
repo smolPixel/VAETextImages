@@ -17,12 +17,12 @@ class CVAE_Classic_model(nn.Module):
         input_sequence = batch['input']
 
         batch_size = input_sequence.size(0)
-        mean, logv = self.encoder(input_sequence)
+        mean, logv = self.encoder(batch, append_labels=True)
         std = torch.exp(0.5 * logv)
 
         z = to_var(torch.randn([batch_size, self.argdict['latent_size']]))
         z = z * std + mean
-        logp = self.decoder(input_sequence, z)
+        logp = self.decoder(batch, z, append_labels=True)
 
         return logp, mean, logv, z
 
