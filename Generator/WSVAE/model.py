@@ -73,11 +73,13 @@ class WSVAE_model(nn.Module):
             raise ValueError()
         # clogvar, zlogvar = logv[:, :, -1], logv[:, :, :-1]
         zstd = torch.exp(0.5 * zlogvar)
-        c = torch.sigmoid(clogvar).unsqueeze(-1)
+        # c = torch.sigmoid(clogvar).unsqueeze(-1)
         #
         z = to_var(torch.randn([batch_size, zstd.shape[-1]]))
         z = z * zstd + zmu
-        c = torch.bernoulli(c)
+        # c = torch.bernoulli(c)
+        c = F.gumbel_softmax(self.discriminator(input_sequence), tau=1, hard=True, dim=-1).unsqueeze(0)
+        c = torch.argmax(c, dim=-1)
         z = torch.cat((z, c), dim=-1)
         # print(z.shape)
 
