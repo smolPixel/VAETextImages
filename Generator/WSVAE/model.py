@@ -61,7 +61,14 @@ class WSVAE_model(nn.Module):
         std = torch.exp(0.5 * logv)
 
         z = to_var(torch.randn([batch_size, self.argdict['latent_size']]))
-        cmu, zmu = mean[:, :, -1], mean[:, :, :-1]
+        # cmu, zmu = mean[:, :, -1], mean[:, :, :-1]
+        if len(z.shape) == 3:
+            cmu, zmu = mean[:, :, -1], mean[:, :, :-1]
+        elif len(z.shape) == 2:
+            # print(torch.argmax(c, dim=-1).shape)
+            cmu, zmu = mean[:, -1], mean[:, :-1]
+        else:
+            raise ValueError()
         clogvar, zlogvar = logv[:, :, -1], logv[:, :, :-1]
         zstd = torch.exp(0.5 * zlogvar)
         c = torch.sigmoid(clogvar).unsqueeze(-1)
