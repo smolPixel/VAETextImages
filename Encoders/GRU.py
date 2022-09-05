@@ -16,14 +16,16 @@ class GRU_Encoder(nn.Module):
 		self.hidden2logv = nn.Linear(argdict['hidden_size'], argdict['latent_size'])
 
 	def forward(self, batch, append_labels=False):
-		print(batch, append_labels)
-		fds
-		input_sequence=input_sequence.to('cuda')
+
+		input_sequence=batch['input'].to('cuda')
 		if isinstance(input_sequence, torch.LongTensor) or (
 				torch.cuda.is_available() and isinstance(input_sequence, torch.cuda.LongTensor)):
 			input_embedding = self.embedding(input_sequence)
 		else:
 			input_embedding = torch.matmul(input_sequence, self.embedding.weight)
+		print(input_embedding.shape)
+		print(batch['label'].shape)
+		fds
 		_, hidden = self.rnn(input_embedding)
 		mean = self.hidden2mean(hidden)
 		logv = self.hidden2logv(hidden)
