@@ -50,7 +50,7 @@ class CVAE_Classic(nn.Module):
         self.latent2hidden = nn.Linear(latent_size, hidden_size * self.hidden_factor)
         self.outputs2vocab = nn.Linear(hidden_size * (2 if bidirectional else 1), vocab_size)
 
-    def forward(self, input_sequence, length, labels):
+    def forward(self, input_sequence, labels):
         #We need to add labels to input sequence
 
 
@@ -74,12 +74,6 @@ class CVAE_Classic(nn.Module):
 
         _, hidden = self.encoder_rnn(input_embedding)
 
-        if self.bidirectional or self.num_layers > 1:
-            # flatten hidden state
-            hidden = hidden.view(batch_size, self.hidden_size*self.hidden_factor)
-        else:
-            hidden = hidden.squeeze()
-
         # REPARAMETERIZATION
         mean = self.hidden2mean(hidden)
         logv = self.hidden2logv(hidden)
@@ -88,20 +82,11 @@ class CVAE_Classic(nn.Module):
         z = to_var(torch.randn([batch_size, self.latent_size]))
         z = z * std + mean
 
+        print(labels)
+        fds
 
-        # print(labels)
-        # print(ll)
-        # print(labels)
-        # print(ll.shape)
-        # ll.scatter_(1, labels, 1)
-        # print(ll)
         ll = torch.zeros((batch_size, self.num_classes)).cuda()
         ll.scatter_(1, labels, 1)
-        # print(ll)
-        # print(z.shape)
-        # print(ll.shape)
-        # z=torch.cat([z, ll], dim=1)
-
         # DECODER
         hidden = self.latent2hidden(z)
 
