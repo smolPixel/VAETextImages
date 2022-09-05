@@ -37,7 +37,7 @@ class WSVAE_model(nn.Module):
         #
         z = to_var(torch.randn([batch_size, std.shape[-1]]))
         z = z * std + mean
-        print(c)
+        print(torch.argmax(c, dim=-1))
         if len(z.shape) == 3:
             z[:, :, -1] = c
         elif len(z.shape) == 2:
