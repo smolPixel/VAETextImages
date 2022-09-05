@@ -80,6 +80,8 @@ class WSVAE_model(nn.Module):
         # c = torch.bernoulli(c)
         c = F.gumbel_softmax(self.discriminator(input_sequence), tau=1, hard=True, dim=-1).unsqueeze(0)
         c = torch.argmax(c, dim=-1)
+        print(c.shape)
+        print(z.shape)
         z = torch.cat((z, c), dim=-1)
         # print(z.shape)
 
