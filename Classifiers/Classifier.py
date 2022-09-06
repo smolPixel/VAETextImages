@@ -40,3 +40,6 @@ class classifier():
     def train_test(self, datasetTrain, datasetDev, datasetTest, num_epochs=-1):
         """Receive as argument a dataloader from pytorch"""
         return self.algo.train_model(datasetTrain, datasetDev, datasetTest, num_epochs)
+
+    def label(self, sentences):
+        return self.algo.label(sentences)

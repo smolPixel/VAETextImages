@@ -220,7 +220,7 @@ class CVAE_Classic():
 		classe_gend = torch.zeros((n)) + 0
 		samples, z = self.model.inference(z=points, labels=classe_gend)
 		sentences=self.datasets['train'].decode(samples)
-		preds=classe.labels(sentences)
+		preds=classe.label(sentences)
 		print(preds)
 		fds
 
