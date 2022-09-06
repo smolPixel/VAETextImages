@@ -13,7 +13,7 @@ class Bert_Classifier(pl.LightningModule):
     def __init__(self, argdict):
         super().__init__()
         self.argdict=argdict
-        trained=False
+        self.trained=False
         try:
             # self.tokenizer = BertTokenizer.from_pretrained('Models/bert_labellers_tokenizer.ptf')
             self.model = BertForSequenceClassification.from_pretrained(f'Models/{self.argdict["dataset"]}/bert_labeller', num_labels=len(self.argdict['categories']))
@@ -21,7 +21,7 @@ class Bert_Classifier(pl.LightningModule):
             # acc, confMatr = self.calculateAccuracyDev(test, self.model, self.tokenizer)
             # print(f"Model has already been trained with an accuracy of {acc}")
             # print(confMatr)
-            trained=True
+            self.trained=True
             print("Loaded Model")
         except:
             self.tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
