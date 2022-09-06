@@ -216,24 +216,16 @@ class CVAE_Classic():
 		from Classifiers.Classifier import classifier
 		classe=classifier(self.argdict)
 		classe.train(self.datasets['train'], self.datasets['dev'])
-		#Generate 500 examples of each class
-		n=500
-		points = to_var(torch.randn([500, self.argdict['latent_size']]))
-		classe_gend = torch.zeros((n)) + 0
-		samples, z = self.model.inference(z=points, labels=classe_gend)
-		sentences=self.datasets['train'].decode(samples)
-		pred, conf=classe.label(sentences)
-		preds_all.extend(pred.tolist())
-		labels_all.extend(classe_gend.tolist())
-		n=500
-		points = to_var(torch.randn([500, self.argdict['latent_size']]))
-		classe_gend = torch.zeros((n)) + 1
-		samples, z = self.model.inference(z=points, labels=classe_gend)
-		sentences=self.datasets['train'].decode(samples)
-		pred, conf=classe.label(sentences)
-		preds_all.extend(pred.tolist())
-		labels_all.extend(classe_gend.tolist())
-
+		#Generate 1000/n_class examples of each class
+		n=1000//self.argdict['num_classes']
+		for i in range(self.argdict['num_classes']):
+			points = to_var(torch.randn([n, self.argdict['latent_size']]))
+			classe_gend = torch.zeros((n)) + i
+			samples, z = self.model.inference(z=points, labels=classe_gend)
+			sentences=self.datasets['train'].decode(samples)
+			pred, conf=classe.label(sentences)
+			preds_all.extend(pred.tolist())
+			labels_all.extend(classe_gend.tolist())
 
 		return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'Mean KL div' :np.mean(Average_KL_Div), 'PPL': {torch.exp(torch.mean(torch.Tensor(NLL_mean_for_ppl)))},
 				'Separability': sep, 'Generation of correct classes': accuracy_score(labels_all, preds_all),
