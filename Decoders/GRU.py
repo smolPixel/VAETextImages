@@ -86,7 +86,6 @@ class GRU_Decoder(nn.Module):
 			if labels is not None:
 				labs = labels.unsqueeze(1).repeat(1, input_embedding.shape[1]).cuda()
 				input_embedding[:, :, -1] = labs
-			fds
 
 			output, hidden = self.rnn(input_embedding, hidden)
 
