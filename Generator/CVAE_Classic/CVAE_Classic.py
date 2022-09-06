@@ -234,11 +234,10 @@ class CVAE_Classic():
 		preds_all.extend(pred.tolist())
 		labels_all.extend(classe_gend.tolist())
 
-		print(accuracy_score(labels_all, preds_all))
-		fds
 
 		return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'Mean KL div' :np.mean(Average_KL_Div), 'PPL': {torch.exp(torch.mean(torch.Tensor(NLL_mean_for_ppl)))},
-				'Separability': sep, 'MI': {np.mean(MIs)}, 'Active Units': AU[0]}
+				'Separability': sep, 'Generation of correct classes': accuracy_score(labels_all, preds_all),
+				'MI': {np.mean(MIs)}, 'Active Units': AU[0]}
 
 	def get_aggregate(self):
 		dico={}
