@@ -26,15 +26,11 @@ class CVAE_Classic_model(nn.Module):
 
         return logp, mean, logv, z
 
-    def encode(self, input_sequence):
-        # print("HIHIOHOHO")
-        # print(input_sequence.shape)
-        batch_size = input_sequence.size(0)
-        # sorted_lengths, sorted_idx = torch.sort(length, descending=True)
-        # input_sequence = input_sequence[sorted_idx]
+    def encode(self, batch):
+        input_sequence = batch['input']
 
-        # ENCODER
-        mean, logv = self.encoder(input_sequence)
+        batch_size = input_sequence.size(0)
+        mean, logv = self.encoder(batch, append_labels=True)
         std = torch.exp(0.5 * logv)
 
         z = to_var(torch.randn([batch_size, self.argdict['latent_size']]))
