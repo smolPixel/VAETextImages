@@ -17,6 +17,8 @@ class Linear_Encoder(nn.Module):
 		h = F.relu(self.fc1(input_sequence))
 		if append_labels:
 			labs=batch['label'].unsqueeze(1).repeat(1, h.shape[1]).cuda()
+			print(labs.shape)
+			print(h.shape)
 			h[:, -1]=labs
 			print(h)
 		fds
