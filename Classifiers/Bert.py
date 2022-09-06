@@ -13,17 +13,7 @@ class Bert_Classifier(pl.LightningModule):
     def __init__(self, argdict):
         super().__init__()
         self.argdict=argdict
-        try:
-            # self.tokenizer = BertTokenizer.from_pretrained('Models/bert_labellers_tokenizer.ptf')
-            self.model = BertForSequenceClassification.from_pretrained(f'Models/{self.argdict["dataset"]}/bert_labeller', num_labels=len(self.argdict['categories']))
-            self.tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-            # acc, confMatr = self.calculateAccuracyDev(test, self.model, self.tokenizer)
-            # print(f"Model has already been trained with an accuracy of {acc}")
-            # print(confMatr)
-            print("Loaded Model")
-        except:
-            self.tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-            self.model = BertForSequenceClassification.from_pretrained('bert-base-uncased', num_labels=self.argdict['num_classes'])
+
         # for param in self.model.base_model.parameters():
         #     param.requires_grad = False
 
@@ -130,8 +120,21 @@ class Bert_Classifier(pl.LightningModule):
             pin_memory=torch.cuda.is_available()
         )
 
-
-        self.trainer.fit(self, train_loader, dev_loader)
+        try:
+            # self.tokenizer = BertTokenizer.from_pretrained('Models/bert_labellers_tokenizer.ptf')
+            self.model = BertForSequenceClassification.from_pretrained(
+                f'Models/{self.argdict["dataset"]}/bert_labeller', num_labels=len(self.argdict['categories']))
+            self.tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+            # acc, confMatr = self.calculateAccuracyDev(test, self.model, self.tokenizer)
+            # print(f"Model has already been trained with an accuracy of {acc}")
+            # print(confMatr)
+            print("Loaded Model")
+        except:
+            self.tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+            self.model = BertForSequenceClassification.from_pretrained('bert-base-uncased',
+                                                                       num_labels=self.argdict['num_classes'])
+            self.trainer.fit(self, train_loader, dev_loader)
+            self.model.save_pretrained(f'Models/{self.argdict["dataset"]}/bert_labeller')
 
         final = self.trainer.test(self, dev_loader)
         print(final)
