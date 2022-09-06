@@ -135,6 +135,7 @@ class Bert_Classifier(pl.LightningModule):
 
         final = self.trainer.test(self, dev_loader)
         print(final)
+        fds
         return final[0]['Test_Acc'], self.current_epoch
 
 
