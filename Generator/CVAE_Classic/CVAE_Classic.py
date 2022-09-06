@@ -214,6 +214,14 @@ class CVAE_Classic():
 		from Classifiers.Classifier import classifier
 		classe=classifier(self.argdict)
 		classe.train(self.datasets['train'], self.datasets['dev'])
+		#Generate 500 examples of each class
+		n=500
+		points = to_var(torch.randn([500, self.argdict['latent_size']]))
+		classe = torch.zeros((n)) + 0
+		samples, z = self.model.inference(z=points, labels=classe)
+		print(self.datasets['train'].decode(samples))
+		fds
+
 		return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'Mean KL div' :np.mean(Average_KL_Div), 'PPL': {torch.exp(torch.mean(torch.Tensor(NLL_mean_for_ppl)))},
 				'Separability': sep, 'MI': {np.mean(MIs)}, 'Active Units': AU[0]}
 

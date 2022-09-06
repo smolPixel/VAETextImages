@@ -104,6 +104,13 @@ class SST2_dataset(Dataset):
 			print("------------------")
 			print(sent)
 
+
+	def decode(self, exo):
+		generated = idx2word(exo, i2w=self.get_i2w(),
+							 pad_idx=self.get_w2i()['<pad>'],
+							 eos_idx=self.get_w2i()['<eos>'])
+		return generated
+
 	def get_i2w(self):
 		return self.vocab_object.get_itos()
 
