@@ -34,7 +34,7 @@ class Bert_Classifier(pl.LightningModule):
         return optimizer
 
 
-    def on_train_batch_start(self, batch, batch_idx, dataloader_idx):
+    def on_train_batch_start(self, batch, batch_idx):
         text_batch = batch['sentence']
         encoding = self.tokenizer(text_batch, return_tensors='pt', padding=True, truncation=True)
         input_ids = encoding['input_ids'].to(self.device)
