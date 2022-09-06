@@ -1,0 +1,20 @@
+---
+dataset: "MNIST"
+computer: "labo"
+dataset_size: 0
+random_seed: 42
+max_length: 0
+algo: "CVAE_Classic"
+encoder: "Linear"
+decoder: "Linear"
+nb_epoch: 30
+latent_size: 15
+
+embedding_size: 300
+hidden_size_encoder: [512, 256]
+hidden_size_decoder: [256, 512]
+num_layers: 1
+batch_size: 64
+dropout: 0.3
+word_dropout: 0.3
+x0: 15
