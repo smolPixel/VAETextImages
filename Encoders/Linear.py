@@ -15,6 +15,7 @@ class Linear_Encoder(nn.Module):
 		input_sequence=batch['input']
 		input_sequence=input_sequence.view(-1, self.argdict['input_size']).to('cuda').float()
 		print(input_sequence.shape)
+		fds
 		h = F.relu(self.fc1(input_sequence))
 		hidden = F.relu(self.fc2(h))
 		mean = self.hidden2mean(hidden)
