@@ -132,8 +132,9 @@ class Bert_Classifier(pl.LightningModule):
             pin_memory=torch.cuda.is_available()
         )
 
-
-        self.trainer.fit(self, train_loader, dev_loader)
+        if not self.trained:
+            self.trainer.fit(self, train_loader, dev_loader)
+            self.model.save_pretrained(f'Models/{self.argdict["dataset"]}/bert_labeller')
 
         final = self.trainer.test(self, dev_loader)
         print(final)
