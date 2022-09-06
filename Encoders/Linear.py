@@ -17,11 +17,7 @@ class Linear_Encoder(nn.Module):
 		h = F.relu(self.fc1(input_sequence))
 		if append_labels:
 			labs=batch['label'].unsqueeze(0).cuda()
-			print(labs.shape)
-			print(h.shape)
 			h[:, -1]=labs
-			print(h)
-		fds
 		hidden = F.relu(self.fc2(h))
 		mean = self.hidden2mean(hidden)
 		logv = self.hidden2logv(hidden)
