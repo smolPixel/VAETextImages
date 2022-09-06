@@ -20,10 +20,10 @@ class decoder(nn.Module):
 		else:
 			raise ValueError("unrecognized Encoder")
 
-	def forward(self, input, z):
+	def forward(self, batch, z, append_labels=False):
 		norm=torch.clone(torch.linalg.norm(self.model.latent2hidden.weight))
 		self.norm.append(norm.item())
-		return self.model(input, z)
+		return self.model(batch, z, append_labels)
 
 	def generate(self, z, **kwargs):
 		return self.model.generate(z, **kwargs)

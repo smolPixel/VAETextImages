@@ -29,12 +29,10 @@ class GRU_Decoder(nn.Module):
 		self.outputs2vocab = nn.Linear(hidden_size, vocab_size)
 
 
-	def forward(self, input_sequence, latent_space):
-		input_sequence=input_sequence.to('cuda')
+	def forward(self, batch, latent_space, append_labels):
+		input_sequence=batch['input'].to('cuda')
 		# input_embedding = self.embedding(input_sequence)
 		hidden=self.latent2hidden(latent_space)
-		# print()
-		# fds
 		if self.word_dropout_rate > 0:
 			# randomly replace decoder input with <unk>
 			prob = torch.rand(input_sequence.size())
@@ -44,6 +42,8 @@ class GRU_Decoder(nn.Module):
 			decoder_input_sequence = input_sequence.clone()
 			decoder_input_sequence[prob < self.word_dropout_rate] = self.unk_idx
 			input_embedding = self.embedding(decoder_input_sequence)
+			print(input_embedding.shape)
+			fds
 		# input_embedding = self.embedding_dropout(input_embedding)
 
 
