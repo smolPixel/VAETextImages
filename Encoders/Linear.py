@@ -14,10 +14,10 @@ class Linear_Encoder(nn.Module):
 	def forward(self, batch, append_labels=False):
 		input_sequence=batch['input']
 		input_sequence=input_sequence.view(-1, self.argdict['input_size']).to('cuda').float()
-		print(batch['label'])
-		print(input_sequence.shape)
-		fds
 		h = F.relu(self.fc1(input_sequence))
+		print(batch['label'])
+		print(h.shape)
+		fds
 		hidden = F.relu(self.fc2(h))
 		mean = self.hidden2mean(hidden)
 		logv = self.hidden2logv(hidden)
