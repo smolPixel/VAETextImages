@@ -83,8 +83,9 @@ class GRU_Decoder(nn.Module):
 				input_sequence = input_sequence.unsqueeze(1)
 
 			input_embedding = self.embedding(input_sequence.cuda())
-			print(input_embedding.shape)
-			print(labels)
+			if labels:
+				labs = labels.unsqueeze(1).repeat(1, input_embedding.shape[1]).cuda()
+				input_embedding[:, :, -1] = labs
 			fds
 
 			output, hidden = self.rnn(input_embedding, hidden)
