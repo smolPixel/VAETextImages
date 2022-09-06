@@ -225,7 +225,16 @@ class CVAE_Classic():
 		pred, conf=classe.label(sentences)
 		preds_all.extend(pred.tolist())
 		labels_all.extend(classe_gend.tolist())
-		print(preds_all, labels_all)
+		n=500
+		points = to_var(torch.randn([500, self.argdict['latent_size']]))
+		classe_gend = torch.zeros((n)) + 1
+		samples, z = self.model.inference(z=points, labels=classe_gend)
+		sentences=self.datasets['train'].decode(samples)
+		pred, conf=classe.label(sentences)
+		preds_all.extend(pred.tolist())
+		labels_all.extend(classe_gend.tolist())
+
+		print(accuracy_score(labels_all, preds_all))
 		fds
 
 		return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'Mean KL div' :np.mean(Average_KL_Div), 'PPL': {torch.exp(torch.mean(torch.Tensor(NLL_mean_for_ppl)))},
