@@ -217,8 +217,8 @@ class CVAE_Classic():
 		#Generate 500 examples of each class
 		n=500
 		points = to_var(torch.randn([500, self.argdict['latent_size']]))
-		classe = torch.zeros((n)) + 0
-		samples, z = self.model.inference(z=points, labels=classe)
+		classe_gend = torch.zeros((n)) + 0
+		samples, z = self.model.inference(z=points, labels=classe_gend)
 		sentences=self.datasets['train'].decode(samples)
 		preds=classe.labels(sentences)
 		print(preds)
