@@ -211,6 +211,8 @@ class CVAE_Classic():
 		# print(AU)
 
 		#Correctness of the generated exos
+		preds_all=[]
+		labels_all=[]
 		from Classifiers.Classifier import classifier
 		classe=classifier(self.argdict)
 		classe.train(self.datasets['train'], self.datasets['dev'])
@@ -220,8 +222,10 @@ class CVAE_Classic():
 		classe_gend = torch.zeros((n)) + 0
 		samples, z = self.model.inference(z=points, labels=classe_gend)
 		sentences=self.datasets['train'].decode(samples)
-		preds, conf=classe.label(sentences)
-		print(preds)
+		pred, conf=classe.label(sentences)
+		preds_all.extend(pred.tolist())
+		labels_all.extend(classe_gend.tolist())
+		print(preds_all, labels_all)
 		fds
 
 		return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'Mean KL div' :np.mean(Average_KL_Div), 'PPL': {torch.exp(torch.mean(torch.Tensor(NLL_mean_for_ppl)))},
