@@ -25,6 +25,8 @@ class GRU_Encoder(nn.Module):
 			input_embedding = torch.matmul(input_sequence, self.embedding.weight)
 		print(input_embedding.shape)
 		print(batch['label'].shape)
+		labs=batch['label'].unsqueeze(1).repeat(1, input_embedding.shape[1])
+		print(labs)
 		fds
 		_, hidden = self.rnn(input_embedding)
 		mean = self.hidden2mean(hidden)
