@@ -26,7 +26,8 @@ class GRU_Encoder(nn.Module):
 		print(input_embedding.shape)
 		print(batch['label'].shape)
 		if append_labels:
-			labs=batch['label'].unsqueeze(1).repeat(1, input_embedding.shape[1]).cuda().unsqueeze(1)
+			labs=batch['label'].unsqueeze(1).repeat(1, input_embedding.shape[1]).cuda().unsqueeze(-1)
+			print(labs.shape)
 			input_embedding=torch.cat([input_embedding, labs], dim=-1)
 			print(input_embedding.shape)
 		fds
