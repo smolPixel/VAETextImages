@@ -113,7 +113,7 @@ class Bert_Classifier(pl.LightningModule):
         # print("WARNING REIMPLEMENT EARLY STOPPING")
         # self.best_model=ModelCheckpoint(dirpath='Temp', monitor='Val_Acc', mode='max', filename=f'best_{self.argdict["dataset"]}_{self.argdict["algo"]}', save_top_k=1, every_n_epochs=1)
 
-        self.trainer = pl.Trainer(gpus=self.argdict['gpus'], max_epochs=self.argdict['num_epochs_classifier'], precision=16, accelerator="dp")#, persistent_workers=True)#, enable_checkpointing=False)
+        self.trainer = pl.Trainer(gpus=self.argdict['gpus'], max_epochs=self.argdict['num_epochs_classifier'], precision=16)#, persistent_workers=True)#, enable_checkpointing=False)
         # trainer=pl.Trainer(max_epochs=self.argdict['num_epochs'])
         train_loader = DataLoader(
             dataset=training_set,
