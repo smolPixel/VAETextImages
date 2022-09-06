@@ -219,7 +219,9 @@ class CVAE_Classic():
 		points = to_var(torch.randn([500, self.argdict['latent_size']]))
 		classe = torch.zeros((n)) + 0
 		samples, z = self.model.inference(z=points, labels=classe)
-		print(self.datasets['train'].decode(samples))
+		sentences=self.datasets['train'].decode(samples)
+		preds=classe.labels(sentences)
+		print(preds)
 		fds
 
 		return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'Mean KL div' :np.mean(Average_KL_Div), 'PPL': {torch.exp(torch.mean(torch.Tensor(NLL_mean_for_ppl)))},
