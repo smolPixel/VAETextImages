@@ -6,6 +6,7 @@ import pandas as pd
 class classifier():
 
     def __init__(self, argdict):
+        print(argdict)
         if argdict['classifier']=='svm':
             from Classifiers.svm import SVM_Classifier
             self.algo=SVM_Classifier(argdict)
