@@ -209,6 +209,11 @@ class CVAE_Classic():
 		svc.fit(X, Y)
 		sep=svc.score(X, Y)
 		# print(AU)
+
+		#Correctness of the generated exos
+		from Classifiers.Classifier import classifier
+		classe=classifier(self.datasets)
+
 		return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'Mean KL div' :np.mean(Average_KL_Div), 'PPL': {torch.exp(torch.mean(torch.Tensor(NLL_mean_for_ppl)))},
 				'Separability': sep, 'MI': {np.mean(MIs)}, 'Active Units': AU[0]}
 

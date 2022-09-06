@@ -5,7 +5,7 @@ import pandas as pd
 
 class classifier():
 
-    def __init__(self, argdict, train, dev, test):
+    def __init__(self, argdict):
         if argdict['classifier']=='svm':
             from Classifiers.svm import SVM_Classifier
             self.algo=SVM_Classifier(argdict)
@@ -32,6 +32,10 @@ class classifier():
 
     def init_model(self):
         self.algo.init_model()
+
+
+    def train(self, train, dev):
+        return self.algo.train_model(train, dev)
 
     def train_test(self, datasetTrain, datasetDev, datasetTest, num_epochs=-1):
         """Receive as argument a dataloader from pytorch"""
