@@ -52,7 +52,7 @@ class GRU_Decoder(nn.Module):
 		logp = nn.functional.log_softmax(self.outputs2vocab(outputs), dim=-1)
 		return logp
 
-	def generate(self, z):
+	def generate(self, z, labels=None):
 		batch_size = z.size(0)
 
 		hidden = self.latent2hidden(z)
@@ -83,6 +83,8 @@ class GRU_Decoder(nn.Module):
 				input_sequence = input_sequence.unsqueeze(1)
 
 			input_embedding = self.embedding(input_sequence.cuda())
+			print(input_embedding.shape)
+			fds
 
 			output, hidden = self.rnn(input_embedding, hidden)
 

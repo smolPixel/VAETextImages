@@ -44,13 +44,13 @@ class CVAE_Classic_model(nn.Module):
         # z[:, :, -1]=labels
         return z, mean, logv
 
-    def inference(self, n=4, z=None):
+    def inference(self, n=4, z=None, labels=None):
         # if z is None:
         #     batch_size = n
         #     z = to_var(torch.randn([batch_size, self.latent_size]))
         # else:
         #     batch_size = z.size(0)
 
-        generated = self.decoder.generate(z)  # , pad_idx=self.pad_idx, sos_idx=self.sos_idx)
+        generated = self.decoder.generate(z, labels)  # , pad_idx=self.pad_idx, sos_idx=self.sos_idx)
 
         return generated, z
