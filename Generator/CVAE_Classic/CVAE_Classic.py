@@ -37,7 +37,6 @@ class CVAE_Classic():
 			self.loss_function_ppl = self.loss_function_basic
 
 	def init_model_dataset(self):
-		fds
 		self.step = 0
 		self.epoch = 0
 		self.argdict['input_size']=self.argdict['input_size']+self.argdict['num_classes']
