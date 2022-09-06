@@ -26,7 +26,6 @@ class GRU_Encoder(nn.Module):
 		if append_labels:
 			labs=batch['label'].unsqueeze(1).repeat(1, input_embedding.shape[1]).cuda()
 			input_embedding[:, :, -1]=labs
-			print(input_embedding.shape)
 		_, hidden = self.rnn(input_embedding)
 		mean = self.hidden2mean(hidden)
 		logv = self.hidden2logv(hidden)

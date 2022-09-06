@@ -42,8 +42,9 @@ class GRU_Decoder(nn.Module):
 			decoder_input_sequence = input_sequence.clone()
 			decoder_input_sequence[prob < self.word_dropout_rate] = self.unk_idx
 			input_embedding = self.embedding(decoder_input_sequence)
-			print(input_embedding.shape)
-			fds
+			if append_labels:
+				labs = batch['label'].unsqueeze(1).repeat(1, input_embedding.shape[1]).cuda()
+				input_embedding[:, :, -1] = labs
 		# input_embedding = self.embedding_dropout(input_embedding)
 
 
