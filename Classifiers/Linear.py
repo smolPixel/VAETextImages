@@ -111,6 +111,27 @@ class LinearClassifier(pl.LightningModule):
         self.trainer.fit(self, train_loader, dev_loader)
         # fds
 
+    def label(self, inputs):
+        #Predict the label of text
+        with torch.no_grad():
+            bs = input.shape[0]
+            input_sequence = input.view(-1, self.argdict['input_size']).to('cuda').float()
+            output = self.linear_layer(input_sequence)
+            results = torch.max(torch.softmax(output, dim=-1), dim=-1)
+        # with torch.no_grad():
+        #     text_batch = texts
+        #     encoding = self.tokenizer(text_batch, return_tensors='pt', padding=True, truncation=True)
+        #     input_ids = encoding['input_ids'].to(self.device)
+        #     attention_mask = encoding['attention_mask'].to(self.device)
+        #     # print(encoding)
+        #     # labels = batch['label']
+        #     outputs = self.model(input_ids, attention_mask=attention_mask)
+        #     results = torch.max(torch.softmax(outputs['logits'], dim=1), dim=1)
+        #     Confidence= results[0]
+
+        # print(Confidence)
+        # proba=np.max(np.array(self.algo.predict_proba(x_sent_tf)), axis=1)
+        return results[1], results[0]
 
     def forward(self, inputs):
         input_sequence = inputs.view(-1, self.argdict['input_size']).to(self.device)

@@ -222,8 +222,8 @@ class CVAE_Classic():
 			points = to_var(torch.randn([n, self.argdict['latent_size']]))
 			classe_gend = torch.zeros((n)) + i
 			samples, z = self.model.inference(z=points, labels=classe_gend)
-			sentences=self.datasets['train'].decode(samples)
-			pred, conf=classe.label(sentences)
+			gend_decoded=self.datasets['train'].decode(samples)
+			pred, conf=classe.label(gend_decoded)
 			preds_all.extend(pred.tolist())
 			labels_all.extend(classe_gend.tolist())
 
