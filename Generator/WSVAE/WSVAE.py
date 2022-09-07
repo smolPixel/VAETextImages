@@ -113,9 +113,9 @@ class WSVAE():
                 # print(batch_size)
 
                 logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
-                NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'),  mean, logv)
-
-                loss = (NLL_loss +  KL_loss) / batch_size
+                NLL_loss, KL_loss, KL_weight = self.loss_fn(logp, target,  mean, logv, 'logistic', self.step,
+                                                            0.0025)
+                loss = (NLL_loss + KL_weight * KL_loss) / batch_size
 
                 # backward + optimization
                 if split == 'train':
