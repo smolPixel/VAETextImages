@@ -90,16 +90,15 @@ class WSVAE_model(nn.Module):
     def discriminate(self, input):
         return self.discriminator.forward(input)
 
-    def inference(self,  n=4, z=None):
+    def inference(self, z, labels):
 
-
-        if z is None:
-            batch_size = n
-            z = to_var(torch.randn([batch_size, self.latent_size]))
+        if len(z.shape) == 3:
+            z[:, :, -1] = labels
+        elif len(z.shape) == 2:
+            z[:, -1] = labels
         else:
-            batch_size = z.size(0)
+            raise ValueError()
 
-
-        generated=self.decoder.generate(z, None)
+        generated = self.decoder.generate(z, None)  # , pad_idx=self.pad_idx, sos_idx=self.sos_idx)
 
         return generated, z
