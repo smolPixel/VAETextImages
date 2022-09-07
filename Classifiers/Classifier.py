@@ -24,6 +24,9 @@ class classifier():
         elif argdict['classifier']=='svm_latent':
             from Classifiers.svm_latent import SVM_Latent_Classifier
             self.algo=SVM_Latent_Classifier(argdict, datasets, datasetsLabelled)
+        elif argdict['classifier'].lower()=="linear":
+            from Classifiers.Linear import LinearClassifier
+            self.algo=LinearClassifier(argdict)
         else:
             raise ValueError(f"No classifier named {argdict['classifier']}")
         self.argdict=argdict
