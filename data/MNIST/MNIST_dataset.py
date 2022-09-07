@@ -33,8 +33,7 @@ class MNIST_dataset(Dataset):
 		# fds
 
 	def decode(self, exos):
-		print(exos.shape)
-		fds
+		return exos.detach().cpu().view(exos.shape[0], 28, 28)
 
 	def test_reconstruction(self, model):
 		#First, get imgs of a 7 and a 0, which are fairly different
