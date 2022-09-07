@@ -69,22 +69,19 @@ class WSVAE():
         return model, params
 
 
-    def loss_fn(self, logp, target,  mean, logv):
-        # NLL = torch.nn.NLLLoss(ignore_index=self.datasets['train'].pad_idx, reduction='sum')
-        # cut-off unnecessary padding from target, and flatten
-        # target = target[:, :torch.max(length).item()].contiguous().view(-1)
-        # target = target.contiguous().view(-1)
-        # logp = logp.view(-1, logp.size(2))
+    def kl_anneal_function(self, anneal_function, step, k, x0):
+        if anneal_function == 'logistic':
+            return float(1 / (1 + np.exp(-k * (step - x0))))
+        elif anneal_function == 'linear':
+            return min(1, step / x0)
 
-        # Negative Log Likelihood
+    def loss_fn(self, logp, target,  mean, logv, anneal_function, step, k):
         NLL_loss = self.loss_function_basic(logp, target)
-        # BCE = torch.nn.functional.binary_cross_entropy(logp, target.view(-1, 784), reduction='sum')
         # KL Divergence
         KL_loss = -0.5 * torch.sum(1 + logv - mean.pow(2) - logv.exp())
-        # KL_weight = self.kl_anneal_function(anneal_function, step, k, self.dataset_length*self.argdict['x0'])
+        KL_weight = self.kl_anneal_function(anneal_function, step, k, self.dataset_length*self.argdict['x0'])
 
-        return NLL_loss, KL_loss
-        # return BCE, KL_loss
+        return NLL_loss, KL_loss, KL_weight
 
     def run_epoch(self, pretraining=False):
         for split in self.splits:

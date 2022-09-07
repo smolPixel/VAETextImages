@@ -76,7 +76,6 @@ class VAE_Annealing():
             data_loader = DataLoader(
                 dataset=self.datasets[split],
                 batch_size=64,  # self.argdict.batch_size,
-                batch_size=64,  # self.argdict.batch_size,
                 shuffle=split == 'train',
                 num_workers=cpu_count(),
                 pin_memory=torch.cuda.is_available()
