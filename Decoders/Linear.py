@@ -18,7 +18,10 @@ class Linear_Decoder(nn.Module):
 		h = F.relu(self.fc5(h))
 		return F.sigmoid(self.fc6(h))
 
-	def generate(self, z):
+	def generate(self, z, labels=None):
+		if labels is not None:
+			labs = batch['label'].unsqueeze(0).cuda()
+			z[:, -1] = labs
 		h = F.relu(self.latent2hidden(z))
 		h = F.relu(self.fc5(h))
 		return F.sigmoid(self.fc6(h))
