@@ -54,6 +54,11 @@ class CVAE_Classic():
 
 		return model, params
 
+	def kl_anneal_function(self, anneal_function, step, k, x0):
+		if anneal_function == 'logistic':
+			return float(1 / (1 + np.exp(-k * (step - x0))))
+		elif anneal_function == 'linear':
+			return min(1, step / x0)
 
 	def loss_fn(self, logp, target,  mean, logv, anneal_function, step, k):
 		NLL_loss = self.loss_function_basic(logp, target)
