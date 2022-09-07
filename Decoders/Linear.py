@@ -20,7 +20,7 @@ class Linear_Decoder(nn.Module):
 
 	def generate(self, z, labels=None):
 		if labels is not None:
-			labs = batch['label'].unsqueeze(0).cuda()
+			labs = labels.unsqueeze(0).cuda()
 			z[:, -1] = labs
 		h = F.relu(self.latent2hidden(z))
 		h = F.relu(self.fc5(h))
