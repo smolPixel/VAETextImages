@@ -10,6 +10,9 @@ decoder: "Linear"
 nb_epoch: 30
 latent_size: 15
 
+classifier: "Linear"
+nb_epoch_classifier: 10
+
 embedding_size: 300
 hidden_size_encoder: [512, 256]
 hidden_size_decoder: [256, 512]
