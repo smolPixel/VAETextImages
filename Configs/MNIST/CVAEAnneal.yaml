@@ -4,7 +4,7 @@ computer: "labo"
 dataset_size: 0
 random_seed: 42
 max_length: 0
-algo: "CVAE_Anneal"
+algo: "CVAE_Annealing"
 encoder: "Linear"
 decoder: "Linear"
 nb_epoch: 30
