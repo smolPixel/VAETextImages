@@ -16,7 +16,7 @@ class LinearClassifier(pl.LightningModule):
 
         self.embedding_size=300
         self.init_model()
-        self.loss_function=
+        self.loss_function=torch.nn.CrossEntropyLoss()
         # self.loss_function=
         # print(self.model)
 
