@@ -32,6 +32,10 @@ class MNIST_dataset(Dataset):
 			plt.imsave(f'Temp/{name}.png', img.cpu().detach().view(28, 28), cmap='gray_r')
 		# fds
 
+	def decode(self, exos):
+		print(exos)
+		fds
+
 	def test_reconstruction(self, model):
 		#First, get imgs of a 7 and a 0, which are fairly different
 		# for key, item in self.data.items():
