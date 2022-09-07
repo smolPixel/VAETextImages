@@ -9,6 +9,7 @@ encoder: "Linear"
 decoder: "Linear"
 nb_epoch: 1 #30
 latent_size: 15
+num_classes: 10
 
 classifier: "Linear"
 nb_epoch_classifier: 10
