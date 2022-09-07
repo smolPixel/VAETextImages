@@ -10,8 +10,10 @@ class Linear_Decoder(nn.Module):
 		self.fc5 = nn.Linear(self.argdict['hidden_size_encoder'][1], self.argdict['hidden_size_encoder'][0])
 		self.fc6 = nn.Linear(self.argdict['hidden_size_encoder'][0], self.argdict['input_size'])
 
-	def forward(self, input_sequence, z):
+	def forward(self, batch, z, append_labels=False):
 		h = F.relu(self.latent2hidden(z))
+		print(h.shape)
+		fds
 		h = F.relu(self.fc5(h))
 		return F.sigmoid(self.fc6(h))
 
