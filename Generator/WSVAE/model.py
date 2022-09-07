@@ -22,7 +22,7 @@ class WSVAE_model(nn.Module):
         input_sequence=batch['input']
 
         batch_size = input_sequence.size(0)
-        mean, logv=self.encoder(input_sequence)
+        mean, logv=self.encoder(batch)
         # cmu, zmu = mean[:, :, -1], mean[:, :, :-1]
         # clogvar, zlogvar = logv[:, :, -1], logv[:, :, :-1]
         std = torch.exp(0.5 * logv)
@@ -45,7 +45,7 @@ class WSVAE_model(nn.Module):
             z[:, -1] = c
         else:
             raise ValueError()
-        logp = self.decoder(input_sequence, z)
+        logp = self.decoder(batch, z)
 
         return logp, mean, logv, z
 
