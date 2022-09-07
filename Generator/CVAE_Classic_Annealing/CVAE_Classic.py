@@ -192,11 +192,11 @@ class CVAE_Classic():
 			mus.append(mean.detach().squeeze(0))
 			batch_size = logp.shape[0]
 			logp, target=self.datasets['train'].shape_for_loss_function(logp, batch['target'])
-			NLL_loss, KL_loss= self.loss_fn(logp, target.to('cuda'),  mean, logv, 'logistic', self.step, 0.0025)
+			NLL_loss, KL_loss, KL_weight= self.loss_fn(logp, target.to('cuda'),  mean, logv, 'logistic', self.step, 0.0025)
 
 			NLL_mean=self.loss_function_ppl(logp, target.to('cuda'))
 
-			loss = (NLL_loss +  KL_loss) / batch_size
+			loss = (NLL_loss + KL_weight * KL_loss) / batch_size
 			Average_loss.append(loss.item())
 			Average_KL_Div.append(KL_loss.cpu().detach()/batch_size)
 			Average_NLL.append(NLL_loss.cpu().detach()/batch_size)
