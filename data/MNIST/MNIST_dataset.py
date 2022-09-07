@@ -33,7 +33,7 @@ class MNIST_dataset(Dataset):
 		# fds
 
 	def decode(self, exos):
-		print(exos)
+		print(exos.shape)
 		fds
 
 	def test_reconstruction(self, model):
