@@ -42,6 +42,9 @@ class generator():
         elif algo == "CVAE_Classic":
             from Generator.CVAE_Classic.CVAE_Classic import CVAE_Classic
             self.generator=CVAE_Classic(self.argdict, train, dev, test)
+        elif algo == "CVAE_Classic_Annealing":
+            from Generator.CVAE_Classic_Annealing.CVAE_Classic import CVAE_Classic
+            self.generator=CVAE_Classic(self.argdict, train, dev, test)
         elif algo == "BVAE":
             from Generator.BVAE.BVAE import BVAE
             self.generator = BVAE(self.argdict, train, dev, test)
