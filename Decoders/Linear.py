@@ -12,9 +12,9 @@ class Linear_Decoder(nn.Module):
 
 	def forward(self, batch, z, append_labels=False):
 		h = F.relu(self.latent2hidden(z))
-		if append_labels:
-			labs = batch['label'].unsqueeze(0).cuda()
-			h[:, -1] = labs
+		# if append_labels:
+		# 	labs = batch['label'].unsqueeze(0).cuda()
+		# 	h[:, -1] = labs
 		h = F.relu(self.fc5(h))
 		return F.sigmoid(self.fc6(h))
 
