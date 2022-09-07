@@ -37,11 +37,11 @@ class CVAE_model(nn.Module):
 		return logp, mean, logv, z
 
 
-	def encode(self, input_sequence, labels):
+	def encode(self, batch):
 		batch_size = input_sequence.size(0)
 
 		batch_size = input_sequence.size(0)
-		mean, logv = self.encoder(input_sequence)
+		mean, logv = self.encoder(batch)
 		std = torch.exp(0.5 * logv)
 
 		z = to_var(torch.randn([batch_size, self.argdict['latent_size']]))
@@ -63,6 +63,6 @@ class CVAE_model(nn.Module):
 		else:
 			raise ValueError()
 
-		generated = self.decoder.generate(z, labels)  # , pad_idx=self.pad_idx, sos_idx=self.sos_idx)
+		generated = self.decoder.generate(z, None)  # , pad_idx=self.pad_idx, sos_idx=self.sos_idx)
 
 		return generated, z
