@@ -38,6 +38,8 @@ class CVAE_model(nn.Module):
 
 
 	def encode(self, batch):
+		input_sequence=batch['input']
+		labels=batch['label']
 		batch_size = input_sequence.size(0)
 
 		batch_size = input_sequence.size(0)
