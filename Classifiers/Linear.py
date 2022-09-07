@@ -5,7 +5,6 @@ import torch.nn as nn
 import os
 from sklearn.metrics import accuracy_score, recall_score, f1_score
 import pytorch_lightning as pl
-from utils import set_seed
 
 class LinearClassifier(pl.LightningModule):
 
@@ -21,7 +20,6 @@ class LinearClassifier(pl.LightningModule):
         # print(self.model)
 
     def init_model(self):
-        set_seed(self.argdict['random_seed'])
         self.linear_layer=nn.Linear(self.argdict['input_size'], 10)
         # self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)
         # for param in self.model.base_model.parameters():
