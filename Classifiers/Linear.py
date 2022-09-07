@@ -113,6 +113,7 @@ class LinearClassifier(pl.LightningModule):
 
     def label(self, inputs):
         #Predict the label of text
+        print(inputs)
         with torch.no_grad():
             bs = input.shape[0]
             input_sequence = input.view(-1, self.argdict['input_size']).to('cuda').float()
