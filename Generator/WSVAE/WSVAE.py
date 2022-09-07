@@ -50,10 +50,10 @@ class WSVAE():
 
         enco=encoder(self.argdict)#vocab_size=self.datasets['train'].vocab_size, embedding_size=300, hidden_size=self.argdict['hidden_size'], latent_size=self.argdict['latent_size'])
 
-        argdict_decoder=copy.deepcopy(self.argdict)
+        # argdict_decoder=copy.deepcopy(self.argdict)
         #Need to modify here because the decoder takes more than just the latent space
-        argdict_decoder['latent_size']=argdict_decoder['latent_size']
-        deco=decoder(argdict_decoder)
+        # argdict_decoder['latent_size']=argdict_decoder['latent_size']
+        deco=decoder(self.argdict)
         discri=discriminator(self.argdict)
 
         params = dict(
