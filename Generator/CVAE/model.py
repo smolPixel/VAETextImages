@@ -63,6 +63,6 @@ class CVAE_model(nn.Module):
 		else:
 			raise ValueError()
 
-		generated = self.decoder.generate(z)  # , pad_idx=self.pad_idx, sos_idx=self.sos_idx)
+		generated = self.decoder.generate(z, labels)  # , pad_idx=self.pad_idx, sos_idx=self.sos_idx)
 
 		return generated, z
