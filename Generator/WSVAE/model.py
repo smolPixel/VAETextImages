@@ -32,7 +32,7 @@ class WSVAE_model(nn.Module):
             c=torch.randint(self.argdict['num_classes'], ( 1, batch_size)).squeeze(0)
 
         else:
-            c=F.gumbel_softmax(self.discriminator(batch['input']), tau=1, hard=True, dim=-1).unsqueeze(0)
+            c=F.gumbel_softmax(self.discriminator(batch), tau=1, hard=True, dim=-1).unsqueeze(0)
             c=torch.argmax(c, dim=-1)
             # c = torch.softmax(self.discriminator(batch['input']), dim=-1)
         #
