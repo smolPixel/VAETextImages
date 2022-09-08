@@ -157,7 +157,7 @@ class WSVAE():
                 ground_truth=[]
                 losses=[]
                 for iteration, batch in enumerate(data_loader):
-                    output=self.model.discriminator.forward(batch['input'])
+                    output=self.model.discriminator.forward(batch)
                     # print(output)
                     # print(output.shape)
                     # print(batch['label'])

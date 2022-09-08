@@ -14,7 +14,8 @@ class GRU_Discriminator(nn.Module):
 
 		self.linear = nn.Linear(argdict['hidden_size'], 2)
 
-	def forward(self, input_sequence):
+	def forward(self, batch):
+		input_sequence=batch['input']
 		input_sequence = input_sequence.to('cuda')
 		if isinstance(input_sequence, torch.LongTensor) or (
             torch.cuda.is_available() and isinstance(input_sequence, torch.cuda.LongTensor)):

@@ -8,10 +8,10 @@ algo: "WSVAE"
 encoder: "Linear"
 decoder: "Linear"
 discriminator: "Linear"
-nb_epoch: 30
+nb_epoch: 1 #30
 latent_size: 15
 nb_epoch_discriminator: 1
-nb_epoch_fine_tuning: 5
+nb_epoch_fine_tuning: 1 #5
 num_classes: 10
 
 classifier: "Linear"
