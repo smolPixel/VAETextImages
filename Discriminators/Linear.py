@@ -13,7 +13,7 @@ class Linear_Discriminator(nn.Module):
 		self.fc2 = nn.Linear(self.argdict['hidden_size_encoder'][0], self.argdict['hidden_size_encoder'][1])
 		self.linear = nn.Linear(self.argdict['hidden_size_encoder'][1], self.argdict['num_classes'])
 
-	def forward(self, batch, append_labels):
+	def forward(self, batch, append_labels=False):
 		input_sequence=batch['input']
 		input_sequence = input_sequence.view(-1, self.argdict['input_size']).to('cuda').float()
 		h = F.relu(self.fc1(input_sequence))
