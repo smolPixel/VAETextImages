@@ -14,6 +14,9 @@ nb_epoch_discriminator: 1
 nb_epoch_fine_tuning: 5
 num_classes: 10
 
+classifier: "Linear"
+nb_epoch_classifier: 10
+
 embedding_size: 300
 hidden_size_encoder: [512, 256]
 hidden_size_decoder: [256, 512]
