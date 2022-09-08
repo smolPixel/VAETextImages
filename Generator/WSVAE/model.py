@@ -74,7 +74,7 @@ class WSVAE_model(nn.Module):
         # clogvar, zlogvar = logv[:, :, -1], logv[:, :, :-1]
         z = to_var(torch.randn([batch_size, std.shape[-1]]))
         z = z * std + mean
-        c = F.gumbel_softmax(self.discriminator(input_sequence), tau=1, hard=True, dim=-1).unsqueeze(0)
+        c = F.gumbel_softmax(self.discriminator({'input':input_sequence}), tau=1, hard=True, dim=-1).unsqueeze(0)
         c = torch.argmax(c, dim=-1)
         if len(z.shape) == 3:
             z[:, :, -1] = c
