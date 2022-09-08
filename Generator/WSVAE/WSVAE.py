@@ -333,7 +333,8 @@ class WSVAE():
             px=(1-ratio)*p0+ratio*p1
             points[i]=px
         points=points.cuda()
-        samples, z = self.model.inference(z=points)
+        classe_gend = torch.zeros((n))
+        samples, z = self.model.inference(z=points, classe_gend)
         self.datasets['train'].process_generated(samples)
         # generated = idx2word(samples, i2w=self.datasets['train'].get_i2w(), pad_idx=self.datasets['train'].get_w2i()['<pad>'], eos_idx=self.datasets['train'].get_w2i()['<eos>'])
         # print("Interpolation:")
