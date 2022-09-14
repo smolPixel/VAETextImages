@@ -17,3 +17,5 @@ dropout: 0.3
 word_dropout: 0.3
 x0: 15
 k: 0.025
+
+min_z=3
