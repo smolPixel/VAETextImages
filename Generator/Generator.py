@@ -36,6 +36,9 @@ class generator():
         elif algo == "VAE_Annealing":
             from Generator.VAE_Annealing.VAE import VAE_Annealing
             self.generator = VAE_Annealing(self.argdict, train, dev, test)
+        elif algo == "VAE_Annealing_Reg":
+            from Generator.VAE_Annealing_Reg.VAE import VAE_Annealing_Reg
+            self.generator = VAE_Annealing_Reg(self.argdict, train, dev, test)
         elif algo == "CVAE":
             from Generator.CVAE.CVAE import CVAE
             self.generator=CVAE(self.argdict, train, dev, test)
