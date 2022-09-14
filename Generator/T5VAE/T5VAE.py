@@ -15,7 +15,7 @@ from transformers import (
 #     MaxLengthCriteria,
 #     StoppingCriteriaList,
 # )
-from Generator.T5VAE.model import T5ForConditionalGeneration
+from Generator.T5VAE.model import ModifiedT5ForConditionalGeneration
 
 # logging.getLogger("transformers").setLevel(logging.ERROR)
 
