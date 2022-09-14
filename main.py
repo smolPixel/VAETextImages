@@ -28,6 +28,7 @@ def main(argdict):
     set_seed(argdict['random_seed'])
     train, dev, test=create_datasets(argdict)
     print(len(train))
+    print(train.data[0])
     fds
     Gen = generator(argdict, train, dev, test)
     Gen.train()
