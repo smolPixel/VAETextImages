@@ -37,8 +37,6 @@ def get_dataFrame(argdict):
     dfTest=pd.read_csv(f'{argdict["path"]}/data/{task}/test.tsv', sep='\t')
     #
     if argdict['dataset_size']!=0:
-        print("BIT")
-        fds
     #     #Sampling balanced data
     #     # print(len(dfTrain[dfTrain['label']==0]))
     #     # prop=len(dfTrain[dfTrain['label']==0])/len(dfTrain)
@@ -52,8 +50,9 @@ def get_dataFrame(argdict):
             # print(int(argdict['dataset_size']/len(argdict['categories'])))
             # print(i)
             NewdfTrain=pd.concat([NewdfTrain ,dfTrain[dfTrain['label']==i].sample(n=nb_points)])
-        dfTrain.drop(NewdfTrain.index)
-        dfTrain.to_csv(f"{argdict['path']}/SelectedData/{argdict['dataset']}/{argdict['dataset_size']}/train_{argdict['random_seed']}.tsv", sep='\t')
+        dfTrain=NewdfTrain
+        # dfTrain.drop(NewdfTrain.index)
+        # dfTrain.to_csv(f"{argdict['path']}/SelectedData/{argdict['dataset']}/{argdict['dataset_size']}/train_{argdict['random_seed']}.tsv", sep='\t')
     return dfTrain, dfVal, dfTest
 
 def create_datasets(argdict):
