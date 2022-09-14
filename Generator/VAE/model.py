@@ -22,7 +22,7 @@ class VAE_model(nn.Module):
         input_sequence=batch['input']
 
         batch_size = input_sequence.size(0)
-        mean, logv=self.encoder(input_sequence)
+        mean, logv=self.encoder(batch)
         std = torch.exp(0.5 * logv)
 
         z = to_var(torch.randn([batch_size, self.argdict['latent_size']]))
