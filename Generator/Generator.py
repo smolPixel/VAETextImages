@@ -57,6 +57,10 @@ class generator():
         elif algo == "WSVAE":
             from Generator.WSVAE.WSVAE import WSVAE
             self.generator = WSVAE(self.argdict, train, dev, test)
+        """Pretrained"""
+        elif algo == "T5VAE":
+            from Generator.T5VAE.T5VAE import T5VAE
+            self.generator = T5VAE(self.argdict, train, dev, test)
         else:
             raise ValueError(f"No generator named {algo}")
 
