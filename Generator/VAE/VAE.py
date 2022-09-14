@@ -67,9 +67,7 @@ class VAE():
         # BCE = torch.nn.functional.binary_cross_entropy(logp, target.view(-1, 784), reduction='sum')
         # KL Divergence
         KL_loss = -0.5 * torch.sum(1 + logv - mean.pow(2) - logv.exp())
-        print(KL_loss)
-        print(KL_loss.shape)
-        fds
+
         # KL_weight = self.kl_anneal_function(anneal_function, step, k, self.dataset_length*self.argdict['x0'])
 
         return NLL_loss, KL_loss

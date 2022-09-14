@@ -67,12 +67,10 @@ class VAE_Annealing_Reg():
     def loss_fn(self, logp, target,  mean, logv, anneal_function, step, k):
         NLL_loss = self.loss_function_basic(logp, target)
         # KL Divergence dimension wise
-        print(mean.shape)
         KL_loss = -0.5 * (1 + logv - mean.pow(2) - logv.exp())
         KL_loss=KL_loss.squeeze(0)
         KL_loss[KL_loss < self.argdict['min_z']] = self.argdict['min_z']
-        print(KL_loss.shape)
-        fds
+        KL_loss=torch.sum(KL_loss)
         KL_weight = self.kl_anneal_function(anneal_function, step, k, self.dataset_length*self.argdict['x0'])
 
         return NLL_loss, KL_loss, KL_weight
