@@ -246,9 +246,7 @@ class T5VAE(LightningModule):
 			max_epochs=15
 		)
 
-		trainer.fit(
-			self, train_dataloader=self.datasets['train'], val_dataloaders=self.datasets['dev']
-		)
+		trainer.fit(self, self.datasets['train'], self.datasets['dev'])
 
 		model = model_class.load_from_checkpoint(
 			checkpoint_callback.best_model_path,
