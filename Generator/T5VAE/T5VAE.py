@@ -83,6 +83,7 @@ class T5VAE(LightningModule):
 	#####
 
 	def run_batch(self, batch, batch_idx, training=False):
+		print(batch)
 		encoder_inputs, encoder_masks, decoder_targets = batch
 
 		if training and self.denoise_percentage:
