@@ -50,7 +50,7 @@ class T5VAE(LightningModule):
 			config=self.config,
 			argdict=argdict
 		)
-		self.tokenizer = T5Tokenizer(argdict['base_model'])
+		self.tokenizer = T5Tokenizer.from_pretrained(argdict['base_model'])
 		self.argdict=argdict
 		self.splits=['train', 'dev', 'test']
 		self.datasets={'train':train, 'dev':dev, 'test':test}
