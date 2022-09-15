@@ -247,7 +247,7 @@ class T5VAE(LightningModule):
 		)
 
 		trainer.fit(
-			model, train_dataloader=train_dataloader, val_dataloaders=val_dataloader
+			self, train_dataloader=self.datasets['train'], val_dataloaders=self.datasets['dev']
 		)
 
 		model = model_class.load_from_checkpoint(
