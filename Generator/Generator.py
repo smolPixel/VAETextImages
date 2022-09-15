@@ -69,7 +69,7 @@ class generator():
         self.classifier=classifier
 
     def train(self):
-        self.generator.train()
+        self.generator.train_model()
 
         #Weight graph
 
