@@ -15,6 +15,7 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
     def __init__(self, config, latent_dim, pooling_strategy):
         super().__init__(config)
         self.latent_dim = latent_dim
+        print(config)
         self.mu = nn.Linear(config.d_model, latent_dim, bias=False)
         self.logvar = nn.Linear(config.d_model, latent_dim, bias=False)
         self.embed_size_per_head = config.d_model // config.num_heads
