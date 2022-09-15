@@ -14,7 +14,7 @@ from transformers import (
 	T5Config,
 	T5ForConditionalGeneration,
 	get_linear_schedule_with_warmup,
-	T5TokenizerFast
+	T5Tokenizer
 )
 # from transformers.generation_stopping_criteria import (
 #     MaxLengthCriteria,
@@ -50,7 +50,7 @@ class T5VAE(LightningModule):
 			config=self.config,
 			argdict=argdict
 		)
-		self.tokenizer = T5TokenizerFast(argdict['base_model'])
+		self.tokenizer = T5Tokenizer(argdict['base_model'])
 		self.argdict=argdict
 		self.splits=['train', 'dev', 'test']
 		self.datasets={'train':train, 'dev':dev, 'test':test}
