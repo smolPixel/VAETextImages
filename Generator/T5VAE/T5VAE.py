@@ -7,12 +7,14 @@ import pytorch_lightning as pl
 from pytorch_lightning.core.lightning import LightningModule
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
+
 from torch import optim
 from transformers import (
 	AdamW,
 	T5Config,
 	T5ForConditionalGeneration,
 	get_linear_schedule_with_warmup,
+	T5TokenizerFast
 )
 # from transformers.generation_stopping_criteria import (
 #     MaxLengthCriteria,
@@ -48,7 +50,7 @@ class T5VAE(LightningModule):
 			config=self.config,
 			argdict=argdict
 		)
-		# self.tokenizer = tokenizer
+		self.tokenizer = T5TokenizerFast(argdict['base_model'])
 		self.argdict=argdict
 		self.splits=['train', 'dev', 'test']
 		self.datasets={'train':train, 'dev':dev, 'test':test}
@@ -160,8 +162,8 @@ class T5VAE(LightningModule):
 		return
 
 	def validation_step(self, batch, batch_idx):
-		print(batch)
-		recon_loss, reg_loss = self.run_batch(batch, batch_idx)
+		tokenized= self.tokenizer(batch[self.field_input], padding=True, truncation=True)
+		recon_loss, reg_loss = self.run_batch(tokenized, batch_idx)
 		loss = recon_loss + reg_loss
 		# mi = calc_batch_mi(self, batch)
 		self.log("val_recon_loss", recon_loss)
