@@ -46,6 +46,7 @@ class T5VAE(LightningModule):
             argdict=argdict
         )
         # self.tokenizer = tokenizer
+        self.argdict=argdict
         self.latent_dim = self.argdict['latent_size']
         self.decoder_unfreeze_step = None
         self.min_z = self.argdict['lambda']
