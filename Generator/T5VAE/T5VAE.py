@@ -4,6 +4,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 # from metrics import calc_all, calc_batch_mi
 from pytorch_lightning.core.lightning import LightningModule
+from pytorch_lightning.callbacks import ModelCheckpoint
+from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 from torch import optim
 from transformers import (
 	AdamW,
@@ -239,19 +241,8 @@ class T5VAE(LightningModule):
 		)
 
 		trainer = pl.Trainer(
-			gpus=-1,
-			accelerator="ddp",
 			callbacks=[early_stop_callback, checkpoint_callback],
-			max_epochs=15,
-			plugins=DDPPlugin(
-				find_unused_parameters=True
-			),  # We ignore params from cross-attention.
-			log_every_n_steps=1,
-			logger=TensorBoardLogger(
-				save_dir=os.getcwd(),
-				version=experiment_name + experiment_suffix,
-				name="lightning_logs",
-			),
+			max_epochs=15
 		)
 
 		trainer.fit(
