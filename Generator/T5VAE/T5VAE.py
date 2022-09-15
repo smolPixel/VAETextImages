@@ -7,6 +7,7 @@ import pytorch_lightning as pl
 from pytorch_lightning.core.lightning import LightningModule
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
+from torch.utils.data import DataLoader
 
 from torch import optim
 from transformers import (
@@ -251,7 +252,20 @@ class T5VAE(LightningModule):
 			max_epochs=15
 		)
 
-		trainer.fit(self, self.datasets['train'], self.datasets['dev'])
+		train_loader = DataLoader(
+			dataset=self.datasets['train'],
+			batch_size=64,  # self.argdict.batch_size,
+			shuffle=True,
+		)
+
+		dev_loader = DataLoader(
+			dataset=self.datasets['dev'],
+			batch_size=64,  # self.argdict.batch_size,
+			shuffle=True,
+		)
+
+
+		trainer.fit(self, train_loader, dev_loader)
 
 		model = model_class.load_from_checkpoint(
 			checkpoint_callback.best_model_path,
