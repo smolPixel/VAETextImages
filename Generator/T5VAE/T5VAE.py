@@ -39,12 +39,10 @@ from Generator.T5VAE.model import ModifiedT5ForConditionalGeneration
 class T5VAE(LightningModule):
     def __init__(self, argdict, train, dev, test):
         super().__init__()
-        self.config = T5Config.from_pretrained(base_model)
+        self.config = T5Config.from_pretrained(argdict['base_model'])
         self.t5 = ModifiedT5ForConditionalGeneration.from_pretrained(
-            base_model,
             config=self.config,
-            latent_dim=argdict['latent_size'],
-            pooling_strategy=argdict['pooling_strategy'],
+            argdict=argdict
         )
         # self.tokenizer = tokenizer
         self.latent_dim = self.argdict['latent_size']

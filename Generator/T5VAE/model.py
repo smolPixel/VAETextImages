@@ -14,16 +14,16 @@ from transformers.modeling_outputs import (
 class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
     def __init__(self, config, argdict):
         super().__init__(config)
-        self.latent_dim = argdict
-        self.mu = nn.Linear(config.d_model, latent_dim, bias=False)
-        self.logvar = nn.Linear(config.d_model, latent_dim, bias=False)
+        self.latent_dim = argdict['latent_size']
+        self.mu = nn.Linear(config.d_model, self.latent_dim, bias=False)
+        self.logvar = nn.Linear(config.d_model, self.latent_dim, bias=False)
         self.embed_size_per_head = config.d_model // config.num_heads
         self.memory_projection = nn.Linear(
-            latent_dim,
+            self.latent_dim,
             config.num_decoder_layers * config.num_heads * self.embed_size_per_head,
             bias=False,
         )
-        self.pooling_strategy = pooling_strategy
+        self.pooling_strategy = argdict['pooling_strategy']
 
     def forward(
         self,
