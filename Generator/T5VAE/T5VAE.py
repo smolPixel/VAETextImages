@@ -165,7 +165,7 @@ class T5VAE(LightningModule):
 		return
 
 	def validation_step(self, batch, batch_idx):
-		tokenized= self.tokenizer(batch['sentence'], padding=True, truncation=True)
+		tokenized= self.tokenizer(batch['sentence'], padding=True, truncation=True, return_tensors='pt')
 		recon_loss, reg_loss = self.run_batch(tokenized, batch_idx)
 		loss = recon_loss + reg_loss
 		# mi = calc_batch_mi(self, batch)
