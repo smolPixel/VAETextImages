@@ -12,10 +12,9 @@ from transformers.modeling_outputs import (
 
 
 class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
-    def __init__(self, config, latent_dim, pooling_strategy):
+    def __init__(self, config, argdict):
         super().__init__(config)
-        print(latent_dim)
-        self.latent_dim = latent_dim
+        self.latent_dim = argdict
         self.mu = nn.Linear(config.d_model, latent_dim, bias=False)
         self.logvar = nn.Linear(config.d_model, latent_dim, bias=False)
         self.embed_size_per_head = config.d_model // config.num_heads

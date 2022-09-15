@@ -16,3 +16,9 @@ batch_size: 64
 dropout: 0.3
 word_dropout: 0.3
 x0: 15
+
+
+base_model: "t5-base"
+pooling_strategy: "max" #mean
+lambda: 3
+

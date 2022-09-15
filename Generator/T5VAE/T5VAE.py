@@ -19,34 +19,39 @@ from Generator.T5VAE.model import ModifiedT5ForConditionalGeneration
 
 # logging.getLogger("transformers").setLevel(logging.ERROR)
 
-
+# self,
+# tokenizer,
+# iterations_per_training_epoch,
+# latent_dim,
+# pooling_strategy,
+# min_z = None,
+# fixed_reg_weight = None,
+# denoise_percentage = 0,
+# base_model = "t5-base",
+# ):
+# super().__init__()
+# self.config = T5Config.from_pretrained(base_model)
+# self.t5 = ModifiedT5ForConditionalGeneration.from_pretrained(
+# base_model,
+# config = self.config,
+# latent_dim = latent_dim,
+# pooling_strategy = pooling_strategy,
 class T5VAE(LightningModule):
-    def __init__(
-        self,
-        tokenizer,
-        iterations_per_training_epoch,
-        latent_dim,
-        pooling_strategy,
-        min_z=None,
-        fixed_reg_weight=None,
-        denoise_percentage=0,
-        base_model="t5-base",
-    ):
+    def __init__(self, argdict, train, dev, test):
         super().__init__()
         self.config = T5Config.from_pretrained(base_model)
         self.t5 = ModifiedT5ForConditionalGeneration.from_pretrained(
             base_model,
             config=self.config,
-            latent_dim=latent_dim,
-            pooling_strategy=pooling_strategy,
+            latent_dim=argdict['latent_size'],
+            pooling_strategy=argdict['pooling_strategy'],
         )
-        self.iterations_per_training_epoch = iterations_per_training_epoch
-        self.tokenizer = tokenizer
-        self.latent_dim = latent_dim
+        # self.tokenizer = tokenizer
+        self.latent_dim = self.argdict['latent_size']
         self.decoder_unfreeze_step = None
-        self.min_z = min_z
-        self.fixed_reg_weight = fixed_reg_weight
-        self.denoise_percentage = denoise_percentage
+        self.min_z = self.argdict['lambda']
+        # self.fixed_reg_weight = fixed_reg_weight
+        # self.denoise_percentage = denoise_percentage
 
     def freeze_decoder(self):
         for param in self.t5.memory_projection.parameters():
