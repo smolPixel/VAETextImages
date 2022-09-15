@@ -41,6 +41,7 @@ class T5VAE(LightningModule):
         super().__init__()
         self.config = T5Config.from_pretrained(argdict['base_model'])
         self.t5 = ModifiedT5ForConditionalGeneration.from_pretrained(
+            argdict['base_model'],
             config=self.config,
             argdict=argdict
         )
