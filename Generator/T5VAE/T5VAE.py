@@ -160,6 +160,7 @@ class T5VAE(LightningModule):
 		return
 
 	def validation_step(self, batch, batch_idx):
+        print(batch)
 		recon_loss, reg_loss = self.run_batch(batch, batch_idx)
 		loss = recon_loss + reg_loss
 		# mi = calc_batch_mi(self, batch)
