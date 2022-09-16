@@ -457,7 +457,7 @@ class T5VAE(LightningModule):
 		# fds
 
 		# print(MIs)
-		AU = calc_au(mus)
+		# AU = calc_au(mus)
 		encoded = self.encode()
 		X = encoded['encoded_test']
 		Y = encoded['labels_test']
