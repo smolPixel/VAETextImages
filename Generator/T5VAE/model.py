@@ -260,7 +260,7 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
             return_dict=return_dict,
         )
 
-        print(encoder_outputs)
+        print(input_ids)
         fds
 
         # If the user passed a tuple for encoder_outputs, we wrap it in a BaseModelOutput when return_dict=True
