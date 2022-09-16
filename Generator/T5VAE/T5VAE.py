@@ -84,7 +84,6 @@ class T5VAE(LightningModule):
 	#####
 
 	def run_batch(self, batch, batch_idx, training=False):
-		print(batch)
 		encoder_inputs, encoder_masks=batch['input_ids'], batch['attention_mask']
 		decoder_targets=batch['input_ids']
 
@@ -268,6 +267,7 @@ class T5VAE(LightningModule):
 			shuffle=True,
 		)
 
+		self.val_dataloader=dev_loader
 
 		trainer.fit(self, train_loader, dev_loader)
 
