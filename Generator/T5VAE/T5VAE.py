@@ -9,6 +9,7 @@ from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 from torch.utils.data import DataLoader
 from pytorch_lightning.plugins import DDPPlugin
+from multiprocessing import cpu_count
 
 from torch import optim
 from transformers import (
@@ -320,7 +321,7 @@ class T5VAE(LightningModule):
 		trainer = pl.Trainer(
 			gpus=-1,
 			callbacks=[early_stop_callback, checkpoint_callback],
-			max_epochs=10,
+			max_epochs= 0 #10,
 			# plugins=DDPPlugin(
 			# 	find_unused_parameters=True
 			# ),  # We ignore params from cross-attention.
@@ -339,6 +340,60 @@ class T5VAE(LightningModule):
 		)
 
 		trainer.fit(self, train_loader, dev_loader)
+
+	def test_model(self):
+		data_loader = DataLoader(
+			dataset=self.datasets['test'],
+			batch_size=64,  # self.argdict.batch_size,
+			shuffle=False,
+			num_workers=cpu_count(),
+			pin_memory=torch.cuda.is_available()
+		)
+
+		self.model.eval()
+
+		Average_loss = []
+		Average_NLL = []
+		Average_KL_Div = []
+		MIs = []
+		mus = []
+		NLL_mean_for_ppl = []
+		for iteration, batch in enumerate(data_loader):
+			# Forward pass
+			logp, mean, logv, z = self.t5(batch)
+			print(logp)
+			fds
+			# Keeping track of the means for AU
+			mus.append(mean.detach().squeeze(0))
+			batch_size = logp.shape[0]
+			logp, target = self.datasets['train'].shape_for_loss_function(logp, batch['target'])
+			NLL_loss, KL_loss = self.loss_fn(logp, target.to('cuda'), mean, logv)
+
+			NLL_mean = self.loss_function_ppl(logp, target.to('cuda'))
+
+			loss = (NLL_loss + KL_loss) / batch_size
+			Average_loss.append(loss.item())
+			Average_KL_Div.append(KL_loss.cpu().detach() / batch_size)
+			Average_NLL.append(NLL_loss.cpu().detach() / batch_size)
+			NLL_mean_for_ppl.append(NLL_mean.cpu().detach())
+			# aggr=self.get_aggregate()
+			MIs.append(calc_mi(z, mean, logv))
+		# print(MIs)
+		# fds
+
+		# print(MIs)
+		AU = calc_au(mus)
+		encoded = self.encode()
+		X = encoded['encoded_test']
+		Y = encoded['labels_test']
+
+		svc = LinearSVC()
+		svc.fit(X, Y)
+		sep = svc.score(X, Y)
+		# print(AU)
+		return {'Mean ELBO': np.mean(Average_loss), 'Mean LF': np.mean(Average_NLL),
+				'Mean KL div': np.mean(Average_KL_Div), 'PPL': {torch.exp(torch.mean(torch.Tensor(NLL_mean_for_ppl)))},
+				'Separability': sep, 'MI': {np.mean(MIs)}, 'Active Units': AU[0]}
 
 
 def log_sum_exp(value, dim=None, keepdim=False):
