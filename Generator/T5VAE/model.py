@@ -78,7 +78,7 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
                 return_dict=return_dict,
             )
             print('---')
-            print(encoder_outputs)
+            print(encoder_outputs.hidden_states)
             pooled = self.pool(encoder_outputs.hidden_states)
             print(pooled)
             z, mu, logvar = self.calculate_latent(pooled)
