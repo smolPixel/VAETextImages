@@ -187,7 +187,7 @@ class T5VAE(LightningModule):
 		self.log("train_reg_loss", reg_weight * reg_loss)
 		self.log("train_unweighted_reg_loss", reg_loss)
 		self.log("train_loss", loss)
-		return loss
+		return 0 #loss
 
 	def training_epoch_end(self, outputs):
 		# if self.current_epoch == 2:
