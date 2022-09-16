@@ -392,7 +392,7 @@ class T5VAE(LightningModule):
 					#
 					# print(batch['input'])
 					# print(batch['input'].shape)
-					z, _, _ = self.model.encode(encoder_inputs, encoder_masks)
+					z, _, _ = self.t5.encode(encoder_inputs, encoder_masks)
 					dataset[counter:counter + batch_size] = z
 					labels[counter:counter + batch_size] = batch['label']
 					counter += batch_size
