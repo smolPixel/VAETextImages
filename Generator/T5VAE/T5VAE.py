@@ -395,10 +395,13 @@ class T5VAE(LightningModule):
 				labels=decoder_targets,
 			)
 
+			# print(logp.shape)
+			# print(decoder_targets.shape)
+
 			# Keeping track of the means for AU
 			mus.append(mean.detach().squeeze(0))
 			batch_size = logp.shape[0]
-			logp, target = self.datasets['train'].shape_for_loss_function(logp, batch['target'])
+			logp, target = self.datasets['train'].shape_for_loss_function(logp, decoder_targets)
 			NLL_loss, KL_loss = self.loss_fn(logp, target.to('cuda'), mean, logv)
 
 			NLL_mean = self.loss_function_ppl(logp, target.to('cuda'))
