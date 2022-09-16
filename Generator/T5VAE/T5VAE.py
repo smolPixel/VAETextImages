@@ -257,7 +257,7 @@ class T5VAE(LightningModule):
 		trainer = pl.Trainer(
 			gpus=1,
 			callbacks=[early_stop_callback, checkpoint_callback],
-			max_epochs= 1 #15
+			max_epochs= 0 #15
 		)
 
 		train_loader = DataLoader(
@@ -284,8 +284,8 @@ class T5VAE(LightningModule):
 			pooling_strategy=conf.pooling_strategy,
 			min_z=conf.min_z,
 			fixed_reg_weight=None,
-			denoise_percentage=conf.denoise_percentage,
-			base_model=conf.base_model_name,
+			denoise_percentage=self.denoise_percentage,
+			base_model=self.base_model_name,
 		)
 
 		print(
