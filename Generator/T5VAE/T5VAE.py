@@ -350,7 +350,7 @@ class T5VAE(LightningModule):
 			pin_memory=torch.cuda.is_available()
 		)
 
-		self.model.eval()
+		self.t5.eval()
 
 		Average_loss = []
 		Average_NLL = []
