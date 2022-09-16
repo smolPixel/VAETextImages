@@ -393,6 +393,8 @@ class T5VAE(LightningModule):
 					#
 					# print(batch['input'])
 					# print(batch['input'].shape)
+					print(encoder_inputs)
+					print(encoder_masks)
 					self.t5.forward(encoder_inputs, encoder_masks, labels=decoder_targets)
 					fds
 					z, _, _ = self.t5.encode(encoder_inputs, encoder_masks)
