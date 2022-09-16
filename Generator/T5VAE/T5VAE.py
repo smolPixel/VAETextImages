@@ -143,7 +143,8 @@ class T5VAE(LightningModule):
 		return weight
 
 	def training_step(self, batch, batch_idx):
-		recon_loss, reg_loss = self.run_batch(batch, batch_idx, training=True)
+		tokenized = self.tokenizer(batch['sentence'], padding=True, truncation=True, return_tensors='pt')
+		recon_loss, reg_loss = self.run_batch(tokenized, batch_idx, training=True)
 		reg_weight = self.kld_weight()
 		loss = recon_loss + reg_weight * reg_loss
 		self.log("train_reg_weight", reg_weight)
