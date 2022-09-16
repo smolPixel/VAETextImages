@@ -21,4 +21,4 @@ x0: 15
 base_model: "t5-base"
 pooling_strategy: "max" #mean
 lambda: 3
-
+denoise_percentage: 0.15
