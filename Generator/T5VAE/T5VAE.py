@@ -306,7 +306,7 @@ class T5VAE(LightningModule):
 		)
 
 
-		trainer.fit(self, train_loader, dev_loader)
+		# trainer.fit(self, train_loader, dev_loader)
 		return
 
 		# self = T5VAE.load_from_checkpoint(
