@@ -308,18 +308,18 @@ class T5VAE(LightningModule):
 
 		trainer.fit(self, train_loader, dev_loader)
 
-		self = T5VAE.load_from_checkpoint(
-			checkpoint_callback.best_model_path,
-			argdict=self.argdict,
-			train=self.datasets['train'],
-			dev=self.datasets['dev'],
-			test=self.datasets['test']
-		)
-
-		print(
-			"Finished preliminary encoder training.",
-			f"Checkpoint saved at: {checkpoint_callback.best_model_path}",
-		)
+		# self = T5VAE.load_from_checkpoint(
+		# 	checkpoint_callback.best_model_path,
+		# 	argdict=self.argdict,
+		# 	train=self.datasets['train'],
+		# 	dev=self.datasets['dev'],
+		# 	test=self.datasets['test']
+		# )
+		#
+		# print(
+		# 	"Finished preliminary encoder training.",
+		# 	f"Checkpoint saved at: {checkpoint_callback.best_model_path}",
+		# )
 		#Phase 2 full fine tuning
 		# self.unfreeze_decoder()
 		#
