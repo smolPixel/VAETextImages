@@ -272,7 +272,7 @@ class T5VAE(LightningModule):
 
 		train_loader = DataLoader(
 			dataset=self.datasets['train'],
-			batch_size=32,  # self.argdict.batch_size,
+			batch_size=64,  # self.argdict.batch_size,
 			shuffle=True,
 		)
 
@@ -373,8 +373,6 @@ class T5VAE(LightningModule):
 				labels=decoder_targets,
 			)
 
-			print(logp.shape)
-			fds
 			# Keeping track of the means for AU
 			mus.append(mean.detach().squeeze(0))
 			batch_size = logp.shape[0]
