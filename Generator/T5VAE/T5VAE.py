@@ -10,6 +10,7 @@ from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 from torch.utils.data import DataLoader
 from pytorch_lightning.plugins import DDPPlugin
 from multiprocessing import cpu_count
+from metrics import calc_mi, calc_au
 
 from torch import optim
 from transformers import (
