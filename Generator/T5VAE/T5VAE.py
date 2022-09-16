@@ -8,6 +8,7 @@ from pytorch_lightning.core.lightning import LightningModule
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 from torch.utils.data import DataLoader
+from pytorch_lightning.plugins import DDPPlugin
 
 from torch import optim
 from transformers import (
@@ -70,6 +71,14 @@ class T5VAE(LightningModule):
 			param.requires_grad = False
 		for param in self.t5.lm_head.parameters():
 			param.requires_grad = False
+
+	def unfreeze_decoder(self):
+		for param in self.t5.memory_projection.parameters():
+			param.requires_grad = True
+		for param in self.t5.decoder.parameters():
+			param.requires_grad = True
+		for param in self.t5.lm_head.parameters():
+			param.requires_grad = True
 
 	def forward(self, encoder_input, encoder_mask, labels, **kwargs):
 		output = self.t5(
@@ -288,6 +297,49 @@ class T5VAE(LightningModule):
 			f"Checkpoint saved at: {checkpoint_callback.best_model_path}",
 		)
 		#Phase 2 full fine tuning
+		self.unfreeze_decoder()
+
+		# Run regular training.
+		early_stop_callback = EarlyStopping(
+			# monitor="val_loss",
+			monitor="finished_epoch",
+			min_delta=0.00,
+			patience=10,
+			verbose=True,
+			mode="min",
+			strict=True,
+		)
+
+		checkpoint_callback = ModelCheckpoint(
+			monitor="finished_epoch",
+			mode="max",
+			save_weights_only=True,
+			save_top_k=10,
+		)
+
+		trainer = pl.Trainer(
+			gpus=-1,
+			accelerator="ddp",
+			callbacks=[early_stop_callback, checkpoint_callback],
+			max_epochs=10,
+			plugins=DDPPlugin(
+				find_unused_parameters=True
+			),  # We ignore params from cross-attention.
+		)
+
+		train_loader = DataLoader(
+			dataset=self.datasets['train'],
+			batch_size=32,  # self.argdict.batch_size,
+			shuffle=True,
+		)
+
+		dev_loader = DataLoader(
+			dataset=self.datasets['dev'],
+			batch_size=64,  # self.argdict.batch_size,
+			shuffle=True,
+		)
+
+		trainer.fit(self, train_loader, dev_loader)
 
 
 def log_sum_exp(value, dim=None, keepdim=False):
