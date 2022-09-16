@@ -360,8 +360,20 @@ class T5VAE(LightningModule):
 		NLL_mean_for_ppl = []
 		for iteration, batch in enumerate(data_loader):
 			# Forward pass
-			logp, mean, logv, z = self.t5(batch)
-			print(logp)
+			# logp, mean, logv, z = self.t5(batch)
+
+			tokenized = self.tokenizer(batch['sentence'], padding=True, truncation=True, return_tensors='pt')
+
+			encoder_inputs, encoder_masks = batch['input_ids'].to(self.device), batch['attention_mask'].to(self.device)
+			decoder_targets = batch['input_ids'].to(self.device)
+
+			logp, z, mean, logv = self(
+				encoder_inputs,
+				encoder_masks,
+				labels=decoder_targets,
+			)
+
+			print(logp.shape)
 			fds
 			# Keeping track of the means for AU
 			mus.append(mean.detach().squeeze(0))
