@@ -289,7 +289,7 @@ class T5VAE(LightningModule):
 
 		trainer = pl.Trainer(
 			gpus=1,
-			callbacks=[early_stop_callback, checkpoint_callback],
+			# callbacks=[early_stop_callback, checkpoint_callback],
 			max_epochs= 1 #15
 		)
 
@@ -306,7 +306,7 @@ class T5VAE(LightningModule):
 		)
 
 
-		# trainer.fit(self, train_loader, dev_loader)
+		trainer.fit(self, train_loader, dev_loader)
 		return
 
 		# self = T5VAE.load_from_checkpoint(
