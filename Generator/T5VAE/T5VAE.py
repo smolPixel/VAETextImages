@@ -86,6 +86,23 @@ class T5VAE(LightningModule):
 		for param in self.t5.lm_head.parameters():
 			param.requires_grad = True
 
+	def loss_fn(self, logp, target, mean, logv):
+		# NLL = torch.nn.NLLLoss(ignore_index=self.datasets['train'].pad_idx, reduction='sum')
+		# cut-off unnecessary padding from target, and flatten
+		# target = target[:, :torch.max(length).item()].contiguous().view(-1)
+		# target = target.contiguous().view(-1)
+		# logp = logp.view(-1, logp.size(2))
+
+		# Negative Log Likelihood
+		NLL_loss = self.loss_function_basic(logp, target)
+		# BCE = torch.nn.functional.binary_cross_entropy(logp, target.view(-1, 784), reduction='sum')
+		# KL Divergence
+		KL_loss = -0.5 * torch.sum(1 + logv - mean.pow(2) - logv.exp())
+
+		# KL_weight = self.kl_anneal_function(anneal_function, step, k, self.dataset_length*self.argdict['x0'])
+
+		return NLL_loss, KL_loss
+
 	def forward(self, encoder_input, encoder_mask, labels, **kwargs):
 		output = self.t5(
 			input_ids=encoder_input,
