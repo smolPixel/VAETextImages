@@ -277,9 +277,10 @@ class T5VAE(LightningModule):
 
 		self = T5VAE.load_from_checkpoint(
 			checkpoint_callback.best_model_path,
-			self.datasets['train'],
-			self.datasets['dev'],
-			self.datasets['test']
+			argdict=self.argdict,
+			train=self.datasets['train'],
+			dev=self.datasets['dev'],
+			test=self.datasets['test']
 		)
 
 		print(
