@@ -179,14 +179,15 @@ class T5VAE(LightningModule):
 		return loss
 
 	def validation_epoch_end(self, outputs):
-		ppl, nll, elbo, rec, kl, mi, au = calc_all(self, self.val_dataloader())
-		self.log("val_ppl", ppl)
-		self.log("val_nll", nll)
-		self.log("val_elbo", elbo)
-		self.log("val_rec", rec)
-		self.log("val_kl", kl)
-		self.log("val_mi", mi)
-		self.log("val_au", au)
+		pass
+		# ppl, nll, elbo, rec, kl, mi, au = calc_all(self, self.val_dataloader())
+		# self.log("val_ppl", ppl)
+		# self.log("val_nll", nll)
+		# self.log("val_elbo", elbo)
+		# self.log("val_rec", rec)
+		# self.log("val_kl", kl)
+		# self.log("val_mi", mi)
+		# self.log("val_au", au)
 
 	def test_step(self, batch, batch_idx):
 		recon_loss, reg_loss, _ = self.run_batch(batch, batch_idx)
@@ -267,7 +268,6 @@ class T5VAE(LightningModule):
 			shuffle=True,
 		)
 
-		self.val_dataloader=dev_loader
 
 		trainer.fit(self, train_loader, dev_loader)
 
