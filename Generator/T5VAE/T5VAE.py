@@ -289,8 +289,8 @@ class T5VAE(LightningModule):
 
 		trainer = pl.Trainer(
 			gpus=1,
-			# callbacks=[early_stop_callback, checkpoint_callback],
-			max_epochs= 1 #15
+			callbacks=[early_stop_callback, checkpoint_callback],
+			max_epochs= 15
 		)
 
 		train_loader = DataLoader(
