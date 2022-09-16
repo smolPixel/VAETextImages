@@ -22,3 +22,4 @@ base_model: "t5-base"
 pooling_strategy: "max" #mean
 lambda: 3
 denoise_percentage: 0.15
+fixed_reg_weight: 0

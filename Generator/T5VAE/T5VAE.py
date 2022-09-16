@@ -59,6 +59,7 @@ class T5VAE(LightningModule):
 		self.decoder_unfreeze_step = None
 		self.min_z = self.argdict['lambda']
 		self.denoise_percentage = self.argdict['denoise_percentage']
+		self.fixed_reg_weight = self.argdict['fixed_reg_weight']
 		# self.fixed_reg_weight = fixed_reg_weight
 		# self.denoise_percentage = denoise_percentage
 
