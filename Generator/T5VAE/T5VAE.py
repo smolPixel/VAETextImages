@@ -275,10 +275,9 @@ class T5VAE(LightningModule):
 
 		trainer.fit(self, train_loader, dev_loader)
 
-		self.t5 = ModifiedT5ForConditionalGeneration.load_from_checkpoint(
+		model = T5VAE.load_from_checkpoint(
 			checkpoint_callback.best_model_path,
-			config=self.config,
-			argdict=argdict
+			config=self.config
 		)
 
 		print(
