@@ -259,10 +259,10 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
             output_hidden_states=output_hidden_states,
             return_dict=return_dict,
         )
-        print(input_ids)
-        print(encoder_outputs)
-        print(self.encoder(input_ids, attention_mask))
-        fds
+        # print(input_ids)
+        # print(encoder_outputs)
+        # print(self.encoder(input_ids, attention_mask))
+        # fds
 
 
         # If the user passed a tuple for encoder_outputs, we wrap it in a BaseModelOutput when return_dict=True
