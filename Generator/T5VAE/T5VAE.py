@@ -187,7 +187,7 @@ class T5VAE(LightningModule):
 		self.log("train_reg_loss", reg_weight * reg_loss)
 		self.log("train_unweighted_reg_loss", reg_loss)
 		self.log("train_loss", loss)
-		return 0 #loss
+		return loss
 
 	def training_epoch_end(self, outputs):
 		# if self.current_epoch == 2:
@@ -307,63 +307,62 @@ class T5VAE(LightningModule):
 
 
 		trainer.fit(self, train_loader, dev_loader)
-		return
 
-		# self = T5VAE.load_from_checkpoint(
-		# 	checkpoint_callback.best_model_path,
-		# 	argdict=self.argdict,
-		# 	train=self.datasets['train'],
-		# 	dev=self.datasets['dev'],
-		# 	test=self.datasets['test']
-		# )
-		#
-		# print(
-		# 	"Finished preliminary encoder training.",
-		# 	f"Checkpoint saved at: {checkpoint_callback.best_model_path}",
-		# )
-		#Phase 2 full fine tuning
-		# self.unfreeze_decoder()
-		#
-		# # Run regular training.
-		# early_stop_callback = EarlyStopping(
-		# 	# monitor="val_loss",
-		# 	monitor="finished_epoch",
-		# 	min_delta=0.00,
-		# 	patience=10,
-		# 	verbose=True,
-		# 	mode="min",
-		# 	strict=True,
-		# )
-		#
-		# checkpoint_callback = ModelCheckpoint(
-		# 	monitor="finished_epoch",
-		# 	mode="max",
-		# 	save_weights_only=True,
-		# 	save_top_k=10,
-		# )
-		#
-		# trainer = pl.Trainer(
-		# 	gpus=-1,
-		# 	callbacks=[early_stop_callback, checkpoint_callback],
-		# 	max_epochs= 0 #10,
-		# 	# plugins=DDPPlugin(
-		# 	# 	find_unused_parameters=True
-		# 	# ),  # We ignore params from cross-attention.
-		# )
-		#
-		# train_loader = DataLoader(
-		# 	dataset=self.datasets['train'],
-		# 	batch_size=64,  # self.argdict.batch_size,
-		# 	shuffle=True,
-		# )
-		#
-		# dev_loader = DataLoader(
-		# 	dataset=self.datasets['dev'],
-		# 	batch_size=64,  # self.argdict.batch_size,
-		# 	shuffle=True,
-		# )
-		#
-		# trainer.fit(self, train_loader, dev_loader)
+		self = T5VAE.load_from_checkpoint(
+			checkpoint_callback.best_model_path,
+			argdict=self.argdict,
+			train=self.datasets['train'],
+			dev=self.datasets['dev'],
+			test=self.datasets['test']
+		)
+
+		print(
+			"Finished preliminary encoder training.",
+			f"Checkpoint saved at: {checkpoint_callback.best_model_path}",
+		)
+		# Phase 2 full fine tuning
+		self.unfreeze_decoder()
+
+		# Run regular training.
+		early_stop_callback = EarlyStopping(
+			# monitor="val_loss",
+			monitor="finished_epoch",
+			min_delta=0.00,
+			patience=10,
+			verbose=True,
+			mode="min",
+			strict=True,
+		)
+
+		checkpoint_callback = ModelCheckpoint(
+			monitor="finished_epoch",
+			mode="max",
+			save_weights_only=True,
+			save_top_k=10,
+		)
+
+		trainer = pl.Trainer(
+			gpus=-1,
+			callbacks=[early_stop_callback, checkpoint_callback],
+			max_epochs= 10,
+			# plugins=DDPPlugin(
+			# 	find_unused_parameters=True
+			# ),  # We ignore params from cross-attention.
+		)
+
+		train_loader = DataLoader(
+			dataset=self.datasets['train'],
+			batch_size=64,  # self.argdict.batch_size,
+			shuffle=True,
+		)
+
+		dev_loader = DataLoader(
+			dataset=self.datasets['dev'],
+			batch_size=64,  # self.argdict.batch_size,
+			shuffle=True,
+		)
+
+		trainer.fit(self, train_loader, dev_loader)
 
 	def encode(self):
 		with torch.no_grad():
