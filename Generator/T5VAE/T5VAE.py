@@ -329,7 +329,7 @@ class T5VAE(LightningModule):
 
 		train_loader = DataLoader(
 			dataset=self.datasets['train'],
-			batch_size=32,  # self.argdict.batch_size,
+			batch_size=64,  # self.argdict.batch_size,
 			shuffle=True,
 		)
 
@@ -364,8 +364,8 @@ class T5VAE(LightningModule):
 
 			tokenized = self.tokenizer(batch['sentence'], padding=True, truncation=True, return_tensors='pt')
 
-			encoder_inputs, encoder_masks = batch['input_ids'].to(self.device), batch['attention_mask'].to(self.device)
-			decoder_targets = batch['input_ids'].to(self.device)
+			encoder_inputs, encoder_masks = tokenized['input_ids'].to(self.device), tokenized['attention_mask'].to(self.device)
+			decoder_targets = tokenized['input_ids'].to(self.device)
 
 			logp, z, mean, logv = self(
 				encoder_inputs,
