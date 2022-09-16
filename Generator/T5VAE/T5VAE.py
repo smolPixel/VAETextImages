@@ -364,6 +364,45 @@ class T5VAE(LightningModule):
 
 		trainer.fit(self, train_loader, dev_loader)
 
+	def encode(self):
+		with torch.no_grad():
+			dico = {}
+			for split in self.splits:
+				data_loader = DataLoader(
+					dataset=self.datasets[split],
+					batch_size=64,  # self.argdict.batch_size,
+					shuffle=False,
+					num_workers=cpu_count(),
+					pin_memory=torch.cuda.is_available()
+				)
+				# Enable/Disable Dropout
+
+				self.t5.eval()
+				# print(f"The dataset length is {len(data_loader.dataset)}")
+				dataset = torch.zeros(len(data_loader.dataset), self.argdict['latent_size'])
+				labels = torch.zeros(len(data_loader.dataset))
+				sentences = []
+				counter = 0
+				for iteration, batch in enumerate(data_loader):
+					# print("Oh la la banana")
+					batch_size = batch['input'].size(0)
+					tokenized = self.tokenizer(batch['sentence'], padding=True, truncation=True, return_tensors='pt')
+
+					encoder_inputs, encoder_masks = tokenized['input_ids'].to(self.device), tokenized['attention_mask'].to(self.device)
+					#
+					# print(batch['input'])
+					# print(batch['input'].shape)
+					z, _, _ = self.model.encode(encoder_inputs, encoder_masks)
+					dataset[counter:counter + batch_size] = z
+					labels[counter:counter + batch_size] = batch['label']
+					counter += batch_size
+				# print(dataset)
+				dico[f"labels_{split}"] = labels
+				dico[f"encoded_{split}"] = dataset
+			# torch.save(labels, f"bin/labels_{split}.pt")
+			# torch.save(dataset, f"bin/encoded_{split}.pt")
+			return dico
+
 	def test_model(self):
 		data_loader = DataLoader(
 			dataset=self.datasets['test'],
@@ -384,7 +423,7 @@ class T5VAE(LightningModule):
 		for iteration, batch in enumerate(data_loader):
 			# Forward pass
 			# logp, mean, logv, z = self.t5(batch)
-
+			pass
 			tokenized = self.tokenizer(batch['sentence'], padding=True, truncation=True, return_tensors='pt')
 
 			encoder_inputs, encoder_masks = tokenized['input_ids'].to(self.device), tokenized['attention_mask'].to(self.device)

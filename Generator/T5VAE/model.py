@@ -184,6 +184,54 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
         out.z = z
         return out
 
+    def encode(self,
+        input_ids=None,
+        attention_mask=None,
+        head_mask=None,
+        decoder_head_mask=None,
+        encoder_outputs=None,
+        inputs_embeds=None,
+        use_cache=None,
+        output_attentions=None,
+        output_hidden_states=None,
+        return_dict=None,
+        sampled_z=None,
+    ):
+
+        # use_cache = use_cache if use_cache is not None else self.config.use_cache
+        # return_dict = (
+        #     return_dict if return_dict is not None else self.config.use_return_dict
+        # )
+        #
+        # # FutureWarning: head_mask was separated into two input args - head_mask, decoder_head_mask
+        # if head_mask is not None and decoder_head_mask is None:
+        #     if self.config.num_layers == self.config.num_decoder_layers:
+        #         warnings.warn(__HEAD_MASK_WARNING_MSG, FutureWarning)
+        #         decoder_head_mask = head_mask
+
+        # Encode if needed (training, first prediction pass)
+        # z, mu, logvar = None, None, None
+        # if sampled_z is not None:
+        #     z = sampled_z
+        #     encoder_outputs = BaseModelOutput(
+        #         last_hidden_state=None,
+        #         hidden_states=None,
+        #         attentions=None,
+        #     )
+        # elif encoder_outputs is None:
+        # Convert encoder inputs in embeddings if needed
+        encoder_outputs = self.run_encoder(
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            inputs_embeds=inputs_embeds,
+            head_mask=head_mask,
+            output_attentions=output_attentions,
+            output_hidden_states=output_hidden_states,
+            return_dict=return_dict,
+        )
+        pooled = self.pool(encoder_outputs.hidden_states)
+        z, mu, logvar = self.calculate_latent(pooled)
+
     def run_encoder(
         self,
         input_ids=None,
