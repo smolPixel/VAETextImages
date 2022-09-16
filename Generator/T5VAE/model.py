@@ -24,6 +24,8 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
             bias=False,
         )
         self.pooling_strategy = argdict['pooling_strategy']
+        print(self.encoder)
+        fds
 
     def forward(
         self,
@@ -256,7 +258,6 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
             output_hidden_states=output_hidden_states,
             return_dict=return_dict,
         )
-        print(encoder_outputs)
         # If the user passed a tuple for encoder_outputs, we wrap it in a BaseModelOutput when return_dict=True
 
         return encoder_outputs
