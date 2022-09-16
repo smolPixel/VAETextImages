@@ -389,10 +389,11 @@ class T5VAE(LightningModule):
 					tokenized = self.tokenizer(batch['sentence'], padding=True, truncation=True, return_tensors='pt')
 
 					encoder_inputs, encoder_masks = tokenized['input_ids'].to(self.device), tokenized['attention_mask'].to(self.device)
+					decoder_targets = tokenized['input_ids'].to(self.device)
 					#
 					# print(batch['input'])
 					# print(batch['input'].shape)
-					self.t5.forward(encoder_inputs, encoder_masks)
+					self.t5.forward(encoder_inputs, encoder_masks, labels=decoder_targets)
 					fds
 					z, _, _ = self.t5.encode(encoder_inputs, encoder_masks)
 					dataset[counter:counter + batch_size] = z
