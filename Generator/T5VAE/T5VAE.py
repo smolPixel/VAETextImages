@@ -262,7 +262,7 @@ class T5VAE(LightningModule):
 
 		train_loader = DataLoader(
 			dataset=self.datasets['train'],
-			batch_size=256,  # self.argdict.batch_size,
+			batch_size=32,  # self.argdict.batch_size,
 			shuffle=True,
 		)
 
