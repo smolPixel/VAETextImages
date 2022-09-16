@@ -223,7 +223,7 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
             print('00')
             print(input_ids, attention_mask)
             print(self.encoder(input_ids))
-
+            df
             encoder_outputs = self.run_encoder(
                 input_ids=input_ids,
                 attention_mask=attention_mask,
@@ -260,8 +260,6 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
             return_dict=return_dict,
         )
 
-        print(input_ids)
-        fds
 
         # If the user passed a tuple for encoder_outputs, we wrap it in a BaseModelOutput when return_dict=True
 

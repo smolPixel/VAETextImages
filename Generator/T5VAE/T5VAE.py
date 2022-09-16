@@ -321,48 +321,48 @@ class T5VAE(LightningModule):
 			f"Checkpoint saved at: {checkpoint_callback.best_model_path}",
 		)
 		#Phase 2 full fine tuning
-		self.unfreeze_decoder()
-
-		# Run regular training.
-		early_stop_callback = EarlyStopping(
-			# monitor="val_loss",
-			monitor="finished_epoch",
-			min_delta=0.00,
-			patience=10,
-			verbose=True,
-			mode="min",
-			strict=True,
-		)
-
-		checkpoint_callback = ModelCheckpoint(
-			monitor="finished_epoch",
-			mode="max",
-			save_weights_only=True,
-			save_top_k=10,
-		)
-
-		trainer = pl.Trainer(
-			gpus=-1,
-			callbacks=[early_stop_callback, checkpoint_callback],
-			max_epochs= 0 #10,
-			# plugins=DDPPlugin(
-			# 	find_unused_parameters=True
-			# ),  # We ignore params from cross-attention.
-		)
-
-		train_loader = DataLoader(
-			dataset=self.datasets['train'],
-			batch_size=64,  # self.argdict.batch_size,
-			shuffle=True,
-		)
-
-		dev_loader = DataLoader(
-			dataset=self.datasets['dev'],
-			batch_size=64,  # self.argdict.batch_size,
-			shuffle=True,
-		)
-
-		trainer.fit(self, train_loader, dev_loader)
+		# self.unfreeze_decoder()
+		#
+		# # Run regular training.
+		# early_stop_callback = EarlyStopping(
+		# 	# monitor="val_loss",
+		# 	monitor="finished_epoch",
+		# 	min_delta=0.00,
+		# 	patience=10,
+		# 	verbose=True,
+		# 	mode="min",
+		# 	strict=True,
+		# )
+		#
+		# checkpoint_callback = ModelCheckpoint(
+		# 	monitor="finished_epoch",
+		# 	mode="max",
+		# 	save_weights_only=True,
+		# 	save_top_k=10,
+		# )
+		#
+		# trainer = pl.Trainer(
+		# 	gpus=-1,
+		# 	callbacks=[early_stop_callback, checkpoint_callback],
+		# 	max_epochs= 0 #10,
+		# 	# plugins=DDPPlugin(
+		# 	# 	find_unused_parameters=True
+		# 	# ),  # We ignore params from cross-attention.
+		# )
+		#
+		# train_loader = DataLoader(
+		# 	dataset=self.datasets['train'],
+		# 	batch_size=64,  # self.argdict.batch_size,
+		# 	shuffle=True,
+		# )
+		#
+		# dev_loader = DataLoader(
+		# 	dataset=self.datasets['dev'],
+		# 	batch_size=64,  # self.argdict.batch_size,
+		# 	shuffle=True,
+		# )
+		#
+		# trainer.fit(self, train_loader, dev_loader)
 
 	def encode(self):
 		with torch.no_grad():
