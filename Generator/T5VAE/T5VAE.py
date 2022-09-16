@@ -64,6 +64,11 @@ class T5VAE(LightningModule):
 		self.fixed_reg_weight = self.argdict['fixed_reg_weight']
 		# self.fixed_reg_weight = fixed_reg_weight
 		# self.denoise_percentage = denoise_percentage
+		self.loss_function_basic = train.loss_function
+		if argdict['dataset'] in ['SST2']:
+			self.loss_function_ppl = torch.nn.CrossEntropyLoss(ignore_index=train.pad_idx, reduction='mean')
+		else:
+			self.loss_function_ppl = self.loss_function_basic
 
 	def freeze_decoder(self):
 		for param in self.t5.memory_projection.parameters():
