@@ -18,6 +18,8 @@ class GRU_Encoder(nn.Module):
 	def forward(self, batch, append_labels=False):
 
 		input_sequence=batch['input'].to('cuda')
+		batch_size=input_sequence.shape[0]
+
 		if isinstance(input_sequence, torch.LongTensor) or (
 				torch.cuda.is_available() and isinstance(input_sequence, torch.cuda.LongTensor)):
 			input_embedding = self.embedding(input_sequence)
@@ -29,11 +31,16 @@ class GRU_Encoder(nn.Module):
 
 		hidden=torch.zeros((1, input_embedding.shape[0], self.argdict['hidden_size'])).cuda()
 		len_seq=input_embedding.shape[1]
+
+		hidden_states=torch.zeros(batch_size, len_seq, self.argdict['hidden_size'])
+
 		for i in range(len_seq):
 			inp=input_embedding[:, i, :].unsqueeze(1)
 			_, hidden=self.rnn(inp, hidden)
-			print(hidden.shape)
-			fds
+			hidden_states[:, i, :]=hidden.squeeze(0)
+
+		print(hidden_states)
+		fds
 		#For pooling, we need to do this one step at a time
 
 		# _, hidden = self.rnn(input_embedding)
