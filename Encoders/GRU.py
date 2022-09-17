@@ -28,10 +28,10 @@ class GRU_Encoder(nn.Module):
 			input_embedding[:, :, -1]=labs
 
 		print(input_embedding.shape)
-		hidden=torch.zeros((input_embedding.shape[0], self.argdict['hidden_size']))
+		hidden=torch.zeros((1, input_embedding.shape[0], self.argdict['hidden_size']))
 		len_seq=input_embedding.shape[1]
 		for i in range(len_seq):
-			inp=input_embedding[:, i, :]
+			inp=input_embedding[:, i, :].unsqueeze(1)
 			print(inp.shape)
 			_, hidden=self.rnn(inp, hidden)
 			print(hidden.shape)
