@@ -28,10 +28,14 @@ class GRU_Encoder(nn.Module):
 			input_embedding[:, :, -1]=labs
 
 		print(input_embedding.shape)
-		fds
+		hidden=torch.zeros((input_embedding.shape[0], self.argdict['hidden_size']))
+		len_seq=input_embedding.shape[1]
+		for i in range(len_seq):
+			inp=input_embedding[:, i, :]
+			_, hidden=self.rnn(inp, hidden)
 		#For pooling, we need to do this one step at a time
 
-		_, hidden = self.rnn(input_embedding)
+		# _, hidden = self.rnn(input_embedding)
 		print(hidden.shape)
 
 		mean = self.hidden2mean(hidden)
