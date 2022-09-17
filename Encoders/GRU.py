@@ -39,7 +39,11 @@ class GRU_Encoder(nn.Module):
 			_, hidden=self.rnn(inp, hidden)
 			hidden_states[:, i, :]=hidden.squeeze(0)
 
-		print(hidden_states)
+
+		if self.argdict['pooling']=="mean":
+			hidden=torch.mean(hidden_states, dim=1)
+
+		print(hidden.shape)
 		fds
 		#For pooling, we need to do this one step at a time
 
