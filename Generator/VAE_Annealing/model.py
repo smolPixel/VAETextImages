@@ -33,6 +33,7 @@ class VAE_Annealing_model(nn.Module):
     def encode(self, batch):
         # print("HIHIOHOHO")
         # print(input_sequence.shape)
+        input_sequence=batch['input']
         batch_size = input_sequence.size(0)
         # sorted_lengths, sorted_idx = torch.sort(length, descending=True)
         # input_sequence = input_sequence[sorted_idx]
