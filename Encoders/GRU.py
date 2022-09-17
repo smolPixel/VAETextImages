@@ -26,7 +26,14 @@ class GRU_Encoder(nn.Module):
 		if append_labels:
 			labs=batch['label'].unsqueeze(1).repeat(1, input_embedding.shape[1]).cuda()
 			input_embedding[:, :, -1]=labs
+
+		print(input_embedding.shape)
+		fds
+		#For pooling, we need to do this one step at a time
+
 		_, hidden = self.rnn(input_embedding)
+		print(hidden.shape)
+
 		mean = self.hidden2mean(hidden)
 		logv = self.hidden2logv(hidden)
 		return mean, logv
