@@ -12,7 +12,7 @@ latent_size: 15
 hidden_size: 512
 embedd_size: 300
 num_layers: 1
-batch_size: 64
+batch_size: 23
 dropout: 0.3
 word_dropout: 0.3
 x0: 15
