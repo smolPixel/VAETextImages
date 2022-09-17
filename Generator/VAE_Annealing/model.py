@@ -57,7 +57,7 @@ class VAE_Annealing_model(nn.Module):
             batch_size = z.size(0)
 
 
-        generated=self.decoder.generate(z)#, pad_idx=self.pad_idx, sos_idx=self.sos_idx)
+        generated=self.decoder.generate(z, labels=None)#, pad_idx=self.pad_idx, sos_idx=self.sos_idx)
         #
         # hidden = self.latent2hidden(z)
         #
