@@ -37,7 +37,6 @@ class GRU_Encoder(nn.Module):
 		for i in range(len_seq):
 			inp=input_embedding[:, i, :].unsqueeze(1)
 			_, hidden=self.rnn(inp, hidden)
-			print(hidden.shape)
 			hidden_states[:, i, :]=hidden.squeeze(0)
 
 
