@@ -33,6 +33,7 @@ class GRU_Encoder(nn.Module):
 		for i in range(len_seq):
 			inp=input_embedding[:, i, :]
 			_, hidden=self.rnn(inp, hidden)
+			print(hidden.shape)
 		#For pooling, we need to do this one step at a time
 
 		# _, hidden = self.rnn(input_embedding)
