@@ -27,18 +27,14 @@ class GRU_Encoder(nn.Module):
 			labs=batch['label'].unsqueeze(1).repeat(1, input_embedding.shape[1]).cuda()
 			input_embedding[:, :, -1]=labs
 
-		print(input_embedding.shape)
 		hidden=torch.zeros((1, input_embedding.shape[0], self.argdict['hidden_size'])).cuda()
 		len_seq=input_embedding.shape[1]
 		for i in range(len_seq):
 			inp=input_embedding[:, i, :].unsqueeze(1)
-			print(inp.shape)
 			_, hidden=self.rnn(inp, hidden)
-			print(hidden.shape)
 		#For pooling, we need to do this one step at a time
 
 		# _, hidden = self.rnn(input_embedding)
-		print(hidden.shape)
 
 		mean = self.hidden2mean(hidden)
 		logv = self.hidden2logv(hidden)
