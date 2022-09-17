@@ -316,7 +316,7 @@ class VAE_Annealing():
                     #
                     # print(batch['input'])
                     # print(batch['input'].shape)
-                    z = self.model.encode(batch['input'])
+                    z = self.model.encode(batch)
                     # print(batch_size)
                     # print(z.shape)
                     dataset[counter:counter + batch_size] = z
