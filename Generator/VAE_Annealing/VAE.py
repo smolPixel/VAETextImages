@@ -193,7 +193,7 @@ class VAE_Annealing():
         df.to_csv(f'graph_{self.argdict["dataset"]}.tsv', sep='\t')
         sdffd
 
-    def train(self):
+    def train_model(self):
         ts = time.strftime('%Y-%b-%d-%H:%M:%S', time.gmtime())
 
 
