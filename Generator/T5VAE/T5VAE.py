@@ -268,7 +268,7 @@ class T5VAE(LightningModule):
 
 	def train_model(self):
 		#Phase 1 encoder training
-		self.freeze_decoder()
+		# self.freeze_decoder()
 
 
 		early_stop_callback = EarlyStopping(
