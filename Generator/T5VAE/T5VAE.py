@@ -145,7 +145,7 @@ class T5VAE(LightningModule):
 				encoder_masks[i] = inp
 
 		batch_size = encoder_inputs.shape[0]
-
+		print('bitch')
 		x, z, mu, logvar = self(
 			encoder_inputs,
 			encoder_masks,
