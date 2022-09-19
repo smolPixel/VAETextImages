@@ -132,7 +132,7 @@ class T5VAE(LightningModule):
 					drop_count = torch.randint(max_drop, size=(1,)).item()
 				else:
 					drop_count = 0
-				print(drop_count)
+				print(drop_count, 'bru')
 				fds
 				drop_index = torch.randperm(token_length)[:drop_count]
 				inp = torch.tensor(
