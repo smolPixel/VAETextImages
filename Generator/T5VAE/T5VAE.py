@@ -147,8 +147,8 @@ class T5VAE(LightningModule):
 		batch_size = encoder_inputs.shape[0]
 
 		x, z, mu, logvar = self(
-			inputs_id=encoder_inputs,
-			attention_mask=encoder_masks,
+			encoder_input=encoder_inputs,
+			encoder_mask=encoder_masks,
 			labels=decoder_targets,
 		)
 
