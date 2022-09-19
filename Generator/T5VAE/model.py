@@ -220,10 +220,6 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
             )
         elif encoder_outputs is None:
             # Convert encoder inputs in embeddings if needed
-            print('00')
-            print(input_ids, attention_mask)
-            print(self.encoder(input_ids))
-            df
             encoder_outputs = self.run_encoder(
                 input_ids=input_ids,
                 attention_mask=attention_mask,
@@ -266,9 +262,6 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
 
 
         # If the user passed a tuple for encoder_outputs, we wrap it in a BaseModelOutput when return_dict=True
-        print('--')
-        print(input_ids)
-        print(encoder_outputs[0][0][0][0:5])
         return encoder_outputs
 
     def pool(self, x):

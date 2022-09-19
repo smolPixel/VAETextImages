@@ -122,30 +122,30 @@ class T5VAE(LightningModule):
 		encoder_inputs, encoder_masks=batch['input_ids'].to(self.device), batch['attention_mask'].to(self.device)
 		decoder_targets=batch['input_ids'].to(self.device)
 
-		if training and self.denoise_percentage:
-			for i, (inp, msk) in enumerate(zip(encoder_inputs, encoder_masks)):
-				#for each sentence
-				#Length= nb of 1 minus 1
-				token_length = (msk.sum() - 1).item()
-				max_drop = int(token_length * self.denoise_percentage)
-				#Max drop = number we are dropping for this sentence
-				if max_drop > 1:
-					drop_count = torch.randint(max_drop, size=(1,)).item()
-				else:
-					drop_count = 0
-				drop_index = torch.randperm(token_length)[:drop_count]
-				inp = torch.tensor(
-					[t for n, t in enumerate(inp) if n not in drop_index]
-				)
-				msk = torch.tensor(
-					[t for n, t in enumerate(msk) if n not in drop_index]
-				)
-				inp = torch.cat(
-					(inp, torch.tensor([self.tokenizer.pad_token_id] * drop_count))
-				)
-				msk = torch.cat((msk, torch.tensor([0] * drop_count)))
-				encoder_inputs[i] = inp
-				encoder_masks[i] = msk
+		# if training and self.denoise_percentage:
+		# 	for i, (inp, msk) in enumerate(zip(encoder_inputs, encoder_masks)):
+		# 		#for each sentence
+		# 		#Length= nb of 1 minus 1
+		# 		token_length = (msk.sum() - 1).item()
+		# 		max_drop = int(token_length * self.denoise_percentage)
+		# 		#Max drop = number we are dropping for this sentence
+		# 		if max_drop > 1:
+		# 			drop_count = torch.randint(max_drop, size=(1,)).item()
+		# 		else:
+		# 			drop_count = 0
+		# 		drop_index = torch.randperm(token_length)[:drop_count]
+		# 		inp = torch.tensor(
+		# 			[t for n, t in enumerate(inp) if n not in drop_index]
+		# 		)
+		# 		msk = torch.tensor(
+		# 			[t for n, t in enumerate(msk) if n not in drop_index]
+		# 		)
+		# 		inp = torch.cat(
+		# 			(inp, torch.tensor([self.tokenizer.pad_token_id] * drop_count))
+		# 		)
+		# 		msk = torch.cat((msk, torch.tensor([0] * drop_count)))
+		# 		encoder_inputs[i] = inp
+		# 		encoder_masks[i] = msk
 
 		batch_size = encoder_inputs.shape[0]
 
