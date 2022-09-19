@@ -129,6 +129,7 @@ class T5VAE(LightningModule):
 				token_length = (msk.sum() - 1).item()
 				max_drop = int(token_length * self.denoise_percentage)
 				if max_drop > 1:
+					max_drop=6
 					drop_count = torch.randint(max_drop, size=(1,)).item()
 				else:
 					drop_count = 0
