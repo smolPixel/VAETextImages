@@ -128,13 +128,11 @@ class T5VAE(LightningModule):
 				#Length= nb of 1 minus 1
 				token_length = (msk.sum() - 1).item()
 				max_drop = int(token_length * self.denoise_percentage)
+				#Max drop = number we are dropping for this sentence
 				if max_drop > 1:
-					max_drop=6
 					drop_count = torch.randint(max_drop, size=(1,)).item()
 				else:
 					drop_count = 0
-				print(drop_count, 'bru')
-				fds
 				drop_index = torch.randperm(token_length)[:drop_count]
 				inp = torch.tensor(
 					[t for n, t in enumerate(inp) if n not in drop_index]
@@ -146,8 +144,8 @@ class T5VAE(LightningModule):
 					(inp, torch.tensor([self.tokenizer.pad_token_id] * drop_count))
 				)
 				msk = torch.cat((msk, torch.tensor([0] * drop_count)))
-				encoder_inputs[i] = msk
-				encoder_masks[i] = inp
+				encoder_inputs[i] = inp
+				encoder_masks[i] = msk
 
 		batch_size = encoder_inputs.shape[0]
 
