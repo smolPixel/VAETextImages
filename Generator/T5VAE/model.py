@@ -266,7 +266,7 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
 
 
         # If the user passed a tuple for encoder_outputs, we wrap it in a BaseModelOutput when return_dict=True
-        print(encoder_outputs)
+        print(encoder_outputs[0])
         return encoder_outputs
 
     def pool(self, x):
