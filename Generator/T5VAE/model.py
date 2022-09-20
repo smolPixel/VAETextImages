@@ -77,9 +77,9 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
                 output_hidden_states=output_hidden_states,
                 return_dict=return_dict,
             )
-            print('bish')
-            print(encoder_outputs.hidden_states
-                  )
+            # print('bish')
+            # print(encoder_outputs.hidden_states
+            #       )
             pooled = self.pool(encoder_outputs.hidden_states)
             z, mu, logvar = self.calculate_latent(pooled)
         elif return_dict and not isinstance(encoder_outputs, BaseModelOutput):
@@ -227,11 +227,11 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
         encoder_outputs = self.run_encoder(
             input_ids=input_ids,
             attention_mask=attention_mask,
-            inputs_embeds=inputs_embeds,
-            head_mask=head_mask,
-            output_attentions=output_attentions,
-            output_hidden_states=output_hidden_states,
-            return_dict=return_dict,
+            # inputs_embeds=inputs_embeds,
+            # head_mask=head_mask,
+            # output_attentions=output_attentions,
+            # output_hidden_states=output_hidden_states,
+            # return_dict=return_dict,
         )
         print(encoder_outputs)
         print(encoder_outputs.hidden_states)
