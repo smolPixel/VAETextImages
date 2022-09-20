@@ -68,6 +68,8 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
             )
         elif encoder_outputs is None:
             # Convert encoder inputs in embeddings if needed
+            print(output_hidden_states)
+            fds
             encoder_outputs = self.run_encoder(
                 input_ids=input_ids,
                 attention_mask=attention_mask,
