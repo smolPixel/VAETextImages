@@ -74,7 +74,7 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
                 inputs_embeds=inputs_embeds,
                 head_mask=head_mask,
                 output_attentions=output_attentions,
-                # output_hidden_states=output_hidden_states,
+                output_hidden_states=output_hidden_states,
                 return_dict=return_dict,
             )
             # print('bish')
