@@ -68,19 +68,16 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
             )
         elif encoder_outputs is None:
             # Convert encoder inputs in embeddings if needed
-            print(output_hidden_states)
-            fds
             encoder_outputs = self.run_encoder(
                 input_ids=input_ids,
                 attention_mask=attention_mask,
-                # inputs_embeds=inputs_embeds,
-                # head_mask=head_mask,
-                # output_attentions=output_attentions,
+                inputs_embeds=inputs_embeds,
+                head_mask=head_mask,
+                output_attentions=output_attentions,
                 output_hidden_states=output_hidden_states,
                 return_dict=return_dict,
             )
             # print('bish')
-            print(encoder_outputs.hidden_states)
             pooled = self.pool(encoder_outputs.hidden_states)
             z, mu, logvar = self.calculate_latent(pooled)
         elif return_dict and not isinstance(encoder_outputs, BaseModelOutput):
@@ -231,7 +228,7 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
             # inputs_embeds=inputs_embeds,
             # head_mask=head_mask,
             # output_attentions=output_attentions,
-            # output_hidden_states=output_hidden_states,
+            output_hidden_states=True,
             # return_dict=return_dict,
         )
         print(encoder_outputs)
