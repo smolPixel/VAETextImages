@@ -449,6 +449,7 @@ class T5VAE(LightningModule):
 			# print(decoder_targets.shape)
 
 			# Keeping track of the means for AU
+			print(mean)
 			mus.append(mean.detach().squeeze(0))
 			batch_size = logp.shape[0]
 			logp, target = self.datasets['train'].shape_for_loss_function(logp, decoder_targets)
