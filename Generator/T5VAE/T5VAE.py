@@ -12,6 +12,8 @@ from pytorch_lightning.plugins import DDPPlugin
 from multiprocessing import cpu_count
 from metrics import calc_mi, calc_au
 
+from sklearn.svm import LinearSVC
+
 from torch import optim
 from transformers import (
 	AdamW,
