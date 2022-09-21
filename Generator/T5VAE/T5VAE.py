@@ -433,7 +433,7 @@ class T5VAE(LightningModule):
 		for iteration, batch in enumerate(data_loader):
 			# Forward pass
 			# logp, mean, logv, z = self.t5(batch)
-			continue
+			# continue
 			tokenized = self.tokenizer(batch['sentence'], padding=True, truncation=True, return_tensors='pt')
 
 			encoder_inputs, encoder_masks = tokenized['input_ids'].to(self.device), tokenized['attention_mask'].to(self.device)
