@@ -295,7 +295,7 @@ class T5VAE(LightningModule):
 		trainer = pl.Trainer(
 			gpus=1,
 			callbacks=[early_stop_callback, checkpoint_callback],
-			max_epochs= 1 #15
+			max_epochs= 15
 		)
 
 		train_loader = DataLoader(
@@ -349,7 +349,7 @@ class T5VAE(LightningModule):
 		trainer = pl.Trainer(
 			gpus=-1,
 			callbacks=[early_stop_callback, checkpoint_callback],
-			max_epochs= 0 #10,
+			max_epochs= 10,
 			# plugins=DDPPlugin(
 			# 	find_unused_parameters=True
 			# ),  # We ignore params from cross-attention.
@@ -449,7 +449,6 @@ class T5VAE(LightningModule):
 			# print(decoder_targets.shape)
 
 			# Keeping track of the means for AU
-			print(mean)
 			mus.append(mean.detach().squeeze(0))
 			batch_size = logp.shape[0]
 			logp, target = self.datasets['train'].shape_for_loss_function(logp, decoder_targets)
