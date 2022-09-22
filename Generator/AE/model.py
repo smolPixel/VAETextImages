@@ -24,8 +24,8 @@ class AE_model(nn.Module):
         logp = self.decoder(batch, mean)
         return logp, mean
 
-    def encode(self, input_sequence):
-        batch_size = input_sequence.size(0)
+    def encode(self, batch):
+        # batch_size = input_sequence.size(0)
         # ENCODER
         mean, logv=self.encoder(batch)
         return mean
