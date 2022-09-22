@@ -20,7 +20,7 @@ class AE_model(nn.Module):
 
         input_sequence=batch['input']
         batch_size = input_sequence.size(0)
-        mean, logv=self.encoder(input_sequence)
+        mean, logv=self.encoder(batch)
         logp = self.decoder(input_sequence, mean)
         return logp, mean
 
