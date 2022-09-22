@@ -284,9 +284,9 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
             logits = output.logits[0, -1, :] #/ temperature
             # filtered_logits = top_k_top_p_filtering(logits, top_k=top_k, top_p=top_p)
             print(logits.shape)
-            probabilities = F.softmax(filtered_logits, dim=-1)
-            next_token_id = torch.multinomial(probabilities, 1)
-            # next_token_id = torch.argmax(filtered_logits, dim=-1).unsqueeze(0)
+            # probabilities = F.softmax(filtered_logits, dim=-1)
+            # next_token_id = torch.multinomial(probabilities, 1)
+            next_token_id = torch.argmax(logits, dim=-1).unsqueeze(0)
 
             generated = torch.cat((generated, next_token_id.unsqueeze(0)), dim=1)
             past = output.past_key_values
@@ -295,11 +295,10 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
                 hidden_states=output.encoder_hidden_states,
                 attentions=output.encoder_attentions,
             )
-            if next_token_id == model.tokenizer.eos_token_id:
-                break
+            # if next_token_id == model.tokenizer.eos_token_id:
+            #     break
 
         return generated
-        fds
 
     def run_encoder(
         self,
