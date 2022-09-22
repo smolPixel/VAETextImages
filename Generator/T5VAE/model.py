@@ -276,14 +276,14 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
                     sampled_z=z#torch.zeros((1, z.shape[1])).normal_(mean=0, std=1)#sampled_z,
                 )
 
-            print(output)
+            # print(output)
             # temperature = kwargs.get("temperature") if "temperature" in kwargs else 1.0
             # top_k = kwargs.get("top_k") if "top_k" in kwargs else 0
             # top_p = kwargs.get("top_p") if "top_p" in kwargs else 0
 
             logits = output.logits[0, -1, :] #/ temperature
             # filtered_logits = top_k_top_p_filtering(logits, top_k=top_k, top_p=top_p)
-            print(logits.shape)
+            # print(logits.shape)
             # probabilities = F.softmax(filtered_logits, dim=-1)
             # next_token_id = torch.multinomial(probabilities, 1)
             next_token_id = torch.argmax(logits, dim=-1).unsqueeze(0)
