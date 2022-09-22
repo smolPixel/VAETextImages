@@ -25,5 +25,5 @@ class decoder(nn.Module):
 		self.norm.append(norm.item())
 		return self.model(batch, z, append_labels)
 
-	def generate(self, z, labels):
+	def generate(self, z, labels=None):
 		return self.model.generate(z, labels)
