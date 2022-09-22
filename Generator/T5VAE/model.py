@@ -270,7 +270,7 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
                     # output_attentions=output_attentions,
                     output_hidden_states=True,
                     return_dict=True,
-                    sampled_z=torch.zeros((1, self.argdict['latent_size'])).normal_(mean=0, std=1)#sampled_z,
+                    sampled_z=torch.zeros((1, bs.shape[1]).normal_(mean=0, std=1)#sampled_z,
                 )
 
             print(output)
