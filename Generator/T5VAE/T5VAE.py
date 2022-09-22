@@ -56,7 +56,7 @@ class T5VAE(LightningModule):
 			config=self.config,
 			argdict=argdict
 		)
-		self.tokenizer = T5Tokenizer.from_pretrained(argdict['base_model'])
+		self.tokenizer = T5Tokenizer.from_pretrained(argdict['base_model'], add_special_tokens=True)
 		print(self.tokenizer.bos_token_id)
 		fds
 
