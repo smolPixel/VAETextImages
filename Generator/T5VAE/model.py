@@ -238,7 +238,7 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
     def inference(self, z, bos_token):
         bs=z.shape[0]
         device='cpu'
-        generated = torch.tensor([bos_token]).unsqueeze(0).to(device)
+        generated = torch.tensor([bos_token for i in range(bs)]).unsqueeze(0).to(device)
         z=z.to(device)
         # print(torch.zeros((1, z.shape[1])).normal_(mean=0, std=1).shape)
         # z=z[0].unsqueeze(0)
