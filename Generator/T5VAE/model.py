@@ -241,7 +241,7 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
         generated = torch.tensor([bos_token]).unsqueeze(0).to(device)
         z=z.to(device)
         print(torch.zeros((1, z.shape[1])).normal_(mean=0, std=1).shape)
-        z=z[0]
+        z=z[0].unsqueeze(0)
         print(z.shape)
         fds
 
