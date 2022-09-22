@@ -50,7 +50,7 @@ from Generator.T5VAE.model import ModifiedT5ForConditionalGeneration
 class T5VAE(LightningModule):
 	def __init__(self, argdict, train, dev, test):
 		super().__init__()
-		self.config = T5Config.from_pretrained(argdict['base_model'])
+		self.config = T5Config.from_pretrained(argdict['base_model'], add_special_tokens=True)
 		self.t5 = ModifiedT5ForConditionalGeneration.from_pretrained(
 			argdict['base_model'],
 			config=self.config,
