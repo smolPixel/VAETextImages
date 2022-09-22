@@ -238,7 +238,7 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
     def inference(self, z, bos_token):
         bs=z.shape[0]
         device='cpu'
-        gend=torch.zeros((bs, 500))
+        gend=torch.zeros((bs, 100))
 
         for i in range(bs):
             generated = torch.tensor([bos_token for i in range(bs)]).unsqueeze(0).to(device)
@@ -250,7 +250,7 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
 
 
             output, encoder_outputs = None, None
-            while generated.shape[1] < 500:
+            while generated.shape[1] < 100:
 
                 # decoder_inputs = self.t5.prepare_inputs_for_generation(generated, past=past)
 
@@ -301,6 +301,7 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
                 # if next_token_id == model.tokenizer.eos_token_id:
                 #     break
             gend[i]=generated
+        print(gend.shape)
         return gend, z
 
     def run_encoder(
