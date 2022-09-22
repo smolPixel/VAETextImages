@@ -235,6 +235,9 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
         z, mu, logvar = self.calculate_latent(pooled)
         return z, mu, logvar
 
+    def inference(self, n, points):
+        fds
+
     def run_encoder(
         self,
         input_ids=None,

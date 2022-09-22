@@ -381,8 +381,10 @@ class T5VAE(LightningModule):
 			px = (1 - ratio) * p0 + ratio * p1
 			points[i] = px
 		points = points.cuda()
+		print(self.tokenizer.bos_token_id)
 		print(points.shape)
-		samples, z = self.model.inference(n=n, z=points)
+		samples, z = self.t5.inference(n=n, z=points)
+		print(samples)
 		self.datasets['train'].process_generated(samples)
 
 	def encode(self):
