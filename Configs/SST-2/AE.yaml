@@ -10,7 +10,7 @@ decoder: "GRU"
 
 pooling: "last"
 
-nb_epoch: 4
+nb_epoch: 1 #4
 latent_size: 15
 hidden_size: 1024
 embedd_size: 300
