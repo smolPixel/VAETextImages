@@ -238,8 +238,8 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
     def inference(self, z, bos_token):
         bs=z.shape[0]
         print(bs)
-        generated = torch.tensor([bos_token]).unsqueeze(0)#.to(self.device)
-
+        generated = torch.tensor([bos_token]).unsqueeze(0).to('cuda')
+        self.to
         print(generated.shape)
 
         output, encoder_outputs = None, None
@@ -250,7 +250,7 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
             sampled_z = z[0]
 
             with torch.no_grad():
-                output = self(
+                output = self.forward(
                     input_ids=None,
                     attention_mask=None,
                     # attention_mask=torch.ones((generated.shape[0], generated.shape[1] + 1)),
