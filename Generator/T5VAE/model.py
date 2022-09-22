@@ -247,7 +247,7 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
 
 
         output, encoder_outputs = None, None
-        while generated.shape[1] < 1000:
+        while generated.shape[1] < 500:
 
             # decoder_inputs = self.t5.prepare_inputs_for_generation(generated, past=past)
 
@@ -298,7 +298,7 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
             # if next_token_id == model.tokenizer.eos_token_id:
             #     break
 
-        return generated
+        return generated, z
 
     def run_encoder(
         self,
