@@ -240,10 +240,10 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
         device='cpu'
         generated = torch.tensor([bos_token]).unsqueeze(0).to(device)
         z=z.to(device)
-        print(torch.zeros((1, z.shape[1])).normal_(mean=0, std=1).shape)
+        # print(torch.zeros((1, z.shape[1])).normal_(mean=0, std=1).shape)
         z=z[0].unsqueeze(0)
-        print(z.shape)
-        fds
+        # print(z.shape)
+        # fds
 
 
         output, encoder_outputs = None, None
@@ -273,7 +273,7 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
                     # output_attentions=output_attentions,
                     output_hidden_states=True,
                     return_dict=True,
-                    sampled_z=torch.zeros((1, z.shape[1])).normal_(mean=0, std=1)#sampled_z,
+                    sampled_z=z#torch.zeros((1, z.shape[1])).normal_(mean=0, std=1)#sampled_z,
                 )
 
             print(output)
