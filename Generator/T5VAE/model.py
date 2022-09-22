@@ -240,6 +240,8 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
         print(bs)
         generated = torch.tensor(bos_token).unsqueeze(0).to(self.device)
 
+        print(generated.shape)
+
         output, encoder_outputs = None, None
         while generated.shape[1] < 1000:
 
