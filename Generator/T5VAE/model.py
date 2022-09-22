@@ -238,7 +238,7 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
     def inference(self, z, bos_token):
         bs=z.shape[0]
         print(bs)
-        generated = torch.tensor(bos).unsqueeze(0).to(self.device)
+        generated = torch.tensor(bos_token).unsqueeze(0).to(self.device)
 
         output, encoder_outputs = None, None
         while generated.shape[1] < 1000:
