@@ -7,6 +7,7 @@ max_length: 0
 algo: "T5VAE"
 #encoder: "GRU"
 #decoder: "GRU"
+nb_epoch_pretraining: 1
 nb_epoch: 1 #30
 latent_size: 15
 hidden_size: 1024
