@@ -371,8 +371,8 @@ class T5VAE(LightningModule):
 		self.interpolate()
 
 	def interpolate(self, n=5):
-		p0 = to_var(torch.randn([1, self.argdict['latent_size']]))
-		p1 = to_var(torch.randn([1, self.argdict['latent_size']]))
+		p0 = torch.randn([1, self.argdict['latent_size']])
+		p1 = torch.randn([1, self.argdict['latent_size']])
 		points = torch.zeros(n, self.argdict['latent_size'])
 		points[0] = p0
 		points[n - 1] = p1
