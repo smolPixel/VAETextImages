@@ -388,7 +388,7 @@ class T5VAE(LightningModule):
 		print(self.tokenizer.bos_token_id)
 		print(points.shape)
 		samples, z = self.t5.inference(z=points, bos_token=self.tokenizer.bos_token_id)
-		print(self.tokenizer.batch_decode(samples, skip_special_tokens=True)[0])
+		print(self.tokenizer.batch_decode(samples, skip_special_tokens=True))
 		self.datasets['train'].process_generated(samples)
 
 	def encode(self):
