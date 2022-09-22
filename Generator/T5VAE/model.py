@@ -254,7 +254,7 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
 
                 # decoder_inputs = self.t5.prepare_inputs_for_generation(generated, past=past)
 
-                sampled_z = z[0]
+                # sampled_z = sampled_z[0]
 
                 with torch.no_grad():
                     output = self.forward(
