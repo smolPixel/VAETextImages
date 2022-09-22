@@ -21,13 +21,13 @@ class AE_model(nn.Module):
         input_sequence=batch['input']
         batch_size = input_sequence.size(0)
         mean, logv=self.encoder(batch)
-        logp = self.decoder(input_sequence, mean)
+        logp = self.decoder(batch, mean)
         return logp, mean
 
     def encode(self, input_sequence):
         batch_size = input_sequence.size(0)
         # ENCODER
-        mean, logv=self.encoder(input_sequence)
+        mean, logv=self.encoder(batch)
         return mean
 
     def inference(self,  n=4, z=None):

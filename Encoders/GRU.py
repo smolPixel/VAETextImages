@@ -42,6 +42,8 @@ class GRU_Encoder(nn.Module):
 
 		if self.argdict['pooling']=="mean":
 			hidden=torch.mean(hidden_states, dim=1).unsqueeze(0).cuda()
+		elif self.argdict['pooling']=='last':
+			hidden=hidden
 		else:
 			raise ValueError("unkown pooling method")
 

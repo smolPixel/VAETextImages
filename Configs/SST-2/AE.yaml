@@ -7,6 +7,9 @@ max_length: 0
 algo: "AE"
 encoder: "GRU"
 decoder: "GRU"
+
+pooling: "last"
+
 nb_epoch: 4
 latent_size: 15
 hidden_size: 1024
