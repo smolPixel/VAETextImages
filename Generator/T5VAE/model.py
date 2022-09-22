@@ -238,67 +238,70 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
     def inference(self, z, bos_token):
         bs=z.shape[0]
         device='cpu'
-        generated = torch.tensor([bos_token for i in range(bs)]).unsqueeze(0).to(device)
-        z=z.to(device)
-        # print(torch.zeros((1, z.shape[1])).normal_(mean=0, std=1).shape)
-        # z=z[0].unsqueeze(0)
-        # print(z.shape)
-        # fds
+        gend=torch.zeros((bs, 500))
+
+        for i in range(bs):
+            generated = torch.tensor([bos_token for i in range(bs)]).unsqueeze(0).to(device)
+            z=z[i].unsqueeze(0).to(device)
+            # print(torch.zeros((1, z.shape[1])).normal_(mean=0, std=1).shape)
+            # z=z[0].unsqueeze(0)
+            # print(z.shape)
+            # fds
 
 
-        output, encoder_outputs = None, None
-        while generated.shape[1] < 500:
+            output, encoder_outputs = None, None
+            while generated.shape[1] < 500:
 
-            # decoder_inputs = self.t5.prepare_inputs_for_generation(generated, past=past)
+                # decoder_inputs = self.t5.prepare_inputs_for_generation(generated, past=past)
 
-            sampled_z = z[0]
+                sampled_z = z[0]
 
-            with torch.no_grad():
-                output = self.forward(
-                    input_ids=None,
-                    attention_mask=None,
-                    # attention_mask=torch.ones((generated.shape[0], generated.shape[1] + 1)),
-                    # encoder_hidden_states=None, #new_encoder_hidden_states,  # Modified.
-                    # encoder_attention_mask=None, #new_attention_mask,  # Modified.
-                    # attention_mask=encoder_mask,
-                    encoder_outputs=None,
-                    decoder_input_ids=generated[:, -1].unsqueeze(0),
-                    # encoder_hidden_states=encoder_outputs[0],  # Modified.
-                    # encoder_attention_mask=attention_mask,  # Modified.
-                    # head_mask=kwargs.get("decoder_head_mask"),
-                    # cross_attn_head_mask=kwargs.get("cross_attn_head_mask"),
-                    past_key_values= None,
-                    # inputs_embeds=decoder_inputs_embeds,
-                    use_cache=True,
-                    # output_attentions=output_attentions,
-                    output_hidden_states=True,
-                    return_dict=True,
-                    sampled_z=z#torch.zeros((1, z.shape[1])).normal_(mean=0, std=1)#sampled_z,
+                with torch.no_grad():
+                    output = self.forward(
+                        input_ids=None,
+                        attention_mask=None,
+                        # attention_mask=torch.ones((generated.shape[0], generated.shape[1] + 1)),
+                        # encoder_hidden_states=None, #new_encoder_hidden_states,  # Modified.
+                        # encoder_attention_mask=None, #new_attention_mask,  # Modified.
+                        # attention_mask=encoder_mask,
+                        encoder_outputs=None,
+                        decoder_input_ids=generated[:, -1].unsqueeze(0),
+                        # encoder_hidden_states=encoder_outputs[0],  # Modified.
+                        # encoder_attention_mask=attention_mask,  # Modified.
+                        # head_mask=kwargs.get("decoder_head_mask"),
+                        # cross_attn_head_mask=kwargs.get("cross_attn_head_mask"),
+                        past_key_values= None,
+                        # inputs_embeds=decoder_inputs_embeds,
+                        use_cache=True,
+                        # output_attentions=output_attentions,
+                        output_hidden_states=True,
+                        return_dict=True,
+                        sampled_z=z#torch.zeros((1, z.shape[1])).normal_(mean=0, std=1)#sampled_z,
+                    )
+
+                # print(output)
+                # temperature = kwargs.get("temperature") if "temperature" in kwargs else 1.0
+                # top_k = kwargs.get("top_k") if "top_k" in kwargs else 0
+                # top_p = kwargs.get("top_p") if "top_p" in kwargs else 0
+
+                logits = output.logits[0, -1, :] #/ temperature
+                # filtered_logits = top_k_top_p_filtering(logits, top_k=top_k, top_p=top_p)
+                # print(logits.shape)
+                # probabilities = F.softmax(filtered_logits, dim=-1)
+                # next_token_id = torch.multinomial(probabilities, 1)
+                next_token_id = torch.argmax(logits, dim=-1).unsqueeze(0)
+
+                generated = torch.cat((generated, next_token_id.unsqueeze(0)), dim=1)
+                past = output.past_key_values
+                encoder_outputs = BaseModelOutput(
+                    last_hidden_state=output.encoder_last_hidden_state,
+                    hidden_states=output.encoder_hidden_states,
+                    attentions=output.encoder_attentions,
                 )
-
-            # print(output)
-            # temperature = kwargs.get("temperature") if "temperature" in kwargs else 1.0
-            # top_k = kwargs.get("top_k") if "top_k" in kwargs else 0
-            # top_p = kwargs.get("top_p") if "top_p" in kwargs else 0
-
-            logits = output.logits[0, -1, :] #/ temperature
-            # filtered_logits = top_k_top_p_filtering(logits, top_k=top_k, top_p=top_p)
-            # print(logits.shape)
-            # probabilities = F.softmax(filtered_logits, dim=-1)
-            # next_token_id = torch.multinomial(probabilities, 1)
-            next_token_id = torch.argmax(logits, dim=-1).unsqueeze(0)
-
-            generated = torch.cat((generated, next_token_id.unsqueeze(0)), dim=1)
-            past = output.past_key_values
-            encoder_outputs = BaseModelOutput(
-                last_hidden_state=output.encoder_last_hidden_state,
-                hidden_states=output.encoder_hidden_states,
-                attentions=output.encoder_attentions,
-            )
-            # if next_token_id == model.tokenizer.eos_token_id:
-            #     break
-
-        return generated, z
+                # if next_token_id == model.tokenizer.eos_token_id:
+                #     break
+            gend[i]=generated
+        return gend, z
 
     def run_encoder(
         self,
