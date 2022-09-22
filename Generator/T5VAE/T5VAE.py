@@ -57,7 +57,7 @@ class T5VAE(LightningModule):
 			argdict=argdict
 		)
 		self.tokenizer = T5Tokenizer.from_pretrained(argdict['base_model'])
-		print(self.tokenizer.decoder_start_token_id)
+		print(self.tokenizer.bos_token_id)
 		fds
 
 
