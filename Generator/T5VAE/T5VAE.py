@@ -387,7 +387,7 @@ class T5VAE(LightningModule):
 		points = points.cuda()
 		print(self.tokenizer.bos_token_id)
 		print(points.shape)
-		samples, z = self.t5.inference(n=n, z=points)
+		samples, z = self.t5.inference(z=points, bos_token=self.tokenizer.bos_token_id)
 		print(samples)
 		self.datasets['train'].process_generated(samples)
 
