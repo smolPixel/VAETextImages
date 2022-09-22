@@ -320,7 +320,7 @@ class AE():
         # print('----------SAMPLES----------')
         return idx2word(samples, i2w=self.datasets['train'].get_i2w(), pad_idx=self.datasets['train'].get_w2i()['<pad>'], eos_idx=self.datasets['train'].get_w2i()['<eos>'])
 
-    def test(self):
+    def test_model(self):
         data_loader = DataLoader(
             dataset=self.datasets['test'],
             batch_size=64,  # self.argdict.batch_size,
