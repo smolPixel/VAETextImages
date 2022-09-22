@@ -238,14 +238,14 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
     def inference(self, z, bos_token):
         bs=z.shape[0]
         print(bs)
-        generated = torch.tensor(starter_tokens).unsqueeze(0).to(model.device)
+        generated = torch.tensor(bos).unsqueeze(0).to(self.device)
 
         output, encoder_outputs = None, None
         while generated.shape[1] < 1000:
 
             # decoder_inputs = self.t5.prepare_inputs_for_generation(generated, past=past)
 
-            sampled_z = kwargs.get("sampled_z") if output is None else None
+            sampled_z = z[0]
 
             with torch.no_grad():
                 output = self(
