@@ -374,11 +374,11 @@ class AE():
         #Reconstruction
         #This part should be handled in the dataset, as it is heavily dataset dependant (duh)
         self.datasets['train'].test_reconstruction(self.model)
-        sentences=["<bos> This is an excellent movie <eos>".lower(), "<bos> I hated this movie so much I couldn't finish it <eos>".lower()]
-        tokenized=self.datasets['train'].batch_tokenize_and_pad(sentences)
-        mean=self.model.encode(tokenized).squeeze(0)
-        samples, z = self.model.inference(n=2, z=mean)
-        self.datasets['train'].process_generated(samples)
+        # sentences=["<bos> This is an excellent movie <eos>".lower(), "<bos> I hated this movie so much I couldn't finish it <eos>".lower()]
+        # tokenized=self.datasets['train'].batch_tokenize_and_pad(sentences)
+        # mean=self.model.encode(tokenized).squeeze(0)
+        # samples, z = self.model.inference(n=2, z=mean)
+        # self.datasets['train'].process_generated(samples)
 
         # print(AU)
         return {'Mean ELBO': np.mean(Average_loss), 'Mean LF' :np.mean(Average_NLL), 'PPL': {torch.exp(torch.mean(torch.Tensor(NLL_mean_for_ppl)))},
