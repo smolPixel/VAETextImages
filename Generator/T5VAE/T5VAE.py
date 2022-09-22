@@ -60,9 +60,6 @@ class T5VAE(LightningModule):
 		self.tokenizer.add_special_tokens({'bos_token': '<bos>', 'eos_token': '<eos>'})
 
 		self.t5.resize_token_embeddings(len(self.tokenizer))
-		print(self.tokenizer.bos_token_id)
-		fds
-
 
 		self.argdict=argdict
 		self.splits=['train', 'dev', 'test']
