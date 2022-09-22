@@ -239,7 +239,7 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
         bs=z.shape[0]
         print(bs)
         generated = torch.tensor([bos_token]).unsqueeze(0).to('cuda')
-        self.to
+        z=z.to('cuda')
         print(generated.shape)
 
         output, encoder_outputs = None, None
