@@ -27,6 +27,9 @@ class generator():
         elif algo == "GPT2":
             from Generator.GPT2.GPT2 import GPT2
             self.generator=GPT2(self.argdict, train, dev, test)
+        elif algo == "T5":
+            from Generator.T5.T5 import T5
+            self.generator=T5(self.argdict, train, dev, test)
         elif algo == "AE":
             from Generator.AE.AE import AE
             self.generator=AE(self.argdict, train, dev, test)
