@@ -222,7 +222,6 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
         #     )
         # elif encoder_outputs is None:
         #     # Convert encoder inputs in embeddings if needed
-        print(input_ids)
         encoder_outputs = self.run_encoder(
             input_ids=input_ids,
             attention_mask=attention_mask,
@@ -302,7 +301,6 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
                 # if next_token_id == model.tokenizer.eos_token_id:
                 #     break
             gend[i]=generated
-        print(gend.shape)
         return gend, z
 
     def run_encoder(
@@ -327,9 +325,6 @@ class ModifiedT5ForConditionalGeneration(T5ForConditionalGeneration):
             output_hidden_states=output_hidden_states,
             return_dict=return_dict,
         )
-        # print(input_ids)
-        # print(encoder_outputs)
-        # print(self.encoder(input_ids, attention_mask))
         # fds
 
 
