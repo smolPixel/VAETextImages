@@ -75,7 +75,7 @@ class SST2_dataset(Dataset):
 			z, _, _ = model.encode(input_ids=tokenized['input_ids'], attention_mask=tokenized['attention_mask'])
 			samples, z = model.inference(z=z, bos_token=tokenizer.bos_token_id)
 			print(samples)
-			print(self.tokenizer.batch_decode(samples, skip_special_tokens=True))
+			print(tokenizer.batch_decode(samples, skip_special_tokens=True))
 
 
 	def get_unlabelled(self):
