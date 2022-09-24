@@ -76,16 +76,18 @@ class T5():
 	def generate_from_dataset(self):
 		data_loader = DataLoader(
 			dataset=self.datasets['train'],
-			batch_size=4,  # self.argdict.batch_size,
+			batch_size=2,  # self.argdict.batch_size,
 			shuffle=False,
 			num_workers=1,
 			pin_memory=torch.cuda.is_available()
 		)
 
 		for iteration, batch in enumerate(data_loader):
+			print(batch['sentence'])
 			encodings = self.tokenizer(batch['sentence'], return_tensors="pt", padding=True, truncation=True).to(self.device)['input_ids']
 			outputs=self.model.generate(encodings)
 			print(self.tokenizer.batch_decode(outputs, skip_special_tokens=True))
+			break
 
 	def loss_fn(self, logp, target):
 
