@@ -66,13 +66,11 @@ class SST2_dataset(Dataset):
 					 "<bos> I hated this movie so much I couldn't finish it <eos>".lower()]
 		if tokenizer is None:
 			tokenized = self.batch_tokenize_and_pad(sentences)
-			mean = model.encode({'input': tokenized}).squeeze(0)
+			z = model.encode({'input': tokenized}).squeeze(0)
 		else:
 			tokenized=tokenizer(sentences)
-			print(tokenized)
-			fds
-		mean = model.encode({'input':tokenized}).squeeze(0)
-		samples, z = model.inference(n=2, z=mean)
+			z, _, _ = model.encode(input_ids=tokenized['input_ids'], attention_mask=tokenized['attention_mask']
+		samples, z = model.inference(n=2, z=z)
 		self.process_generated(samples)
 
 
