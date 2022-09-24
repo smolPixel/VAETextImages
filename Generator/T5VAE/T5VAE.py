@@ -500,7 +500,7 @@ class T5VAE(LightningModule):
 
 		# Reconstruction
 		# This part should be handled in the dataset, as it is heavily dataset dependant (duh)
-		self.datasets['train'].test_reconstruction(self.t5)
+		self.datasets['train'].test_reconstruction(self.t5, self.tokenizer)
 
 		# print(AU)
 		return {'Mean ELBO': np.mean(Average_loss), 'Mean LF': np.mean(Average_NLL),
