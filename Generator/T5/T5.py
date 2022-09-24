@@ -75,7 +75,7 @@ class T5():
 
 	def generate_from_dataset(self):
 		data_loader = DataLoader(
-			dataset=self.datasets['rain'],
+			dataset=self.datasets['train'],
 			batch_size=4,  # self.argdict.batch_size,
 			shuffle=False,
 			num_workers=1,
