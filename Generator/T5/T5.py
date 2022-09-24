@@ -83,7 +83,7 @@ class T5():
 		)
 
 		for iteration, batch in enumerate(data_loader):
-			encodings = self.tokenizer(batch['sentence'], return_tensors="pt", padding=True, truncation=True).to(self.device)
+			encodings = self.tokenizer(batch['sentence'], return_tensors="pt", padding=True, truncation=True).to(self.device)['input_ids']
 			outputs=self.model.generate(encodings)
 			print(self.tokenizer.batch_decode(outputs, skip_special_tokens=True))
 
