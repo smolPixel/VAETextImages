@@ -69,7 +69,7 @@ class SST2_dataset(Dataset):
 			z = model.encode({'input': tokenized}).squeeze(0)
 		else:
 			tokenized=tokenizer(sentences)
-			z, _, _ = model.encode(input_ids=tokenized['input_ids'], attention_mask=tokenized['attention_mask']
+			z, _, _ = model.encode(input_ids=tokenized['input_ids'], attention_mask=tokenized['attention_mask'])
 		samples, z = model.inference(n=2, z=z)
 		self.process_generated(samples)
 
