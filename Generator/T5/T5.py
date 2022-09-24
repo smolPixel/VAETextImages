@@ -70,6 +70,23 @@ class T5():
 			self.epoch = epoch
 			self.run_epoch()
 
+		self.generate_from_dataset()
+
+
+	def generate_from_dataset(self):
+		data_loader = DataLoader(
+			dataset=self.datasets['rain'],
+			batch_size=4,  # self.argdict.batch_size,
+			shuffle=False,
+			num_workers=1,
+			pin_memory=torch.cuda.is_available()
+		)
+
+		for iteration, batch in enumerate(data_loader):
+			encodings = self.tokenizer(batch['sentence'], return_tensors="pt", padding=True, truncation=True).to(self.device)
+			outputs=self.model.generate(encodings)
+			print(self.tokenizer.batch_decode(outputs, skip_special_tokens=True))
+
 	def loss_fn(self, logp, target):
 
 		# Negative Log Likelihood
