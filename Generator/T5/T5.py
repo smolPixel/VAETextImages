@@ -78,7 +78,7 @@ class T5():
 
 		return NLL_loss
 
-	def test(self):
+	def test_model(self):
 		data_loader = DataLoader(
 			dataset=self.datasets['test'],
 			batch_size=4,  # self.argdict.batch_size,
