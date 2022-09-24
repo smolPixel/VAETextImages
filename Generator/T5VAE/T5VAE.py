@@ -337,7 +337,7 @@ class T5VAE(LightningModule):
 			# monitor="val_loss",
 			monitor="finished_epoch",
 			min_delta=0.00,
-			patience=10,
+			patience=50,
 			verbose=True,
 			mode="min",
 			strict=True,
