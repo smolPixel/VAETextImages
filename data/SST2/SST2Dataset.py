@@ -70,7 +70,7 @@ class SST2_dataset(Dataset):
 		else:
 			tokenized=tokenizer(sentences, padding=True, truncation=True, return_tensors='pt')
 			z, _, _ = model.encode(input_ids=tokenized['input_ids'], attention_mask=tokenized['attention_mask'])
-		samples, z = model.inference(z=z, bos_token='<bos>')
+		samples, z = model.inference(z=z, bos_token=tokenizer.bos_token_id)
 		self.process_generated(samples)
 
 
