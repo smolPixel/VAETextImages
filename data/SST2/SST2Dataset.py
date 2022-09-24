@@ -61,10 +61,16 @@ class SST2_dataset(Dataset):
 			array[i]=input
 		return array.long()
 
-	def test_reconstruction(self, model):
+	def test_reconstruction(self, model, tokenizer=None):
 		sentences = ["<bos> This is an excellent movie <eos>".lower(),
 					 "<bos> I hated this movie so much I couldn't finish it <eos>".lower()]
-		tokenized = self.batch_tokenize_and_pad(sentences)
+		if tokenizer is None:
+			tokenized = self.batch_tokenize_and_pad(sentences)
+			mean = model.encode({'input': tokenized}).squeeze(0)
+		else:
+			tokenized=tokenizer(sentences)
+			print(tokenized)
+			fds
 		mean = model.encode({'input':tokenized}).squeeze(0)
 		samples, z = model.inference(n=2, z=mean)
 		self.process_generated(samples)
