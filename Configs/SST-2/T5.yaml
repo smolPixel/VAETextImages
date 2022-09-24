@@ -1,0 +1,25 @@
+---
+dataset: "SST2"
+computer: "labo"
+dataset_size: 100
+random_seed: 42
+max_length: 0
+algo: "T5"
+#encoder: "GRU"
+#decoder: "GRU"
+nb_epoch: 30
+latent_size: 15
+hidden_size: 1024
+embedd_size: 300
+num_layers: 1
+batch_size: 64
+dropout: 0.3
+word_dropout: 0.3
+x0: 15
+
+
+base_model: "t5-base"
+pooling_strategy: "max" #mean
+lambda: 3
+denoise_percentage: 0.15
+fixed_reg_weight: 0
