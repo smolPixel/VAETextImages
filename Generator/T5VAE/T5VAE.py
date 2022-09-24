@@ -370,7 +370,7 @@ class T5VAE(LightningModule):
 			batch_size=64,  # self.argdict.batch_size,
 			shuffle=True,
 		)
-
+		print("Starting Full training")
 		trainer.fit(self, train_loader, dev_loader)
 		self.interpolate()
 
@@ -389,7 +389,7 @@ class T5VAE(LightningModule):
 		print(points.shape)
 		samples, z = self.t5.inference(z=points, bos_token=self.tokenizer.bos_token_id)
 		print(self.tokenizer.batch_decode(samples, skip_special_tokens=True))
-		self.datasets['train'].process_generated(samples)
+		# self.datasets['train'].process_generated(samples)
 
 	def encode(self):
 		with torch.no_grad():
