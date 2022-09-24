@@ -65,7 +65,7 @@ class T5():
 
 			print(f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean LF {np.mean(Average_NLL)}")
 
-	def train(self):
+	def train_model(self):
 		for epoch in range(self.argdict['nb_epoch']):
 			self.epoch = epoch
 			self.run_epoch()
