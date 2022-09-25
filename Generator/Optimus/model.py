@@ -30,7 +30,7 @@ class Optimus(nn.Module):
 	"""VAE with normal prior"""
 
 	def __init__(self, encoder, decoder, tokenizer_encoder, tokenizer_decoder, argdict):  #
-		super(VAE, self).__init__()
+		super(Optimus, self).__init__()
 		self.encoder = encoder
 		self.decoder = decoder
 
