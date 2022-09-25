@@ -54,7 +54,7 @@ class GPT2ForLatentConnector():
 		# self.init_weights()
 		# self.tie_weights()
 
-
+		pass
 		# self.latent_as_gpt_emb = latent_as_gpt_emb
 		# self.latent_as_gpt_memory = latent_as_gpt_memory
 
