@@ -68,6 +68,10 @@ class generator():
             """Pretrained"""
             from Generator.T5VAEHomemade.T5VAEHomemade import T5VAEHomemade
             self.generator = T5VAEHomemade(self.argdict, train, dev, test)
+        elif algo == "Optimus":
+            """Pretrained"""
+            from Generator.Optimus.Optimus import OptimusVAE
+            self.generator = OptimusVAE(self.argdict, train, dev, test)
         else:
             raise ValueError(f"No generator named {algo}")
 
