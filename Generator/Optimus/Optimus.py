@@ -5,8 +5,9 @@
 #                                   RobertaConfig, RobertaForMaskedLM, RobertaTokenizer)
 
 from Generator.Optimus.GPTLatent import GPT2ForLatentConnector
-
+from Generator.Optimus.BertLatent import BertForLatentConnector
 
 class OptimusVAE():
 	def __init__(self, argdict, train, dev, test):
-		encoder=GPT2ForLatentConnector(argdict)
+		decoder=GPT2ForLatentConnector(argdict)
+		encoder=BertForLatentConnector(argdict)
