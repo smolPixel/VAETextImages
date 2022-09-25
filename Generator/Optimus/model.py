@@ -34,7 +34,7 @@ class Optimus(nn.Module):
 		self.encoder = encoder
 		self.decoder = decoder
 
-		self.args = args
+		self.args = argdict
 		self.nz = args.latent_size
 
 		self.eos_token_id = tokenizer_decoder.convert_tokens_to_ids([tokenizer_decoder.eos_token])[0]
