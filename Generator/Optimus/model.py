@@ -45,7 +45,7 @@ class Optimus(nn.Module):
 
 		# Standard Normal prior
 		loc = torch.zeros(self.nz, device=argdict['device'])
-		scale = torch.ones(self.nz, device=ardict['device'])
+		scale = torch.ones(self.nz, device=argdict['device'])
 		self.prior = torch.distributions.normal.Normal(loc, scale)
 
 	def connect(self, bert_fea, nsamples=1):
