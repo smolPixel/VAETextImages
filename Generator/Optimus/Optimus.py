@@ -16,5 +16,5 @@ class OptimusVAE():
 		encoder=BertForLatentConnector(argdict)
 		tokenizer_decoder=GPT2Tokenizer.from_pretrained('gpt2')
 		tokenizer_encoder=BertTokenizer.from_pretrained('bert-base-uncased')
-		self.model=Optimus(encoder, decoder, tokenizer_encoder, tokenizer_decoder)
+		self.model=Optimus(encoder, decoder, tokenizer_encoder, tokenizer_decoder, argdict)
 		fds

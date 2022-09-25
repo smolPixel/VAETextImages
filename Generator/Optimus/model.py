@@ -29,7 +29,7 @@ def log_sum_exp(value, dim=None, keepdim=False):
 class Optimus(nn.Module):
 	"""VAE with normal prior"""
 
-	def __init__(self, encoder, decoder, tokenizer_encoder, tokenizer_decoder, args):  #
+	def __init__(self, encoder, decoder, tokenizer_encoder, tokenizer_decoder, argdict):  #
 		super(VAE, self).__init__()
 		self.encoder = encoder
 		self.decoder = decoder
