@@ -18,6 +18,8 @@ dropout: 0.3
 word_dropout: 0.3
 x0: 15
 
+device: 'cuda'
+
 #
 #base_model: "t5-base"
 #pooling_strategy: "max" #mean

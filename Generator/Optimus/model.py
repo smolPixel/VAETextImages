@@ -35,7 +35,7 @@ class Optimus(nn.Module):
 		self.decoder = decoder
 
 		self.args = argdict
-		self.nz = args.latent_size
+		self.nz = argdict.latent_size
 
 		self.eos_token_id = tokenizer_decoder.convert_tokens_to_ids([tokenizer_decoder.eos_token])[0]
 		self.pad_token_id = tokenizer_decoder.convert_tokens_to_ids([tokenizer_decoder.pad_token])[0]
@@ -44,8 +44,8 @@ class Optimus(nn.Module):
 		# self.linear = nn.Linear(args.nz, 2 * args.nz, bias=False)
 
 		# Standard Normal prior
-		loc = torch.zeros(self.nz, device=args.device)
-		scale = torch.ones(self.nz, device=args.device)
+		loc = torch.zeros(self.nz, device=argdict.device)
+		scale = torch.ones(self.nz, device=ardict.device)
 		self.prior = torch.distributions.normal.Normal(loc, scale)
 
 	def connect(self, bert_fea, nsamples=1):
