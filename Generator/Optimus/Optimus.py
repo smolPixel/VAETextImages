@@ -9,4 +9,4 @@ from Generator.Optimus.GPTLatent import GPT2ForLatentConnector
 
 class OptimusVAE():
 	def __init__(self, argdict, train, dev, test):
-		encoder=GPT2ForLatentConnector()
+		encoder=GPT2ForLatentConnector(argdict)
