@@ -37,7 +37,6 @@ class BertForLatentConnector():
 		# self.linear = nn.Linear(config.hidden_size, 2 * latent_size, bias=False)
 		#
 		# self.init_weights()
-		fds
 
 	def _resize_token_embeddings(self, new_num_tokens):
 		old_embeddings = self.embeddings.word_embeddings
