@@ -268,6 +268,7 @@ class T5VAE(LightningModule):
 		return loss
 
 	def regularization_loss(self, mu, logvar, training=False):
+		return 0
 		dimensionwise_loss = -0.5 * (1 + logvar - mu ** 2 - logvar.exp())
 		#KL thresholding, 2.2.4
 		if self.min_z and training:
