@@ -14,7 +14,7 @@ class OptimusVAE():
 	def __init__(self, argdict, train, dev, test):
 		self.datasets={'train':train, 'dev':dev, 'test': test}
 		self.argdict=argdict
-		self.split=['train', 'dev']
+		self.splits=['train', 'dev']
 		decoder=GPT2ForLatentConnector(argdict)
 		self.encoder=BertForLatentConnector(argdict)
 		tokenizer_decoder=GPT2Tokenizer.from_pretrained('gpt2')
