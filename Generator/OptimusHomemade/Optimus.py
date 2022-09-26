@@ -5,11 +5,6 @@
 #                                   RobertaConfig, RobertaForMaskedLM, RobertaTokenizer)
 
 
-from Generator.Optimus.model import Optimus
-from Generator.Optimus.GPTLatent import GPT2ForLatentConnector
-from Generator.Optimus.BertLatent import BertForLatentConnector
-from transformers import GPT2Tokenizer, BertTokenizer
-import torch
 from torch.utils.data import DataLoader
 from multiprocessing import cpu_count
 import numpy as np
