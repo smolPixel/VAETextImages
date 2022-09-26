@@ -14,11 +14,7 @@ class OptimusVAE():
 		self.datasets={'train':train, 'dev':dev, 'test': test}
 		self.argdict=argdict
 		self.splits=['train', 'dev']
-		decoder=GPT2ForLatentConnector(argdict)
-		self.encoder=BertForLatentConnector(argdict)
-		tokenizer_decoder=GPT2Tokenizer.from_pretrained('gpt2')
-		self.tokenizer_encoder=BertTokenizer.from_pretrained('bert-base-uncased')
-		self.model=Optimus(self.encoder, decoder, self.tokenizer_encoder, tokenizer_decoder, argdict)
+		self.model=Optimus(argdict)
 		self.device='cuda'
 
 
