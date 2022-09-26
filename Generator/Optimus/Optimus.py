@@ -13,6 +13,7 @@ from transformers import GPT2Tokenizer, BertTokenizer
 class OptimusVAE():
 	def __init__(self, argdict, train, dev, test):
 		self.datasets={'train':train, 'dev':dev, 'test': test}
+		self.argdict=argdict
 		self.split=['train', 'dev']
 		decoder=GPT2ForLatentConnector(argdict)
 		self.encoder=BertForLatentConnector(argdict)
