@@ -8,13 +8,14 @@
 from torch.utils.data import DataLoader
 from multiprocessing import cpu_count
 import numpy as np
+from Generator.OptimusHomemade.model import OptimusHomemade
 
 class OptimusVAE():
 	def __init__(self, argdict, train, dev, test):
 		self.datasets={'train':train, 'dev':dev, 'test': test}
 		self.argdict=argdict
 		self.splits=['train', 'dev']
-		self.model=Optimus(argdict)
+		self.model=OptimusHomemade(argdict)
 		self.device='cuda'
 
 
