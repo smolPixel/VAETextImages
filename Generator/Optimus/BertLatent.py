@@ -33,6 +33,52 @@ class BertEmbeddings(nn.Module):
         embeddings = self.dropout(embeddings)
         return embeddings
 
+class BertLayer(nn.Module):
+    def __init__(self):
+        super(BertLayer, self).__init__()
+        self.attention = BertAttention()
+        self.intermediate = BertIntermediate()
+        self.output = BertOutput()
+
+    def forward(self, hidden_states, attention_mask, head_mask=None):
+        attention_outputs = self.attention(hidden_states, attention_mask, head_mask)
+        attention_output = attention_outputs[0]
+        intermediate_output = self.intermediate(attention_output)
+        layer_output = self.output(intermediate_output, attention_output)
+        outputs = (layer_output,) + attention_outputs[1:]  # add attentions if we output them
+        return outputs
+
+class BertEncoder(nn.Module):
+    def __init__(self):
+        super(BertEncoder, self).__init__()
+        self.output_attentions = True
+        self.output_hidden_states = True
+        self.layer = nn.ModuleList([BertLayer() for _ in range(12)])
+
+    def forward(self, hidden_states, attention_mask, head_mask=None):
+        all_hidden_states = ()
+        all_attentions = ()
+        for i, layer_module in enumerate(self.layer):
+            if self.output_hidden_states:
+                all_hidden_states = all_hidden_states + (hidden_states,)
+
+            layer_outputs = layer_module(hidden_states, attention_mask, head_mask[i])
+            hidden_states = layer_outputs[0]
+
+            if self.output_attentions:
+                all_attentions = all_attentions + (layer_outputs[1],)
+
+        # Add last layer
+        if self.output_hidden_states:
+            all_hidden_states = all_hidden_states + (hidden_states,)
+
+        outputs = (hidden_states,)
+        if self.output_hidden_states:
+            outputs = outputs + (all_hidden_states,)
+        if self.output_attentions:
+            outputs = outputs + (all_attentions,)
+        return outputs  # last-layer hidden state, (all hidden states), (all attentions)
+
 class BertForLatentConnector(nn.Module):
 	r"""
 	Outputs: `Tuple` comprising various elements depending on the configuration (config) and inputs:
@@ -66,7 +112,7 @@ class BertForLatentConnector(nn.Module):
 		super(BertForLatentConnector, self).__init__()
 		self.argdict=argdict
 		self.embeddings = BertEmbeddings().to(argdict['device'])
-		# self.encoder = BertEncoder(config)
+		self.encoder = BertEncoder()
 		# self.pooler = BertPooler(config)
 		#
 		# self.linear = nn.Linear(config.hidden_size, 2 * latent_size, bias=False)
