@@ -24,6 +24,7 @@ class OptimusVAE():
 		tokenizer_decoder=GPT2Tokenizer.from_pretrained('gpt2')
 		self.tokenizer_encoder=BertTokenizer.from_pretrained('bert-base-uncased')
 		self.model=Optimus(self.encoder, decoder, self.tokenizer_encoder, tokenizer_decoder, argdict)
+		self.device='cuda'
 
 
 	def run_epoch(self):
