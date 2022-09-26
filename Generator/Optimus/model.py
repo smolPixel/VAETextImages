@@ -119,6 +119,7 @@ class Optimus(nn.Module):
 		sent_length = torch.sum(reconstrution_mask, dim=1)
 
 		outputs = self.encoder(inputs, attention_mask)
+		fds
 		pooled_hidden_fea = outputs[1]  # model outputs are always tuple in pytorch-transformers (see doc)
 
 		if self.args.fb_mode == 0:
