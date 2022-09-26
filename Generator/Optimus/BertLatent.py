@@ -65,7 +65,7 @@ class BertForLatentConnector(nn.Module):
 	def __init__(self, argdict):
 		super(BertForLatentConnector, self).__init__()
 		self.argdict=argdict
-		self.embeddings = BertEmbeddings()
+		self.embeddings = BertEmbeddings().to(argdict['device'])
 		# self.encoder = BertEncoder(config)
 		# self.pooler = BertPooler(config)
 		#
@@ -105,11 +105,8 @@ class BertForLatentConnector(nn.Module):
 		# positions we want to attend and -10000.0 for masked positions.
 		# Since we are adding it to the raw scores before the softmax, this is
 		# effectively the same as removing these entirely.
-		print(extended_attention_mask)
 		extended_attention_mask = extended_attention_mask.to(dtype=next(self.parameters()).dtype) # fp16 compatibility
-		print(extended_attention_mask)
 		extended_attention_mask = (1.0 - extended_attention_mask) * -10000.0
-		print(extended_attention_mask)
 
 
 		# Prepare head mask if needed
