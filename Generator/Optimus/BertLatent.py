@@ -30,7 +30,7 @@ class BertForLatentConnector(nn.Module):
 
 	"""
 	def __init__(self, argdict):
-		super(BertForLatentConnector, self).__init__(config)
+		super(BertForLatentConnector, self).__init__()
 		self.argdict=argdict
 		# self.embeddings = BertEmbeddings(config)
 		# self.encoder = BertEncoder(config)
