@@ -72,7 +72,7 @@ class generator():
             """Pretrained"""
             from Generator.Optimus.Optimus import OptimusVAE
             self.generator = OptimusVAE(self.argdict, train, dev, test)
-        elif algo == "OptimusHomemade"
+        elif algo == "OptimusHomemade":
             from Generator.OptimusHomemade.Optimus import OptimusVAE
             self.generator=OptimusVAE(self.argdict, train, dev, test)
         else:
