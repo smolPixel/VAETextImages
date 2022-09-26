@@ -1,6 +1,6 @@
 import torch.nn as nn
 
-class BertForLatentConnector(nn.module):
+class BertForLatentConnector(nn.Module):
 	r"""
 	Outputs: `Tuple` comprising various elements depending on the configuration (config) and inputs:
 		**last_hidden_state**: ``torch.FloatTensor`` of shape ``(batch_size, sequence_length, hidden_size)``
