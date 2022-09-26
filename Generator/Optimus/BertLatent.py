@@ -74,7 +74,10 @@ class BertForLatentConnector(nn.Module):
 		# Since we are adding it to the raw scores before the softmax, this is
 		# effectively the same as removing these entirely.
 		extended_attention_mask = extended_attention_mask.to(dtype=next(self.parameters()).dtype) # fp16 compatibility
+		print(extended_attention_mask)
 		extended_attention_mask = (1.0 - extended_attention_mask) * -10000.0
+		print(extended_attention_mask)
+
 
 		# Prepare head mask if needed
 		# 1.0 in head_mask indicate we keep the head
