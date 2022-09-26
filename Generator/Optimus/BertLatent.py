@@ -120,12 +120,12 @@ class BertForLatentConnector(nn.Module):
 		if head_mask is not None:
 			if head_mask.dim() == 1:
 				head_mask = head_mask.unsqueeze(0).unsqueeze(0).unsqueeze(-1).unsqueeze(-1)
-				head_mask = head_mask.expand(self.config.num_hidden_layers, -1, -1, -1, -1)
+				head_mask = head_mask.expand(12, -1, -1, -1, -1)
 			elif head_mask.dim() == 2:
 				head_mask = head_mask.unsqueeze(1).unsqueeze(-1).unsqueeze(-1)  # We can specify head_mask for each layer
 			head_mask = head_mask.to(dtype=next(self.parameters()).dtype) # switch to fload if need + fp16 compatibility
 		else:
-			head_mask = [None] * self.config.num_hidden_layers
+			head_mask = [None] * 12
 
 		embedding_output = self.embeddings(input_ids, position_ids=position_ids, token_type_ids=token_type_ids)
 		encoder_outputs = self.encoder(embedding_output,
