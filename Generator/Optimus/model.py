@@ -117,10 +117,12 @@ class Optimus(nn.Module):
 		# logger.info(labels)
 		reconstrution_mask = (labels != 50257).float()  # 50257 is the padding token for GPT2
 		sent_length = torch.sum(reconstrution_mask, dim=1)
-
-		outputs = self.encoder(inputs, attention_mask)
+		print(inputs)
 		fds
+		outputs = self.encoder(inputs, attention_mask)
 		pooled_hidden_fea = outputs[1]  # model outputs are always tuple in pytorch-transformers (see doc)
+
+
 
 		if self.args.fb_mode == 0:
 			# Connect hidden feature to the latent space

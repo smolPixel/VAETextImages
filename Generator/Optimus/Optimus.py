@@ -52,7 +52,8 @@ class OptimusVAE():
 			Average_KL_Div = []
 			for iteration, batch in enumerate(data_loader):
 				# Forward pass
-				encodings_input = self.tokenizer_encoder(batch['sentence'], return_tensors="pt", padding=True, truncation=True).to(self.device)
+				sents=['[CLS] '+sent for sent in batch['sentence']]
+				encodings_input = self.tokenizer_encoder(sents, return_tensors="pt", padding=True, truncation=True).to(self.device)
 				target = encodings_input['input_ids']
 				batch_size = target.shape[0]
 				outputs=self.model(encodings_input['input_ids'], labels=encodings_input['input_ids'].clone())
