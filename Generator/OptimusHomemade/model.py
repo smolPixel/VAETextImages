@@ -18,6 +18,7 @@ class OptimusHomemade(nn.Module):
 		print(batch)
 		sents=batch['sentence']
 		encoded=self.encoder_tokenizer(sents, padding=True, truncation=True)
+		print(encoded)
 		output=self.encoder(input_ids=encoded['input_ids'], attention_mask=encoded['attention_mask'])
 		print(output)
 
