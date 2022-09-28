@@ -19,7 +19,8 @@ class OptimusHomemade(nn.Module):
 		encoded=self.encoder_tokenizer(sents, padding=True, truncation=True, return_tensors='pt')
 		output=self.encoder(input_ids=encoded['input_ids'], attention_mask=encoded['attention_mask'])
 		print(encoded['input_ids'].shape)
-		print(output['last_hidden_state'].shape)
+		output=output['last_hidden_state'][:, :, 0]
+		print(output.shape)
 
 		fds
 
