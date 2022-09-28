@@ -17,6 +17,7 @@ class OptimusHomemade(nn.Module):
 	def forward(self, batch):
 		print(batch)
 		sents=batch['sentence']
+		sents=["[CLS] "+sent for sent in sents]
 		print(sents)
 
 		fds
