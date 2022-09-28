@@ -1,7 +1,7 @@
 import math
 import torch
 import torch.nn as nn
-from transformers import BertTokenizer, BertForMaskedLM
+from transformers import BertTokenizer, BertModel
 
 
 class OptimusHomemade(nn.Module):
@@ -10,17 +10,16 @@ class OptimusHomemade(nn.Module):
 	def __init__(self, argdict):  #
 		super(OptimusHomemade, self).__init__()
 		self.argdict = argdict
-		self.encoder=BertForMaskedLM.from_pretrained('bert-base-uncased')
+		self.encoder=BertModel.from_pretrained('bert-base-uncased')
 		self.encoder_tokenizer=BertTokenizer.from_pretrained('bert-base-uncased')
 
 
 	def forward(self, batch):
 		print(batch)
 		sents=batch['sentence']
-		sents=["[CLS] "+sent for sent in sents]
 		encoded=self.encoder_tokenizer(sents, padding=True, truncation=True)
-		print(encoded)
-
+		output=self.encoder(input_ids=encoded['input_ids'], attention_mask=encoded['attention_mask'])
+		print(output)
 
 		fds
 
