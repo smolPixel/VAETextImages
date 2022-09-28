@@ -18,7 +18,9 @@ class OptimusHomemade(nn.Module):
 		print(batch)
 		sents=batch['sentence']
 		sents=["[CLS] "+sent for sent in sents]
-		print(sents)
+		encoded=self.encoder_tokenizer(sents, padding=True, truncation=True)
+		print(encoded)
+
 
 		fds
 
