@@ -16,5 +16,8 @@ class OptimusHomemade(nn.Module):
 
 	def forward(self, batch):
 		print(batch)
+		sents=batch['sentence']
+		print(sents)
+
 		fds
 
