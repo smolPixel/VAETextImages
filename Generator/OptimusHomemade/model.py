@@ -17,7 +17,7 @@ class OptimusHomemade(nn.Module):
 	def forward(self, batch):
 		print(batch)
 		sents=batch['sentence']
-		encoded=self.encoder_tokenizer(sents, padding=True, truncation=True)
+		encoded=self.encoder_tokenizer(sents, padding=True, truncation=True, return_tensors='pt')
 		print(encoded)
 		output=self.encoder(input_ids=encoded['input_ids'], attention_mask=encoded['attention_mask'])
 		print(output)
