@@ -19,6 +19,7 @@ class OptimusHomemade(nn.Module):
 		# self.latent_to_hidden=nn.Linear
 
 		self.decoder=GPT2ModelLatent.from_pretrained('gpt2', argdict)
+		self.decoder_tokenizer.pad_token = self.tokenizer.eos_token
 		self.decoder_tokenizer=GPT2Tokenizer.from_pretrained('gpt2')
 
 	def forward(self, batch):
