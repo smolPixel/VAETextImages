@@ -2,6 +2,8 @@ from transformers import GPT2PreTrainedModel
 from transformers.models.gpt2.modeling_gpt2 import GPT2Block
 import torch
 import torch.nn as nn
+from typing import Optional, Tuple, Union
+from torch.nn import BCEWithLogitsLoss, CrossEntropyLoss, MSELoss
 
 class GPT2ModelLatent(GPT2PreTrainedModel):
     _keys_to_ignore_on_load_missing = ["attn.masked_bias"]
