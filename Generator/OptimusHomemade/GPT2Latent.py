@@ -45,7 +45,6 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
         # ln_f to last
         self.ln_f = self.ln_f.to(self.last_device)
 
-    @add_start_docstrings(DEPARALLELIZE_DOCSTRING)
     def deparallelize(self):
         self.model_parallel = False
         self.device_map = None
@@ -71,13 +70,13 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
         for layer, heads in heads_to_prune.items():
             self.h[layer].attn.prune_heads(heads)
 
-    @add_start_docstrings_to_model_forward(GPT2_INPUTS_DOCSTRING)
-    @add_code_sample_docstrings(
-        processor_class=_TOKENIZER_FOR_DOC,
-        checkpoint=_CHECKPOINT_FOR_DOC,
-        output_type=BaseModelOutputWithPastAndCrossAttentions,
-        config_class=_CONFIG_FOR_DOC,
-    )
+    # @add_start_docstrings_to_model_forward(GPT2_INPUTS_DOCSTRING)
+    # @add_code_sample_docstrings(
+    #     processor_class=_TOKENIZER_FOR_DOC,
+    #     checkpoint=_CHECKPOINT_FOR_DOC,
+    #     output_type=BaseModelOutputWithPastAndCrossAttentions,
+    #     config_class=_CONFIG_FOR_DOC,
+    # )
     def forward(
         self,
         input_ids: Optional[torch.LongTensor] = None,
