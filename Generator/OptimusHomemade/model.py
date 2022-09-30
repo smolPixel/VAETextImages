@@ -1,7 +1,8 @@
 import math
 import torch
 import torch.nn as nn
-from transformers import BertTokenizer, BertModel
+from transformers import BertTokenizer, BertModel, GPT2Tokenizer
+from Generator.OptimusHomemade.GPT2Latent import GPT2ModelLatent
 
 
 class OptimusHomemade(nn.Module):
@@ -15,11 +16,15 @@ class OptimusHomemade(nn.Module):
 
 		self.hidden_to_latent=nn.Linear(768, argdict['latent_size'])
 
+		# self.latent_to_hidden=nn.Linear
+
+		self.decoder=GPT2ModelLatent.from_pretrained('gpt2')
+		self.decoder_tokenizer=GPT2Tokenizer.from_pretrained('gpt2')
+
 	def forward(self, batch):
 		sents=batch['sentence']
 		encoded=self.encoder_tokenizer(sents, padding=True, truncation=True, return_tensors='pt')
 		output=self.encoder(input_ids=encoded['input_ids'], attention_mask=encoded['attention_mask'])
-		print(encoded['input_ids'].shape)
 		output=output['last_hidden_state'][:, 0, :]
 		latent=self.hidden_to_latent(output)
 
