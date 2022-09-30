@@ -188,7 +188,7 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 		hidden_states = inputs_embeds + position_embeds
 		print(hidden_states.shape)
 		if 'Embedding' in self.strategies:
-			z=self.latent_to_embed(z).repeat(1, hidden_states.shape[1], 1)
+			z=self.latent_to_embed(z).unsqueeze(1).repeat(1, hidden_states.shape[1], 1)
 			print(z.shape)
 		print(hidden_states.shape)
 		print(z.shape)
