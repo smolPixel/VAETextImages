@@ -178,6 +178,9 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 		# head_mask has shape n_layer x batch x n_heads x N x N
 		head_mask = self.get_head_mask(head_mask, self.config.n_layer)
 
+		print('---')
+		print(input_ids.shape)
+
 		if inputs_embeds is None:
 			inputs_embeds = self.wte(input_ids)
 		position_embeds = self.wpe(position_ids)
