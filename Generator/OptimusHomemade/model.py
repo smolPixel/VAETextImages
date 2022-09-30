@@ -29,9 +29,11 @@ class OptimusHomemade(nn.Module):
 		output=output['last_hidden_state'][:, 0, :]
 		latent=self.hidden_to_latent(output)
 
+		#TODO REPARAMETRIZATION
+
 		#decoder
 		encoded=self.decoder_tokenizer(sents, padding=True, truncation=True, return_tensors='pt')
-		output = self.decoder(input_ids=encoded['input_ids'], attention_mask=encoded['attention_mask'])
+		output = self.decoder(input_ids=encoded['input_ids'], attention_mask=encoded['attention_mask'], z=latent)
 		print(output)
 		print(output.shape)
 		fds

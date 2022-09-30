@@ -140,6 +140,7 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 			position_ids = torch.arange(past_length, input_shape[-1] + past_length, dtype=torch.long, device=device)
 			position_ids = position_ids.unsqueeze(0).view(-1, input_shape[-1])
 
+
 		# GPT2Attention mask.
 		if attention_mask is not None:
 			if batch_size <= 0:
@@ -181,6 +182,9 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 			inputs_embeds = self.wte(input_ids)
 		position_embeds = self.wpe(position_ids)
 		hidden_states = inputs_embeds + position_embeds
+		print(hidden_states.shape)
+		print(z.shape)
+		fsd
 
 		if token_type_ids is not None:
 			token_type_embeds = self.wte(token_type_ids)
