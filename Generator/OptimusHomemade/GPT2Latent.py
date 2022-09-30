@@ -18,7 +18,7 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 	def __init__(self, config, argdict):
 		super().__init__(config)
 
-        print(argdict)
+		print(argdict)
 
 		self.embed_dim = config.hidden_size
 
