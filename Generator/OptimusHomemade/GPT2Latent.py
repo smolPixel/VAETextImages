@@ -24,8 +24,8 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 
 		self.wte = nn.Embedding(config.vocab_size, self.embed_dim)
 		self.wpe = nn.Embedding(config.max_position_embeddings, self.embed_dim)
-		self.latent_to_embed=nn.Linear(config.latent_size, self.embed_dim)
-		self.strategies=config.strategies
+		self.latent_to_embed=nn.Linear(argdict['latent_size'], self.embed_dim)
+		self.strategies=argdict['strategy']
 
 		self.drop = nn.Dropout(config.embd_pdrop)
 		self.h = nn.ModuleList([GPT2Block(config, layer_idx=i) for i in range(config.num_hidden_layers)])
