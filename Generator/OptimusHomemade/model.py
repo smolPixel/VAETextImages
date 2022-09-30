@@ -13,6 +13,7 @@ class OptimusHomemade(nn.Module):
 		self.encoder=BertModel.from_pretrained('bert-base-uncased')
 		self.encoder_tokenizer=BertTokenizer.from_pretrained('bert-base-uncased')
 
+		self.hidden_to_latent=nn.Linear(768, argdict['latent_size'])
 
 	def forward(self, batch):
 		sents=batch['sentence']
@@ -20,7 +21,8 @@ class OptimusHomemade(nn.Module):
 		output=self.encoder(input_ids=encoded['input_ids'], attention_mask=encoded['attention_mask'])
 		print(encoded['input_ids'].shape)
 		output=output['last_hidden_state'][:, 0, :]
-		print(output.shape)
+		latent=self.hidden_to_latent(output)
 
+
+		print(latent.shape)
 		fds
-
