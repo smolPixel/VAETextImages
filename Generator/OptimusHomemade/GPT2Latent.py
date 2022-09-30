@@ -18,8 +18,6 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 	def __init__(self, config, argdict):
 		super().__init__(config)
 
-		print(argdict)
-
 		self.embed_dim = config.hidden_size
 
 		self.wte = nn.Embedding(config.vocab_size, self.embed_dim)
