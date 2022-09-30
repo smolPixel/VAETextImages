@@ -178,21 +178,14 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 		# head_mask has shape n_layer x batch x n_heads x N x N
 		head_mask = self.get_head_mask(head_mask, self.config.n_layer)
 
-		print('---')
-		print(input_ids.shape)
 
 		if inputs_embeds is None:
 			inputs_embeds = self.wte(input_ids)
-		print(inputs_embeds.shape)
 		position_embeds = self.wpe(position_ids)
 		hidden_states = inputs_embeds + position_embeds
-		print(hidden_states.shape)
 		if 'Embedding' in self.strategies:
 			z=self.latent_to_embed(z).unsqueeze(1).repeat(1, hidden_states.shape[1], 1)
-			print(z.shape)
-		print(hidden_states.shape)
-		print(z.shape)
-		fsd
+			hidden_states=hidden_states+z
 
 		if token_type_ids is not None:
 			token_type_embeds = self.wte(token_type_ids)
