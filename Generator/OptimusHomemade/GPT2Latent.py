@@ -342,7 +342,7 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 		logits_processor = LogitsProcessorList()
 		while True:
 			# prepare model inputs
-			model_inputs = self.prepare_inputs_for_generation(input_ids, z, **model_kwargs)
+			model_inputs = self.prepare_inputs_for_generation(input_ids, z)
 
 			# forward pass to get next token
 			outputs = self(
