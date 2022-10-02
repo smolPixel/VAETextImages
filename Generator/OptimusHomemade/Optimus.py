@@ -119,7 +119,8 @@ class OptimusVAE():
 		NLL_mean_for_ppl = []
 		for iteration, batch in enumerate(data_loader):
 			# Forward pass
-			outputs, mean, logv, z = self.model(batch)
+			with torch.no_grad():
+				outputs, mean, logv, z = self.model(batch)
 			logp=outputs['logits']
 			# Keeping track of the means for AU
 			mus.append(mean.detach().squeeze(0))
