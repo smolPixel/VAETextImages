@@ -27,7 +27,7 @@ class OptimusHomemade(nn.Module):
 		self.loss_function=torch.nn.CrossEntropyLoss(ignore_index=self.decoder_tokenizer.pad_token_id)
 
 	def forward(self, batch):
-		sents=batch['sentence']
+		sents=['[BOS] '+ sent for sent in batch['sentence']]
 		encoded=self.encoder_tokenizer(sents, padding=True, truncation=True, return_tensors='pt').to(self.device)
 		output=self.encoder(input_ids=encoded['input_ids'], attention_mask=encoded['attention_mask'])
 		output=output['last_hidden_state'][:, 0, :]
