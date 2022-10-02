@@ -34,6 +34,8 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 		self.device_map = None
 		self.gradient_checkpointing = False
 
+		self.lm_head=nn.Linear(config.n_embd, config.vocab_size, bias=False)
+
 		# Initialize weights and apply final processing
 		self.post_init()
 
@@ -88,6 +90,41 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 	#     output_type=BaseModelOutputWithPastAndCrossAttentions,
 	#     config_class=_CONFIG_FOR_DOC,
 	# )
+
+	def get_output_embeddings(self):
+		return self.lm_head
+
+	def set_output_embeddings(self, new_embeddings):
+		self.lm_head = new_embeddings
+
+	def prepare_inputs_for_generation(self, input_ids, past=None, **kwargs):
+		token_type_ids = kwargs.get("token_type_ids", None)
+		# only last token for inputs_ids if past is defined in kwargs
+		if past:
+			input_ids = input_ids[:, -1].unsqueeze(-1)
+			if token_type_ids is not None:
+				token_type_ids = token_type_ids[:, -1].unsqueeze(-1)
+
+		attention_mask = kwargs.get("attention_mask", None)
+		position_ids = kwargs.get("position_ids", None)
+
+		if attention_mask is not None and position_ids is None:
+			# create position_ids on the fly for batch generation
+			position_ids = attention_mask.long().cumsum(-1) - 1
+			position_ids.masked_fill_(attention_mask == 0, 1)
+			if past:
+				position_ids = position_ids[:, -1].unsqueeze(-1)
+		else:
+			position_ids = None
+		return {
+			"input_ids": input_ids,
+			"past_key_values": past,
+			"use_cache": kwargs.get("use_cache"),
+			"position_ids": position_ids,
+			"attention_mask": attention_mask,
+			"token_type_ids": token_type_ids,
+		}
+
 	def forward(
 		self,
 		input_ids: Optional[torch.LongTensor] = None,
@@ -273,17 +310,43 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 		if output_hidden_states:
 			all_hidden_states = all_hidden_states + (hidden_states,)
 
-		if not return_dict:
-			return tuple(
-				v
-				for v in [hidden_states, presents, all_hidden_states, all_self_attentions, all_cross_attentions]
-				if v is not None
-			)
+		lm_logits = self.lm_head(hidden_states)
 
-		return BaseModelOutputWithPastAndCrossAttentions(
-			last_hidden_state=hidden_states,
-			past_key_values=presents,
-			hidden_states=all_hidden_states,
-			attentions=all_self_attentions,
-			cross_attentions=all_cross_attentions,
+		loss = None
+		if labels is not None:
+			# Shift so that tokens < n predict n
+			shift_logits = lm_logits[..., :-1, :].contiguous()
+			shift_labels = labels[..., 1:].contiguous()
+			# Flatten the tokens
+			loss_fct = CrossEntropyLoss()
+			loss = loss_fct(shift_logits.view(-1, shift_logits.size(-1)), shift_labels.view(-1))
+
+		if not return_dict:
+			output = (lm_logits,) + transformer_outputs[1:]
+			return ((loss,) + output) if loss is not None else output
+
+		return CausalLMOutputWithCrossAttentions(
+			loss=loss,
+			logits=lm_logits,
+			past_key_values=transformer_outputs.past_key_values,
+			hidden_states=transformer_outputs.hidden_states,
+			attentions=transformer_outputs.attentions,
+			cross_attentions=transformer_outputs.cross_attentions,
 		)
+
+		# if not return_dict:
+		# 	return tuple(
+		# 		v
+		# 		for v in [hidden_states, presents, all_hidden_states, all_self_attentions, all_cross_attentions]
+		# 		if v is not None
+		# 	)
+		#
+		#
+		#
+		# return BaseModelOutputWithPastAndCrossAttentions(
+		# 	last_hidden_state=hidden_states,
+		# 	past_key_values=presents,
+		# 	hidden_states=all_hidden_states,
+		# 	attentions=all_self_attentions,
+		# 	cross_attentions=all_cross_attentions,
+		# )

@@ -37,7 +37,5 @@ class OptimusHomemade(nn.Module):
 		#decoder
 		encoded=self.decoder_tokenizer(sents, padding=True, truncation=True, return_tensors='pt')
 		output = self.decoder(input_ids=encoded['input_ids'], attention_mask=encoded['attention_mask'], z=latent)
-		print(encoded['input_ids'].shape)
-		print(output['last_hidden_state'].shape)
-		loss=self.loss_function(output['last_hidden_state'], encoded['input_ids'])
+		print(output)
 		fds
