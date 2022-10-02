@@ -18,7 +18,7 @@ class OptimusVAE():
 	def __init__(self, argdict, train, dev, test):
 		self.datasets={'train':train, 'dev':dev, 'test': test}
 		self.argdict=argdict
-		self.splits=['train', 'dev']
+		self.splits=['train', 'dev', 'test']
 		self.model=OptimusHomemade(argdict)
 		self.device='cuda'
 
