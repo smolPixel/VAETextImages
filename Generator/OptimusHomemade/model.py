@@ -50,7 +50,7 @@ class OptimusHomemade(nn.Module):
 		bs=z.shape[0]
 		sents=["[BOS] " for i in range(bs)]
 		encoded = self.decoder_tokenizer(sents, padding=True, truncation=True, return_tensors='pt').to(self.device)
-		gend = self.decoder.generate(encoded['input_ids'], z=z, max_length=50)
+		gend = self.decoder.generate(encoded['input_ids'], z=z)
 		# print(tokenizer.batch_decode(gend))
 		# fds
 		gend = self.decoder_tokenizer.batch_decode(gend, skip_special_tokens=True)
