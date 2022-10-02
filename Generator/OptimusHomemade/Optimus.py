@@ -18,6 +18,7 @@ class OptimusVAE():
 		self.model=OptimusHomemade(argdict)
 		self.device='cuda'
 
+		self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)
 
 	def run_epoch(self):
 		for split in self.splits:
