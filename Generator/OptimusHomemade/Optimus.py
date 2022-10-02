@@ -26,7 +26,7 @@ class OptimusVAE():
 
 			data_loader = DataLoader(
 				dataset=self.datasets[split],
-				batch_size=self.argdict.batch_size,
+				batch_size=self.argdict['batch_size'],
 				shuffle=split == 'train',
 				num_workers=cpu_count(),
 				pin_memory=False
