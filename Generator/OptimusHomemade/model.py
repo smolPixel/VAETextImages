@@ -43,6 +43,7 @@ class OptimusHomemade(nn.Module):
 		#decoder
 		encoded=self.decoder_tokenizer(sents, padding=True, truncation=True, return_tensors='pt').to(self.device)
 		output = self.decoder(input_ids=encoded['input_ids'], attention_mask=encoded['attention_mask'], z=z, labels=encoded['input_ids'])
+		output['encoded_output']=encoded
 		return output, logv, mean, z
 
 

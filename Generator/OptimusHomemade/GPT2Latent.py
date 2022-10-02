@@ -342,7 +342,7 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 			past_key_values=presents,
 			hidden_states=all_hidden_states,
 			attentions=all_self_attentions,
-			cross_attentions=all_cross_attentions,
+			cross_attentions=all_cross_attentions
 		)
 
 
