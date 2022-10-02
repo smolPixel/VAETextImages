@@ -26,7 +26,7 @@ class OptimusVAE():
 
 			data_loader = DataLoader(
 				dataset=self.datasets[split],
-				batch_size=8,  # self.argdict.batch_size,
+				batch_size=self.argdict.batch_size,
 				shuffle=split == 'train',
 				num_workers=cpu_count(),
 				pin_memory=False
@@ -48,7 +48,7 @@ class OptimusVAE():
 				# Forward pass
 				# encodings_input = self.tokenizer_encoder(batch['sentence'], return_tensors="pt", padding=True, truncation=True).to(self.device)
 				# target = encodings_input['input_ids']
-				# batch_size = target.shape[0]
+				batch_size = len(batch['sentence'])
 				outputs=self.model(batch)
 				# print(batch_size)
 				loss=outputs['loss']
