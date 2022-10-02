@@ -122,9 +122,9 @@ class OptimusVAE():
 					# print("Oh la la banana")
 					batch_size = batch['input'].size(0)
 					# print(batch['input'].shape)
-					for k, v in batch.items():
-						if torch.is_tensor(v):
-							batch[k] = to_var(v)
+					# for k, v in batch.items():
+					# 	if torch.is_tensor(v):
+					# 		batch[k] = to_var(v)
 					#
 					# print(batch['input'])
 					# print(batch['input'].shape)
