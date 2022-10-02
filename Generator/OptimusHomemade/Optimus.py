@@ -23,6 +23,7 @@ class OptimusVAE():
 		self.device='cuda'
 
 		self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)
+		self.loss_function_basic = train.loss_function
 		if argdict['dataset'] in ['SST2']:
 			self.loss_function_ppl = torch.nn.CrossEntropyLoss(reduction='mean')
 		else:
