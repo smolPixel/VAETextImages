@@ -329,10 +329,10 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 		return CausalLMOutputWithCrossAttentions(
 			loss=loss,
 			logits=lm_logits,
-			past_key_values=transformer_outputs.past_key_values,
-			hidden_states=transformer_outputs.hidden_states,
-			attentions=transformer_outputs.attentions,
-			cross_attentions=transformer_outputs.cross_attentions,
+			past_key_values=presents,
+			hidden_states=all_hidden_states,
+			attentions=all_self_attentions,
+			cross_attentions=all_cross_attentions,
 		)
 
 		# if not return_dict:
