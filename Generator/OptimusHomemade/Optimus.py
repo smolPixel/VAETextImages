@@ -23,6 +23,10 @@ class OptimusVAE():
 		self.device='cuda'
 
 		self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)
+		if argdict['dataset'] in ['SST2']:
+			self.loss_function_ppl = torch.nn.CrossEntropyLoss(reduction='mean')
+		else:
+			self.loss_function_ppl = self.loss_function_basic
 
 	def run_epoch(self):
 		for split in self.splits:
@@ -117,8 +121,6 @@ class OptimusVAE():
 			# Forward pass
 			outputs, mean, logv, z = self.model(batch)
 			logp=outputs['logits']
-			print(logp)
-			fds
 			# Keeping track of the means for AU
 			mus.append(mean.detach().squeeze(0))
 			batch_size = logp.shape[0]
