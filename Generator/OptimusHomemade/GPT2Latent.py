@@ -370,6 +370,8 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 			# prepare model inputs
 			model_inputs = self.prepare_inputs_for_generation(input_ids, z)
 
+			print(model_inputs)
+
 			# forward pass to get next token
 			outputs = self(
 				**model_inputs,
