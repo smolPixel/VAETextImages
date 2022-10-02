@@ -373,12 +373,16 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 			print(model_inputs)
 
 			# forward pass to get next token
-			outputs = self(
-				**model_inputs,
-				return_dict=True,
-				output_attentions=False,
-				output_hidden_states=False,
-			)
+			try:
+				outputs = self(
+					**model_inputs,
+					return_dict=True,
+					output_attentions=False,
+					output_hidden_states=False,
+				)
+			except:
+				print(model_inputs)
+				fds
 			print('swag')
 
 			next_token_logits = outputs.logits[:, -1, :]
