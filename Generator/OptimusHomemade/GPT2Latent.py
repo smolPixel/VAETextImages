@@ -362,7 +362,7 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 		pad_token_id = self.config.pad_token_id
 		eos_token_id = None
 		scores= None
-
+		cur_len = input_ids.shape[-1]
 
 		while True:
 			# prepare model inputs
