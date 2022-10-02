@@ -369,7 +369,7 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 		while True:
 			# prepare model inputs
 			model_inputs = self.prepare_inputs_for_generation(input_ids, z)
-
+			print('---')
 			print(model_inputs)
 
 			# forward pass to get next token
@@ -379,7 +379,7 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 				output_attentions=False,
 				output_hidden_states=False,
 			)
-
+			print('swag')
 
 			next_token_logits = outputs.logits[:, -1, :]
 
