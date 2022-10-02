@@ -46,3 +46,4 @@ class OptimusHomemade(nn.Module):
 		return output, logv, mean, z
 
 	def inference(self, z):
+		...
