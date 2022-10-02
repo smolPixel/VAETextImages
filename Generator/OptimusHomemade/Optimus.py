@@ -125,7 +125,7 @@ class OptimusVAE():
 			mus.append(mean.detach().squeeze(0))
 			batch_size = logp.shape[0]
 			logp, target = self.datasets['train'].shape_for_loss_function(logp, batch['target'])
-			NLL_loss, KL_loss, KL_weight = self.loss_fn(logp, target.to('cuda'), mean, logv, 'logistic', self.step, 0.0025)
+			NLL_loss, KL_loss, KL_weight = 0,0,0 #self.loss_fn(logp, target.to('cuda'), mean, logv, 'logistic', self.step, 0.0025)
 
 			NLL_mean = self.loss_function_ppl(logp, target.to('cuda'))
 
