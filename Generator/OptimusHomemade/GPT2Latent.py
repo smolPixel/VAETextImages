@@ -379,9 +379,8 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 				output_hidden_states=False,
 			)
 
-			next_token_logits = outputs.logits[:, -1, :]
 			try:
-
+				next_token_logits = outputs.logits[:, -1, :]
 				# pre-process distribution
 				next_tokens_scores = logits_processor(input_ids, next_token_logits)
 				# argmax
