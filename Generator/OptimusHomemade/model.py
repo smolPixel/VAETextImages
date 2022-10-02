@@ -46,7 +46,6 @@ class OptimusHomemade(nn.Module):
 		return output, logv, mean, z
 
 	def inference(self, z):
-		print(z.shape)
 		bs=z.shape[0]
 		sents=["[BOS] " for i in range(bs)]
 		encoded = self.decoder_tokenizer(sents, padding=True, truncation=True, return_tensors='pt').to(self.device)
@@ -54,4 +53,4 @@ class OptimusHomemade(nn.Module):
 		# print(tokenizer.batch_decode(gend))
 		# fds
 		gend = self.decoder_tokenizer.batch_decode(gend, skip_special_tokens=True)
-		print(gend)
+		return gend, z
