@@ -48,4 +48,10 @@ class OptimusHomemade(nn.Module):
 	def inference(self, z):
 		print(z.shape)
 		bs=z.shape[0]
-		# sents=
+		sents=["[BOS] " for i in range(bs)]
+		encoded = self.decoder_tokenizer(sents, padding=True, truncation=True, return_tensors='pt').to(self.device)
+		gend = self.model.generate(encoded['input_ids'], max_length=50)
+		# print(tokenizer.batch_decode(gend))
+		# fds
+		gend = self.tokenizer.batch_decode(gend, skip_special_tokens=True)
+		print(gend)
