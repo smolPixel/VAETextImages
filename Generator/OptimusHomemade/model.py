@@ -12,15 +12,15 @@ class OptimusHomemade(nn.Module):
 		super(OptimusHomemade, self).__init__()
 		self.argdict = argdict
 		self.device = 'cuda'
-		self.encoder=BertModel.from_pretrained('bert-base-uncased')
-		self.encoder_tokenizer=BertTokenizer.from_pretrained('bert-base-uncased').to(self.device)
+		self.encoder=BertModel.from_pretrained('bert-base-uncased').to(self.device)
+		self.encoder_tokenizer=BertTokenizer.from_pretrained('bert-base-uncased')
 
 		self.hidden_to_latent=nn.Linear(768, argdict['latent_size'])
 
 		# self.latent_to_hidden=nn.Linear
 
-		self.decoder=GPT2ModelLatent.from_pretrained('gpt2', argdict)
-		self.decoder_tokenizer=GPT2Tokenizer.from_pretrained('gpt2').to(self.device)
+		self.decoder=GPT2ModelLatent.from_pretrained('gpt2', argdict).to(self.device)
+		self.decoder_tokenizer=GPT2Tokenizer.from_pretrained('gpt2')
 		self.decoder_tokenizer.pad_token = self.decoder_tokenizer.eos_token
 
 		self.loss_function=torch.nn.CrossEntropyLoss(ignore_index=self.decoder_tokenizer.pad_token_id)
