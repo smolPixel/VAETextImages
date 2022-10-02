@@ -48,10 +48,8 @@ class OptimusVAE():
 				# target = encodings_input['input_ids']
 				# batch_size = target.shape[0]
 				outputs=self.model(batch)
-				print(outputs)
-				fds
 				# print(batch_size)
-				loss=outputs[0]
+				loss=outputs['loss']
 				# backward + optimization
 				if split == 'train':
 					self.optimizer.zero_grad()
@@ -59,7 +57,7 @@ class OptimusVAE():
 					self.optimizer.step()
 
 				# Average_loss.append(loss.item().cpu())
-				Average_NLL.append(outputs[0].cpu().detach() / batch_size)
+				Average_NLL.append(outputs['loss'].cpu().detach() / batch_size)
 
 			print(f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean LF {np.mean(Average_NLL)}")
 
