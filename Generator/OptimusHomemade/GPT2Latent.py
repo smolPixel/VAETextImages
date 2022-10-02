@@ -409,6 +409,7 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 				if unfinished_sequences.max() == 0 or stopping_criteria(input_ids, scores):
 					break
 			except:
+				print(model_inputs)
 				dfs
 				# if not synced_gpus:
 				# 	break
