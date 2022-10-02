@@ -25,7 +25,7 @@ class OptimusHomemade(nn.Module):
 		self.decoder_tokenizer.pad_token = self.decoder_tokenizer.eos_token
 		special_tokens = {'bos_token': '[bos]'}
 		num_add_toks = self.decoder_tokenizer.add_special_tokens(special_tokens)
-		self.decoder.resize_token_embeddings(len(self.tokenizer))
+		self.decoder.resize_token_embeddings(len(self.decoder_tokenizer))
 		self.loss_function=torch.nn.CrossEntropyLoss(ignore_index=self.decoder_tokenizer.pad_token_id)
 
 	def forward(self, batch):
