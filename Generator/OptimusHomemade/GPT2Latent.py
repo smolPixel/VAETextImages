@@ -12,6 +12,14 @@ from transformers.modeling_outputs import (
 )
 
 from transformers.generation_logits_process import LogitsProcessorList
+from transformers.generation_stopping_criteria import (
+    MaxLengthCriteria,
+    MaxTimeCriteria,
+    StoppingCriteria,
+    StoppingCriteriaList,
+    validate_stopping_criteria,
+)
+
 
 class GPT2ModelLatent(GPT2PreTrainedModel):
 	_keys_to_ignore_on_load_missing = ["attn.masked_bias"]
@@ -338,8 +346,23 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 		)
 
 
-	def generate(self, input_ids, z, model_kwargs=None):
+	def generate(self, input_ids, z, max_length=None, model_kwargs=None):
 		logits_processor = LogitsProcessorList()
+		stopping_criteria = StoppingCriteriaList()
+		if max_length is not None:
+			warnings.warn(
+				"`max_length` is deprecated in this function, use"
+				" `stopping_criteria=StoppingCriteriaList([MaxLengthCriteria(max_length=max_length)])` instead.",
+				UserWarning,
+			)
+			stopping_criteria = validate_stopping_criteria(stopping_criteria, max_length)
+
+
+		bos_token_id = bos_token_id if bos_token_id is not None else self.config.bos_token_id
+		pad_token_id = pad_token_id if pad_token_id is not None else self.config.pad_token_id
+		scores= None
+
+
 		while True:
 			# prepare model inputs
 			model_inputs = self.prepare_inputs_for_generation(input_ids, z)
@@ -360,8 +383,6 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 			# argmax
 			next_tokens = torch.argmax(next_tokens_scores, dim=-1)
 
-			print(next_tokens)
-			fds
 
 			# finished sentences should have their next token be a padding token
 			if eos_token_id is not None:
@@ -382,10 +403,11 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 
 			# stop when each sentence is finished, or if we exceed the maximum length
 			if unfinished_sequences.max() == 0 or stopping_criteria(input_ids, scores):
-				if not synced_gpus:
-					break
-				else:
-					this_peer_finished = True
+				break
+				# if not synced_gpus:
+				# 	break
+				# else:
+				# 	this_peer_finished = True
 
 		# if not return_dict:
 		# 	return tuple(
