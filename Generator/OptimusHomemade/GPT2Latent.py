@@ -368,19 +368,19 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 
 		while True:
 			# prepare model inputs
+			model_inputs = self.prepare_inputs_for_generation(input_ids, z)
+
+			# forward pass to get next token
+
+			outputs = self(
+				**model_inputs,
+				return_dict=True,
+				output_attentions=False,
+				output_hidden_states=False,
+			)
+
+			next_token_logits = outputs.logits[:, -1, :]
 			try:
-				model_inputs = self.prepare_inputs_for_generation(input_ids, z)
-
-				# forward pass to get next token
-
-				outputs = self(
-					**model_inputs,
-					return_dict=True,
-					output_attentions=False,
-					output_hidden_states=False,
-				)
-
-				next_token_logits = outputs.logits[:, -1, :]
 
 				# pre-process distribution
 				next_tokens_scores = logits_processor(input_ids, next_token_logits)
