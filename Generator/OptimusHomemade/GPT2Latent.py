@@ -393,7 +393,7 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 
 			# update generated ids, model inputs, and length for next step
 			input_ids = torch.cat([input_ids, next_tokens[:, None]], dim=-1)
-			print(outputs)
+			print(outputs.past_key_values)
 			model_kwargs = self._update_model_kwargs_for_generation(
 				outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
 			)
