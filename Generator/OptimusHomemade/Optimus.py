@@ -88,7 +88,7 @@ class OptimusVAE():
 			output, mean, logv, z = self.model(batch)
 			samples, z = self.model.inference(z=z)
 			# print(gend)
-			for sent, gen in zip(batch['sentence'], gend):
+			for sent, gen in zip(batch['sentence'], samples):
 				print(f"Original sentence: {sent}, generated: {gen}")
 			break
 
