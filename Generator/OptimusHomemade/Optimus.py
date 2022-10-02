@@ -9,6 +9,7 @@ from torch.utils.data import DataLoader
 from multiprocessing import cpu_count
 import numpy as np
 from Generator.OptimusHomemade.model import OptimusHomemade
+import torch
 
 class OptimusVAE():
 	def __init__(self, argdict, train, dev, test):
