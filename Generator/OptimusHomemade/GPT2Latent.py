@@ -351,11 +351,11 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 		logits_processor = LogitsProcessorList()
 		stopping_criteria = StoppingCriteriaList()
 		if max_length is not None:
-			warnings.warn(
-				"`max_length` is deprecated in this function, use"
-				" `stopping_criteria=StoppingCriteriaList([MaxLengthCriteria(max_length=max_length)])` instead.",
-				UserWarning,
-			)
+			# warnings.warn(
+			# 	"`max_length` is deprecated in this function, use"
+			# 	" `stopping_criteria=StoppingCriteriaList([MaxLengthCriteria(max_length=max_length)])` instead.",
+			# 	UserWarning,
+			# )
 			stopping_criteria = validate_stopping_criteria(stopping_criteria, max_length)
 
 
