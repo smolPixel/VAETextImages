@@ -99,6 +99,47 @@ class OptimusVAE():
 				print(f"Original sentence: {sent}, generated: {gen}")
 			break
 
+	def encode(self):
+		with torch.no_grad():
+			dico = {}
+			for split in self.splits:
+				data_loader = DataLoader(
+					dataset=self.datasets[split],
+					batch_size=self.argdict['batch_size'],
+					shuffle=False,
+					num_workers=cpu_count(),
+					pin_memory=torch.cuda.is_available()
+				)
+				# Enable/Disable Dropout
+
+				self.model.eval()
+				# print(f"The dataset length is {len(data_loader.dataset)}")
+				dataset = torch.zeros(len(data_loader.dataset), self.argdict['latent_size'])
+				labels = torch.zeros(len(data_loader.dataset))
+				sentences = []
+				counter = 0
+				for iteration, batch in enumerate(data_loader):
+					# print("Oh la la banana")
+					batch_size = batch['input'].size(0)
+					# print(batch['input'].shape)
+					for k, v in batch.items():
+						if torch.is_tensor(v):
+							batch[k] = to_var(v)
+					#
+					# print(batch['input'])
+					# print(batch['input'].shape)
+					z = self.model.encode(batch)
+					# print(batch_size)
+					# print(z.shape)
+					dataset[counter:counter + batch_size] = z
+					labels[counter:counter + batch_size] = batch['label']
+					counter += batch_size
+				# print(dataset)
+				dico[f"labels_{split}"] = labels
+				dico[f"encoded_{split}"] = dataset
+			# torch.save(labels, f"bin/labels_{split}.pt")
+			# torch.save(dataset, f"bin/encoded_{split}.pt")
+			return dico
 
 	def test_model(self):
 		data_loader = DataLoader(

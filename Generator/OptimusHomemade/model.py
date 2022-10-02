@@ -45,6 +45,20 @@ class OptimusHomemade(nn.Module):
 		output = self.decoder(input_ids=encoded['input_ids'], attention_mask=encoded['attention_mask'], z=z, labels=encoded['input_ids'])
 		return output, logv, mean, z
 
+
+	def encode(self, batch):
+		sents=['[BOS] '+ sent for sent in batch['sentence']]
+		encoded=self.encoder_tokenizer(sents, padding=True, truncation=True, return_tensors='pt').to(self.device)
+		output=self.encoder(input_ids=encoded['input_ids'], attention_mask=encoded['attention_mask'])
+		output=output['last_hidden_state'][:, 0, :]
+		logv=self.hidden_to_logp(output)
+		mean=self.hidden_to_mean(output)
+
+		#TODO REPARAMETRIZATION
+		z=mean
+
+		return z
+
 	def inference(self, z):
 		bs=z.shape[0]
 		sents=["[BOS] " for i in range(bs)]
