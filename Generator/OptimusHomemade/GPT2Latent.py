@@ -138,6 +138,7 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 		encoder_hidden_states: Optional[torch.Tensor] = None,
 		encoder_attention_mask: Optional[torch.FloatTensor] = None,
 		use_cache: Optional[bool] = None,
+			labels: Optional[torch.LongTensor] = None,
 		output_attentions: Optional[bool] = None,
 		output_hidden_states: Optional[bool] = None,
 		return_dict: Optional[bool] = None,
