@@ -86,7 +86,7 @@ class OptimusVAE():
 			batch_size = batch['input'].size(0)
 			# Forward pass
 			output, mean, logv, z = self.model(batch)
-			samples, z = self.model.inference(z=z.squeeze(0))
+			samples, z = self.model.inference(z=z)
 			# print(gend)
 			for sent, gen in zip(batch['sentence'], gend):
 				print(f"Original sentence: {sent}, generated: {gen}")
