@@ -362,6 +362,8 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 		pad_token_id = self.config.pad_token_id
 		eos_token_id = None
 		scores= None
+
+		unfinished_sequences = input_ids.new(input_ids.shape[0]).fill_(1)
 		cur_len = input_ids.shape[-1]
 
 		while True:
