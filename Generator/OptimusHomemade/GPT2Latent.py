@@ -358,8 +358,8 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 			stopping_criteria = validate_stopping_criteria(stopping_criteria, max_length)
 
 
-		bos_token_id = bos_token_id if bos_token_id is not None else self.config.bos_token_id
-		pad_token_id = pad_token_id if pad_token_id is not None else self.config.pad_token_id
+		bos_token_id = self.config.bos_token_id
+		pad_token_id = self.config.pad_token_id
 		scores= None
 
 
