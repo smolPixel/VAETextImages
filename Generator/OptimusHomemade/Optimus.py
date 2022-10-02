@@ -24,6 +24,8 @@ class OptimusVAE():
 
 		self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)
 		self.loss_function_basic = train.loss_function
+		self.step = 0
+		self.epoch = 0
 		if argdict['dataset'] in ['SST2']:
 			self.loss_function_ppl = torch.nn.CrossEntropyLoss(reduction='mean')
 		else:
@@ -100,6 +102,8 @@ class OptimusVAE():
 				print(f"Original sentence: {sent}, generated: {gen}")
 			break
 
+
+
 	def encode(self):
 		with torch.no_grad():
 			dico = {}
@@ -142,6 +146,14 @@ class OptimusVAE():
 			# torch.save(dataset, f"bin/encoded_{split}.pt")
 			return dico
 
+	def loss_fn(self, logp, target, mean, logv, anneal_function, step, k):
+		NLL_loss = self.loss_function_basic(logp, target)
+		# KL Divergence
+		KL_loss = -0.5 * torch.sum(1 + logv - mean.pow(2) - logv.exp())
+		KL_weight = self.kl_anneal_function(anneal_function, step, k, self.dataset_length * self.argdict['x0'])
+
+		return NLL_loss, KL_loss, KL_weight
+
 	def test_model(self):
 		data_loader = DataLoader(
 			dataset=self.datasets['test'],
@@ -173,7 +185,7 @@ class OptimusVAE():
 
 
 
-			NLL_mean = 0 #self.loss_function_ppl(logp, target.to('cuda'))
+			NLL_mean = self.loss_function_ppl(logp, target.to('cuda'))
 
 			loss = (NLL_loss + KL_weight * KL_loss) / batch_size
 			Average_loss.append(outputs['loss'].cpu())
