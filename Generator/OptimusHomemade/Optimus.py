@@ -68,6 +68,28 @@ class OptimusVAE():
 			self.epoch = epoch
 			self.run_epoch()
 
-		self.generate_from_dataset()
+		self.generate_from_train()
+
+	def generate_from_train(self):
+		data_loader = DataLoader(
+			dataset=self.datasets['train'],
+			batch_size=2,  # self.argdict.batch_size,
+			shuffle=False,
+			num_workers=cpu_count(),
+			pin_memory=torch.cuda.is_available()
+		)
+
+		self.model.eval()
+
+		for iteration, batch in enumerate(data_loader):
+
+			batch_size = batch['input'].size(0)
+			# Forward pass
+			logp, mean, logv, z = self.model(batch)
+			samples, z = self.model.inference(z=z.squeeze(0))
+			# print(gend)
+			for sent, gen in zip(batch['sentence'], gend):
+				print(f"Original sentence: {sent}, generated: {gen}")
+			break
 
 
