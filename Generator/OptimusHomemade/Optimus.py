@@ -103,7 +103,7 @@ class OptimusVAE():
 	def test_model(self):
 		data_loader = DataLoader(
 			dataset=self.datasets['test'],
-			batch_size=self.argdict.batch_size,
+			batch_size=self.argdict['batch_size'],
 			shuffle=False,
 			num_workers=cpu_count(),
 			pin_memory=torch.cuda.is_available()
