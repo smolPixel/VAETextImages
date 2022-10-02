@@ -15,7 +15,8 @@ class OptimusHomemade(nn.Module):
 		self.encoder=BertModel.from_pretrained('bert-base-uncased').to(self.device)
 		self.encoder_tokenizer=BertTokenizer.from_pretrained('bert-base-uncased')
 
-		self.hidden_to_latent=nn.Linear(768, argdict['latent_size']).to(self.device)
+		self.hidden_to_logp=nn.Linear(768, argdict['latent_size']).to(self.device)
+		self.hidden_to_mean=nn.Linear(768, argdict['latent_size']).to(self.device)
 
 		# self.latent_to_hidden=nn.Linear
 
@@ -30,11 +31,14 @@ class OptimusHomemade(nn.Module):
 		encoded=self.encoder_tokenizer(sents, padding=True, truncation=True, return_tensors='pt').to(self.device)
 		output=self.encoder(input_ids=encoded['input_ids'], attention_mask=encoded['attention_mask'])
 		output=output['last_hidden_state'][:, 0, :]
-		latent=self.hidden_to_latent(output)
+		logv=self.hidden_to_logp(output)
+		mean=self.hidden_to_mean(output)
 
 		#TODO REPARAMETRIZATION
+		z=mean
+
 
 		#decoder
 		encoded=self.decoder_tokenizer(sents, padding=True, truncation=True, return_tensors='pt').to(self.device)
-		output = self.decoder(input_ids=encoded['input_ids'], attention_mask=encoded['attention_mask'], z=latent, labels=encoded['input_ids'])
-		return output
+		output = self.decoder(input_ids=encoded['input_ids'], attention_mask=encoded['attention_mask'], z=z, labels=encoded['input_ids'])
+		return output, logv, mean, z
