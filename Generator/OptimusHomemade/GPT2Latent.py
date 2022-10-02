@@ -338,7 +338,7 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 		)
 
 
-	def generate(self, input_ids, z):
+	def generate(self, input_ids, z, model_kwargs=None):
 		logits_processor = LogitsProcessorList()
 		while True:
 			# prepare model inputs
