@@ -49,7 +49,7 @@ class OptimusVAE():
 				# encodings_input = self.tokenizer_encoder(batch['sentence'], return_tensors="pt", padding=True, truncation=True).to(self.device)
 				# target = encodings_input['input_ids']
 				batch_size = len(batch['sentence'])
-				outputs=self.model(batch)
+				outputs, mean, logv, z=self.model(batch)
 				# print(batch_size)
 				loss=outputs['loss']
 				# backward + optimization
