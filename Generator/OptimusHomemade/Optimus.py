@@ -181,6 +181,7 @@ class OptimusVAE():
 			batch_size = logp.shape[0]
 			target=outputs['encoded_output']
 			# logp, target = self.datasets['train'].shape_for_loss_function(logp, batch['target'])
+			print(target)
 			NLL_loss, KL_loss, KL_weight = self.loss_fn(logp, target.to('cuda'), mean, logv, 'logistic', self.step, 0.0025)
 
 
