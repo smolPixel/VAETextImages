@@ -115,7 +115,10 @@ class OptimusVAE():
 		NLL_mean_for_ppl = []
 		for iteration, batch in enumerate(data_loader):
 			# Forward pass
-			logp, mean, logv, z = self.model(batch)
+			outputs, mean, logv, z = self.model(batch)
+			logp=outputs['logits']
+			print(logp)
+			fds
 			# Keeping track of the means for AU
 			mus.append(mean.detach().squeeze(0))
 			batch_size = logp.shape[0]
