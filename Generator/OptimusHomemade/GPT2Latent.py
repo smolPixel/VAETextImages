@@ -360,6 +360,7 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 
 		bos_token_id = self.config.bos_token_id
 		pad_token_id = self.config.pad_token_id
+		eos_token_id = self.config.eos_token_id
 		scores= None
 
 
