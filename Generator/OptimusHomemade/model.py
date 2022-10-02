@@ -11,7 +11,7 @@ class OptimusHomemade(nn.Module):
 	def __init__(self, argdict):  #
 		super(OptimusHomemade, self).__init__()
 		self.argdict = argdict
-		self.device = 'cuda'
+		self.device = 'cpu'
 		self.encoder=BertModel.from_pretrained('bert-base-uncased').to(self.device)
 		self.encoder_tokenizer=BertTokenizer.from_pretrained('bert-base-uncased')
 

@@ -374,6 +374,7 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 
 
 			try:
+				model_inputs = self.prepare_inputs_for_generation(input_ids, z)
 				outputs = self(
 					**model_inputs,
 					return_dict=True,
@@ -409,6 +410,7 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 				if unfinished_sequences.max() == 0 or stopping_criteria(input_ids, scores):
 					break
 			except:
+				print('bitch')
 				print(model_inputs)
 				dfs
 				# if not synced_gpus:
