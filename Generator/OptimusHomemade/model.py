@@ -15,7 +15,7 @@ class OptimusHomemade(nn.Module):
 		self.encoder=BertModel.from_pretrained('bert-base-uncased').to(self.device)
 		self.encoder_tokenizer=BertTokenizer.from_pretrained('bert-base-uncased')
 
-		self.hidden_to_latent=nn.Linear(768, argdict['latent_size'])
+		self.hidden_to_latent=nn.Linear(768, argdict['latent_size']).to(self.device)
 
 		# self.latent_to_hidden=nn.Linear
 
