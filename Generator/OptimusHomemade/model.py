@@ -22,6 +22,9 @@ class OptimusHomemade(nn.Module):
 		self.decoder_tokenizer=GPT2Tokenizer.from_pretrained('gpt2')
 		self.decoder_tokenizer.pad_token = self.decoder_tokenizer.eos_token
 
+		self.loss_function=torch.nn.CrossEntropyLoss(ignore_index=self.decoder_tokenizer.pad_token_id)
+
+
 	def forward(self, batch):
 		sents=batch['sentence']
 		encoded=self.encoder_tokenizer(sents, padding=True, truncation=True, return_tensors='pt')
@@ -34,6 +37,6 @@ class OptimusHomemade(nn.Module):
 		#decoder
 		encoded=self.decoder_tokenizer(sents, padding=True, truncation=True, return_tensors='pt')
 		output = self.decoder(input_ids=encoded['input_ids'], attention_mask=encoded['attention_mask'], z=latent)
-		print(output)
-		print(output.shape)
+		print(output['last_hidden_state'])
+		print(output['last_hidden_state'].shape)
 		fds
