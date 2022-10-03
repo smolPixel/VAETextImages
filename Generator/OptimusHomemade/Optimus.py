@@ -190,9 +190,68 @@ class OptimusVAE():
 				  f" Mean NLL {np.mean(dev_NLL)}, Mean KL div {np.mean(dev_KL)}")
 
 
+		#Fine Tuning
 		for epoch in range(self.argdict['nb_epoch']):
-			self.epoch = epoch
-			self.run_epoch()
+			#How many batches
+			data_loader = DataLoader(
+				dataset=self.datasets['train'],
+				batch_size=self.argdict['batch_size'],
+				shuffle= True,
+				num_workers=cpu_count(),
+				pin_memory=False
+			)
+
+			num_batches=len(data_loader)
+			ratios=self.argdict['ratios']
+			ratios=[math.floor(r*num_batches) for r in ratios]
+			num_iter_anneal=ratios[1]
+			#TODO there has to be a more eleguant way to do this lmao
+			ratios[1]=ratios[0]+ratios[1]
+			ratios[2]=ratios[2]+ratios[1]
+
+			train_loss, train_KL, train_NLL=[], [], []
+			dev_loss, dev_KL, dev_NLL=[], [], []
+
+			for i, batch in enumerate(data_loader):
+				if i<ratios[0]:
+					#AE objective
+					args_KL={'strategy': 'beta', 'k': 0, 'step':0, 'x0':0, 'lamb':5}
+				elif i<ratios[1]:
+					#annealing
+					args_KL={'strategy': 'logistic', 'step':i-ratios[0] , 'k':1, 'x0':math.floor(num_iter_anneal)/2, 'lamb':5}
+				else:
+					#beta=1
+					args_KL = {'strategy': 'beta', 'k': 1, 'step':0, 'x0':0, 'lamb':5}
+				loss, KL_loss, NLL_loss, KL_weight=self.run_batch(batch, args_KL)
+				train_loss.append(loss.detach().cpu())
+				train_NLL.append(NLL_loss.detach().cpu())
+				train_KL.append(KL_loss.detach().cpu())
+				self.optimizer.zero_grad()
+				loss.backward()
+				self.optimizer.step()
+			print(f"training Train Epoch {epoch}/{self.argdict['nb_epoch_pretraining']}, Mean ELBO {np.mean(train_loss)},"
+				  f" Mean NLL {np.mean(train_NLL)}, Mean KL div {np.mean(train_KL)}")
+
+			#dev
+			data_loader = DataLoader(
+				dataset=self.datasets['dev'],
+				batch_size=self.argdict['batch_size'],
+				shuffle=False,
+				num_workers=cpu_count(),
+				pin_memory=False
+			)
+
+			num_batches = len(data_loader)
+			for i, batch in enumerate(data_loader):
+				with torch.no_grad():
+					args_KL = {'strategy': 'beta', 'k': 1, 'step': 0, 'x0': 0, 'lamb': 5}
+					loss, KL_loss, NLL_loss, KL_weight = self.run_batch(batch, args_KL)
+					dev_loss.append(loss.detach().cpu())
+					dev_NLL.append(NLL_loss.detach().cpu())
+					dev_KL.append(KL_loss.detach().cpu())
+			print(f"training Dev Epoch {epoch}/{self.argdict['nb_epoch_pretraining']}, Mean ELBO {np.mean(dev_loss)},"
+				  f" Mean NLL {np.mean(dev_NLL)}, Mean KL div {np.mean(dev_KL)}")
+
 
 		self.generate_from_train()
 
