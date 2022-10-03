@@ -39,10 +39,14 @@ class OptimusVAE():
 		elif anneal_function == 'beta':
 			return k
 
-	def loss_fn(self, logp, target, mean, logv, anneal_function, step, k, x0):
+	def loss_fn(self, logp, target, mean, logv, anneal_function, step, k, x0, lamb):
 		NLL_loss = self.loss_function_basic(logp, target)
 		# KL Divergence
-		KL_loss = -0.5 * torch.sum(1 + logv - mean.pow(2) - logv.exp())
+		dimensionwise_loss = -0.5 * (1 + logv - mean ** 2 - logv.exp())
+		dimensionwise_loss[dimensionwise_loss < lamb] = lamb
+		KL_loss = dimensionwise_loss.sum(-1)
+
+		# KL_loss = -0.5 * torch.sum(1 + logv - mean.pow(2) - logv.exp())
 		KL_weight = self.kl_anneal_function(anneal_function, step, k, x0)
 
 		return NLL_loss, KL_loss, KL_weight
@@ -57,7 +61,7 @@ class OptimusVAE():
 		# logp, target = self.datasets['train'].shape_for_loss_function(logp, batch['target'])
 		# print(target)
 		logp, target = self.datasets['train'].shape_for_loss_function(logp[:, :-1, :].contiguous(), target[:, 1:])
-		NLL_loss, KL_loss, KL_weight = self.loss_fn(logp, target, mean, logv, params_anneal['strategy'], params_anneal['step'], params_anneal['k'], params_anneal['x0'])
+		NLL_loss, KL_loss, KL_weight = self.loss_fn(logp, target, mean, logv, params_anneal['strategy'], params_anneal['step'], params_anneal['k'], params_anneal['x0'], params_anneal['lamb'])
 		# print(NLL_loss)
 		# batch_size = logp.shape[0]
 		# print(batch_size)
@@ -145,14 +149,13 @@ class OptimusVAE():
 				print(i)
 				if i<ratios[0]:
 					#AE objective
-					args_KL={'strategy': 'beta', 'k': 0, 'step':0, 'x0':0}
+					args_KL={'strategy': 'beta', 'k': 0, 'step':0, 'x0':0, 'lamb':5}
 				elif i<ratios[1]:
 					#annealing
-					args_KL={'strategy': 'logistic', 'step':i-ratios[0] , 'k':1, 'x0':math.floor(num_iter_anneal)/2}
+					args_KL={'strategy': 'logistic', 'step':i-ratios[0] , 'k':1, 'x0':math.floor(num_iter_anneal)/2, 'lamb':5}
 				else:
 					#beta=1
-					args_KL = {'strategy': 'beta', 'k': 1, 'step':0, 'x0':0}
-				print(args_KL)
+					args_KL = {'strategy': 'beta', 'k': 1, 'step':0, 'x0':0, 'lamb':5}
 				loss, KL_loss, NLL_loss, KL_weight=self.run_batch(batch, args_KL)
 				self.optimizer.zero_grad()
 				loss.backward()
