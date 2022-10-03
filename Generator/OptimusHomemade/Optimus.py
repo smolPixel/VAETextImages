@@ -152,7 +152,7 @@ class OptimusVAE():
 				else:
 					#beta=1
 					args_KL = {'strategy': 'beta', 'k': 1}
-
+				print(args_KL)
 				loss, KL_loss, NLL_loss, KL_weight=self.run_batch(batch, args_KL)
 				self.optimizer.zero_grad()
 				loss.backward()
