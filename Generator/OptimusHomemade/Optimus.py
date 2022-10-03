@@ -132,8 +132,10 @@ class OptimusVAE():
 				pin_memory=False
 			)
 
-			print(len(data_loader))
-			print(len(self.datasets['train']))
+			num_batches=len(data_loader)
+			ratios=self.argdict['ratios']
+			print(ratios)
+
 			fds
 			if training:
 				self.optimizer.zero_grad()
