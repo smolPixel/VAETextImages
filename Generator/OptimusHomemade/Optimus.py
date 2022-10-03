@@ -159,9 +159,9 @@ class OptimusVAE():
 					#beta=1
 					args_KL = {'strategy': 'beta', 'k': 1, 'step':0, 'x0':0, 'lamb':5}
 				loss, KL_loss, NLL_loss, KL_weight=self.run_batch(batch, args_KL)
-				train_loss.append(loss.detach())
-				train_NLL.append(NLL_loss.detach())
-				train_KL.append(KL_loss.detach())
+				train_loss.append(loss.detach().cpu())
+				train_NLL.append(NLL_loss.detach().cpu())
+				train_KL.append(KL_loss.detach().cpu())
 				self.optimizer.zero_grad()
 				loss.backward()
 				self.optimizer.step()
