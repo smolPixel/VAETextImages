@@ -134,7 +134,7 @@ class OptimusVAE():
 
 			num_batches=len(data_loader)
 			ratios=self.argdict['ratios']
-			ratios=[math.floow(r*num_batches) for r in ratios ]
+			ratios=[math.floor(r*num_batches) for r in ratios ]
 			print(ratios)
 
 			fds
