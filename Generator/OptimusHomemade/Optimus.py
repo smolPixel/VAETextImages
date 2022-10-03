@@ -42,6 +42,7 @@ class OptimusVAE():
 	def loss_fn(self, logp, target, mean, logv, anneal_function, step, k, x0, lamb):
 		NLL_loss = self.loss_function_basic(logp, target)
 		# KL Divergence
+		print(logv.shape)
 		dimensionwise_loss = -0.5 * (1 + logv - mean ** 2 - logv.exp())
 		dimensionwise_loss[dimensionwise_loss < lamb] = lamb
 		KL_loss = dimensionwise_loss.sum(-1)
