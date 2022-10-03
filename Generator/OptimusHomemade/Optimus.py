@@ -42,6 +42,7 @@ class OptimusVAE():
 	def loss_fn(self, logp, target, mean, logv, anneal_function, step, k, x0, lamb):
 		NLL_loss = self.loss_function_basic(logp, target)
 		# KL Divergence
+		#TODO Check that this is correct
 		dimensionwise_loss = -0.5 * (1 + logv - mean ** 2 - logv.exp())
 		dimensionwise_loss[dimensionwise_loss < lamb] = lamb
 		KL_loss = dimensionwise_loss.sum()
@@ -144,8 +145,10 @@ class OptimusVAE():
 			#TODO there has to be a more eleguant way to do this lmao
 			ratios[1]=ratios[0]+ratios[1]
 			ratios[2]=ratios[2]+ratios[1]
+
+			train_loss, train_KL, train_NLL=[], [], []
+
 			for i, batch in enumerate(data_loader):
-				print(i)
 				if i<ratios[0]:
 					#AE objective
 					args_KL={'strategy': 'beta', 'k': 0, 'step':0, 'x0':0, 'lamb':5}
@@ -156,9 +159,30 @@ class OptimusVAE():
 					#beta=1
 					args_KL = {'strategy': 'beta', 'k': 1, 'step':0, 'x0':0, 'lamb':5}
 				loss, KL_loss, NLL_loss, KL_weight=self.run_batch(batch, args_KL)
+				train_loss.append(loss.detach())
+				train_NLL.append(NLL_loss.detach())
+				train_KL.append(KL_loss.detach())
 				self.optimizer.zero_grad()
 				loss.backward()
 				self.optimizer.step()
+			print(f"Pretraining Epoch {epoch}/{self.argdict['nb_epoch_pretraining']}, Mean ELBO {np.mean(train_loss)},"
+				  f" Mean NLL {np.mean(train_NLL)}, Mean KL div {np.mean(train_KL)}")
+
+			#dev
+			data_loader = DataLoader(
+				dataset=self.datasets['dev'],
+				batch_size=self.argdict['batch_size'],
+				shuffle=False,
+				num_workers=cpu_count(),
+				pin_memory=False
+			)
+
+			num_batches = len(data_loader)
+			for i, batch in enumerate(data_loader):
+				with torch.no_grad():
+					args_KL = {'strategy': 'beta', 'k': 1, 'step': 0, 'x0': 0, 'lamb': 5}
+					loss, KL_loss, NLL_loss, KL_weight = self.run_batch(batch, args_KL)
+
 
 		for epoch in range(self.argdict['nb_epoch']):
 			self.epoch = epoch
