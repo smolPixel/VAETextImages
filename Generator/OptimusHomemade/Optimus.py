@@ -31,6 +31,20 @@ class OptimusVAE():
 		else:
 			self.loss_function_ppl = self.loss_function_basic
 
+	def kl_anneal_function(self, anneal_function, step, k, x0):
+		if anneal_function == 'logistic':
+			return float(1 / (1 + np.exp(-k * (step - x0))))
+		elif anneal_function == 'linear':
+			return min(1, step / x0)
+
+	def loss_fn(self, logp, target, mean, logv, anneal_function, step, k):
+		NLL_loss = self.loss_function_basic(logp, target)
+		# KL Divergence
+		KL_loss = -0.5 * torch.sum(1 + logv - mean.pow(2) - logv.exp())
+		KL_weight = self.kl_anneal_function(anneal_function, step, k, self.dataset_length * self.argdict['x0'])
+
+		return NLL_loss, KL_loss, KL_weight
+
 	def run_epoch(self):
 		for split in self.splits:
 
@@ -60,8 +74,17 @@ class OptimusVAE():
 				# target = encodings_input['input_ids']
 				batch_size = len(batch['sentence'])
 				outputs, mean, logv, z=self.model(batch)
+				logp = outputs['logits']
 				# print(batch_size)
-				loss=outputs['loss']
+				target = outputs['encoded_output']['input_ids']
+				# logp, target = self.datasets['train'].shape_for_loss_function(logp, batch['target'])
+				# print(target)
+				logp, target = self.datasets['train'].shape_for_loss_function(logp[:, :-1, :].contiguous(), target[:, 1:])
+				NLL_loss, KL_loss, KL_weight = self.loss_fn(logp, target, mean, logv, 'logistic', self.step,0.0025)
+				# print(NLL_loss)
+				# batch_size = logp.shape[0]
+				# print(batch_size)
+				loss = (NLL_loss + KL_weight * KL_loss) / batch_size
 				# backward + optimization
 				if split == 'train':
 					self.optimizer.zero_grad()
@@ -146,19 +169,6 @@ class OptimusVAE():
 			# torch.save(dataset, f"bin/encoded_{split}.pt")
 			return dico
 
-	def kl_anneal_function(self, anneal_function, step, k, x0):
-		if anneal_function == 'logistic':
-			return float(1 / (1 + np.exp(-k * (step - x0))))
-		elif anneal_function == 'linear':
-			return min(1, step / x0)
-
-	def loss_fn(self, logp, target, mean, logv, anneal_function, step, k):
-		NLL_loss = self.loss_function_basic(logp, target)
-		# KL Divergence
-		KL_loss = -0.5 * torch.sum(1 + logv - mean.pow(2) - logv.exp())
-		KL_weight = self.kl_anneal_function(anneal_function, step, k, self.dataset_length * self.argdict['x0'])
-
-		return NLL_loss, KL_loss, KL_weight
 
 	def test_model(self):
 		data_loader = DataLoader(
@@ -188,6 +198,7 @@ class OptimusVAE():
 			target=outputs['encoded_output']['input_ids']
 			# logp, target = self.datasets['train'].shape_for_loss_function(logp, batch['target'])
 			# print(target)
+
 			logp, target = self.datasets['train'].shape_for_loss_function(logp[:, :-1, :].contiguous(), target[:, 1:])
 			NLL_loss, KL_loss, KL_weight = self.loss_fn(logp, target.to('cuda'), mean, logv, 'logistic', self.step, 0.0025)
 
