@@ -147,6 +147,7 @@ class OptimusVAE():
 			ratios[2]=ratios[2]+ratios[1]
 
 			train_loss, train_KL, train_NLL=[], [], []
+			dev_loss, dev_KL, dev_NLL=[], [], []
 
 			for i, batch in enumerate(data_loader):
 				if i<ratios[0]:
@@ -165,7 +166,7 @@ class OptimusVAE():
 				self.optimizer.zero_grad()
 				loss.backward()
 				self.optimizer.step()
-			print(f"Pretraining Epoch {epoch}/{self.argdict['nb_epoch_pretraining']}, Mean ELBO {np.mean(train_loss)},"
+			print(f"Pretraining Train Epoch {epoch}/{self.argdict['nb_epoch_pretraining']}, Mean ELBO {np.mean(train_loss)},"
 				  f" Mean NLL {np.mean(train_NLL)}, Mean KL div {np.mean(train_KL)}")
 
 			#dev
@@ -182,6 +183,11 @@ class OptimusVAE():
 				with torch.no_grad():
 					args_KL = {'strategy': 'beta', 'k': 1, 'step': 0, 'x0': 0, 'lamb': 5}
 					loss, KL_loss, NLL_loss, KL_weight = self.run_batch(batch, args_KL)
+					dev_loss.append(loss.detach().cpu())
+					dev_NLL.append(NLL_loss.detach().cpu())
+					dev_KL.append(KL_loss.detach().cpu())
+			print(f"Pretraining Dev Epoch {epoch}/{self.argdict['nb_epoch_pretraining']}, Mean ELBO {np.mean(dev_loss)},"
+				  f" Mean NLL {np.mean(dev_NLL)}, Mean KL div {np.mean(dev_KL)}")
 
 
 		for epoch in range(self.argdict['nb_epoch']):
