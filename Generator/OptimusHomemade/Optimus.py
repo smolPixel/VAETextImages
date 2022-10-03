@@ -138,7 +138,7 @@ class OptimusVAE():
 			#TODO there has to be a more elogant way to do this lmao
 			ratios[1]=ratios[0]+ratios[1]
 			ratios[2]=ratios[2]+ratios[1]
-			pritn(ratios)
+			print(ratios)
 			for i, batch in enumerate(data_loader):
 				...
 			fds
