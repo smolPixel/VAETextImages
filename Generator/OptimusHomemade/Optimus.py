@@ -11,7 +11,7 @@ import numpy as np
 from Generator.OptimusHomemade.model import OptimusHomemade
 import torch
 from metrics import calc_au, calc_mi
-
+import math
 from sklearn.svm import LinearSVC
 
 class OptimusVAE():
@@ -134,6 +134,7 @@ class OptimusVAE():
 
 			num_batches=len(data_loader)
 			ratios=self.argdict['ratios']
+			ratios=[math.floow(r*num_batches) for r in ratios ]
 			print(ratios)
 
 			fds
