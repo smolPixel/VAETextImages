@@ -92,9 +92,10 @@ class OptimusVAE():
 					self.optimizer.step()
 
 				# Average_loss.append(loss.item().cpu())
-				Average_NLL.append(outputs['loss'].cpu().detach() / batch_size)
-
-			print(f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean LF {np.mean(Average_NLL)}")
+				Average_loss.append(loss.item())
+				Average_KL_Div.append(KL_loss.cpu().detach() / batch_size)
+				Average_NLL.append(NLL_loss.cpu().detach() / batch_size)
+			print(f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean ELBO {np.mean(Average_loss)}, Mean NLL {np.mean(Average_NLL)}, Mean KL div {np.mean(Average_KL_Div)} KL Weight {KL_weight}")
 
 	def train_model(self):
 		for epoch in range(self.argdict['nb_epoch']):
