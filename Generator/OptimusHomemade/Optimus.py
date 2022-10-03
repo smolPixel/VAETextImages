@@ -45,6 +45,29 @@ class OptimusVAE():
 
 		return NLL_loss, KL_loss, KL_weight
 
+
+	def run_batch(self, batch, params_anneal, training=True):
+		batch_size = len(batch['sentence'])
+		outputs, mean, logv, z = self.model(batch)
+		logp = outputs['logits']
+		# print(batch_size)
+		target = outputs['encoded_output']['input_ids']
+		# logp, target = self.datasets['train'].shape_for_loss_function(logp, batch['target'])
+		# print(target)
+		logp, target = self.datasets['train'].shape_for_loss_function(logp[:, :-1, :].contiguous(), target[:, 1:])
+		NLL_loss, KL_loss, KL_weight = self.loss_fn(logp, target, mean, logv, 'logistic', self.step, 0.0025)
+		# print(NLL_loss)
+		# batch_size = logp.shape[0]
+		# print(batch_size)
+		loss = (NLL_loss + KL_weight * KL_loss) / batch_size
+		# backward + optimization
+
+		# Average_loss.append(loss.item().cpu())
+		Average_loss.append(loss.item())
+		Average_KL_Div.append(KL_loss.cpu().detach() / batch_size)
+		Average_NLL.append(NLL_loss.cpu().detach() / batch_size)
+
+
 	def run_epoch(self):
 		for split in self.splits:
 
@@ -98,6 +121,25 @@ class OptimusVAE():
 			print(f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean ELBO {np.mean(Average_loss)}, Mean NLL {np.mean(Average_NLL)}, Mean KL div {np.mean(Average_KL_Div)} KL Weight {KL_weight}")
 
 	def train_model(self):
+		#Pretraining
+		for epoch in range(self.argdict['nb_epoch_pretraining']):
+			#How many batches
+			data_loader = DataLoader(
+				dataset=self.datasets['train'],
+				batch_size=self.argdict['batch_size'],
+				shuffle= True,
+				num_workers=cpu_count(),
+				pin_memory=False
+			)
+
+			print(len(data_loader))
+			print(len(self.datasets['train']))
+			fds
+			if training:
+				self.optimizer.zero_grad()
+				loss.backward()
+				self.optimizer.step()
+
 		for epoch in range(self.argdict['nb_epoch']):
 			self.epoch = epoch
 			self.run_epoch()

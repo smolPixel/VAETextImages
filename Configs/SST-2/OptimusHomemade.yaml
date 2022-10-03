@@ -7,7 +7,15 @@ max_length: 0
 algo: "OptimusHomemade"
 #encoder: "GRU"
 #decoder: "GRU"
-nb_epoch_pretraining: 1 #10
+
+#pretraining
+pretraining: True
+nb_epoch_pretraining: 10
+annealing_strategy_pretraining: cyclical
+ratios: [0.5, 0.25, 0.25]
+pretraining_dataset: "SST2"
+
+
 nb_epoch: 5
 latent_size: 15
 hidden_size: 1024
