@@ -142,6 +142,7 @@ class OptimusVAE():
 			ratios[1]=ratios[0]+ratios[1]
 			ratios[2]=ratios[2]+ratios[1]
 			for i, batch in enumerate(data_loader):
+				print(i)
 				if i<ratios[0]:
 					#AE objective
 					args_KL={'strategy': 'beta', 'k': 0, 'step':0, 'x0':0}
