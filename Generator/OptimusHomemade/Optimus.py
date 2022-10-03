@@ -138,7 +138,7 @@ class OptimusVAE():
 			ratios=self.argdict['ratios']
 			ratios=[math.floor(r*num_batches) for r in ratios]
 			num_iter_anneal=ratios[1]
-			#TODO there has to be a more elogant way to do this lmao
+			#TODO there has to be a more eleguant way to do this lmao
 			ratios[1]=ratios[0]+ratios[1]
 			ratios[2]=ratios[2]+ratios[1]
 			for i, batch in enumerate(data_loader):
@@ -151,7 +151,7 @@ class OptimusVAE():
 					args_KL={'strategy': 'logistic', 'step':i-ratios[0] , 'k':1, 'x0':math.floor(num_iter_anneal)/2}
 				else:
 					#beta=1
-					args_KL = {'strategy': 'beta', 'k': 1}
+					args_KL = {'strategy': 'beta', 'k': 1, 'step':0, 'x0':0}
 				print(args_KL)
 				loss, KL_loss, NLL_loss, KL_weight=self.run_batch(batch, args_KL)
 				self.optimizer.zero_grad()
