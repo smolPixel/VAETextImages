@@ -134,9 +134,13 @@ class OptimusVAE():
 
 			num_batches=len(data_loader)
 			ratios=self.argdict['ratios']
-			ratios=[math.floor(r*num_batches) for r in ratios ]
-			print(ratios)
-
+			ratios=[math.floor(r*num_batches) for r in ratios]
+			#TODO there has to be a more elogant way to do this lmao
+			ratios[1]=ratios[0]+ratios[1]
+			ratios[2]=ratios[2]+ratios[1]
+			pritn(ratios)
+			for i, batch in enumerate(data_loader):
+				...
 			fds
 			if training:
 				self.optimizer.zero_grad()
