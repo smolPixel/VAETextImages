@@ -36,7 +36,7 @@ class OptimusVAE():
 			return float(1 / (1 + np.exp(-k * (step - x0))))
 		elif anneal_function == 'linear':
 			return min(1, step / x0)
-		elif anneal_function == 'beta'
+		elif anneal_function == 'beta':
 			return k
 
 	def loss_fn(self, logp, target, mean, logv, anneal_function, step, k, x0):
