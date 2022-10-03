@@ -41,7 +41,7 @@ class OptimusVAE():
 		NLL_loss = self.loss_function_basic(logp, target)
 		# KL Divergence
 		KL_loss = -0.5 * torch.sum(1 + logv - mean.pow(2) - logv.exp())
-		KL_weight = self.kl_anneal_function(anneal_function, step, k, self.dataset_length * self.argdict['x0'])
+		KL_weight = self.kl_anneal_function(anneal_function, step, k, x0)
 
 		return NLL_loss, KL_loss, KL_weight
 
