@@ -146,7 +146,7 @@ class OptimusVAE():
 				if i<ratios[0]:
 					#AE objective
 					args_KL={'strategy': 'beta', 'k': 0, 'step':0, 'x0':0}
-				elif i>ratios[0] and i<ratios[1]:
+				elif i<ratios[1]:
 					#annealing
 					args_KL={'strategy': 'logistic', 'step':i-ratios[0] , 'k':1, 'x0':math.floor(num_iter_anneal)/2}
 				else:
