@@ -37,7 +37,7 @@ class OptimusVAE():
 		elif anneal_function == 'linear':
 			return min(1, step / x0)
 
-	def loss_fn(self, logp, target, mean, logv, anneal_function, step, k):
+	def loss_fn(self, logp, target, mean, logv, anneal_function, step, k, x0):
 		NLL_loss = self.loss_function_basic(logp, target)
 		# KL Divergence
 		KL_loss = -0.5 * torch.sum(1 + logv - mean.pow(2) - logv.exp())
@@ -46,7 +46,7 @@ class OptimusVAE():
 		return NLL_loss, KL_loss, KL_weight
 
 
-	def run_batch(self, batch, params_anneal, training=True):
+	def run_batch(self, batch, params_anneal):
 		batch_size = len(batch['sentence'])
 		outputs, mean, logv, z = self.model(batch)
 		logp = outputs['logits']
@@ -55,17 +55,17 @@ class OptimusVAE():
 		# logp, target = self.datasets['train'].shape_for_loss_function(logp, batch['target'])
 		# print(target)
 		logp, target = self.datasets['train'].shape_for_loss_function(logp[:, :-1, :].contiguous(), target[:, 1:])
-		NLL_loss, KL_loss, KL_weight = self.loss_fn(logp, target, mean, logv, 'logistic', self.step, 0.0025)
+		NLL_loss, KL_loss, KL_weight = self.loss_fn(logp, target, mean, logv, params_anneal['strategy'], params_anneal['step'], params_anneal['k'], params_anneal['x0'])
 		# print(NLL_loss)
 		# batch_size = logp.shape[0]
 		# print(batch_size)
 		loss = (NLL_loss + KL_weight * KL_loss) / batch_size
 		# backward + optimization
-
+		return loss, KL_loss, NLL_loss, KL_weight
 		# Average_loss.append(loss.item().cpu())
-		Average_loss.append(loss.item())
-		Average_KL_Div.append(KL_loss.cpu().detach() / batch_size)
-		Average_NLL.append(NLL_loss.cpu().detach() / batch_size)
+		# Average_loss.append(loss.item())
+		# Average_KL_Div.append(KL_loss.cpu().detach() / batch_size)
+		# Average_NLL.append(NLL_loss.cpu().detach() / batch_size)
 
 
 	def run_epoch(self):
@@ -135,14 +135,22 @@ class OptimusVAE():
 			num_batches=len(data_loader)
 			ratios=self.argdict['ratios']
 			ratios=[math.floor(r*num_batches) for r in ratios]
+			num_iter_anneal=ratios[1]
 			#TODO there has to be a more elogant way to do this lmao
 			ratios[1]=ratios[0]+ratios[1]
 			ratios[2]=ratios[2]+ratios[1]
-			print(ratios)
 			for i, batch in enumerate(data_loader):
-				...
-			fds
-			if training:
+				if i<ratios[0]:
+					#AE objective
+					args_KL={'strategy': 'beta', 'k': 0}
+				elif i>ratios[0] and i<ratios[1]:
+					#annealing
+					args_KL={'strategy': 'logistic', 'k':1, 'x0':math.floor(num_iter_anneal)/2}
+				else:
+					#beta=1
+					args_KL = {'strategy': 'beta', 'k': 1}
+
+				loss, KL_loss, NLL_loss, KL_weight=self.run_batch(batch, args_KL)
 				self.optimizer.zero_grad()
 				loss.backward()
 				self.optimizer.step()
