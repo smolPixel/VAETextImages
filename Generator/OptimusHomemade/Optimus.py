@@ -208,7 +208,7 @@ class OptimusVAE():
 			NLL_mean = self.loss_function_ppl(logp, target.to('cuda'))
 
 			loss = (NLL_loss + KL_weight * KL_loss) / batch_size
-			Average_loss.append(outputs['loss'].cpu())
+			Average_loss.append(loss.item())
 			Average_KL_Div.append(KL_loss.cpu().detach() / batch_size)
 			Average_NLL.append(NLL_loss.cpu().detach() / batch_size)
 			NLL_mean_for_ppl.append(NLL_mean.cpu().detach())
