@@ -352,7 +352,8 @@ class OptimusVAE():
 			# print(target)
 
 			logp, target = self.datasets['train'].shape_for_loss_function(logp[:, :-1, :].contiguous(), target[:, 1:])
-			NLL_loss, KL_loss, KL_weight = self.loss_fn(logp, target.to('cuda'), mean, logv, 'logistic', self.step, 0.0025)
+			# args_KL = {'strategy': 'beta', 'k': 1, 'step': 0, 'x0': 0, 'lamb': 5}
+			NLL_loss, KL_loss, KL_weight = self.loss_fn(logp, target.to('cuda'), mean, logv, 'beta', 0, 1, 0, 5)
 
 
 
