@@ -3,4 +3,9 @@ venv/
 __pycache__/
 data/yelp
 Models/
-data/Wikipedia
+data/Wikipedia/dev.tsv
+data/Wikipedia/train.tsv
+data/Wikipedia/test.tsv
+data/Wikipedia/wiki.test.tokens
+data/Wikipedia/wiki.train.tokens
+data/Wikipedia/wiki.valid.tokens
