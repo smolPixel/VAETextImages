@@ -14,7 +14,7 @@ def run_external_process(process):
 
 class generator():
 
-    def __init__(self, argdict, train, dev, test, classifier=None):
+    def __init__(self, argdict, datasets, dataset_pretraining, classifier=None):
         self.argdict=argdict
 
         # self.argdict['c']
@@ -74,7 +74,7 @@ class generator():
             self.generator = OptimusVAE(self.argdict, train, dev, test)
         elif algo == "OptimusHomemade":
             from Generator.OptimusHomemade.Optimus import OptimusVAE
-            self.generator=OptimusVAE(self.argdict, train, dev, test)
+            self.generator=OptimusVAE(self.argdict, datasets, dataset_pretraining)
         else:
             raise ValueError(f"No generator named {algo}")
 
