@@ -30,9 +30,8 @@ def main(argdict):
         train_pretrain, dev_pretrain=create_datasets(argdict, argdict['pretraining_dataset'], argdict['pretraining_dataset_size'])
 
     train, dev, test=create_datasets(argdict, argdict['dataset'], argdict['dataset_size'])
-    print(train_pretrain)
-    fds
     Gen = generator(argdict, {'train':train, 'dev':dev, 'test':test}, dataset_pretraining={'train':train_pretrain, "dev":dev_pretrain})
+    fds
     Gen.train()
     metrics=Gen.test()
     print(metrics)
