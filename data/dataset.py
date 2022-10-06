@@ -13,18 +13,16 @@ from torchvision import datasets, transforms
 import copy
 import math
 
-def get_dataFrame(argdict):
+def get_dataFrame(argdict, task, dataset_size:
     """Get the dataframe for the particular split. If it does not exist: create it"""
     create_train=False
-    task=argdict['dataset']
-
 
 
     # try:
     #     dfTrain=pd.read_csv(f"{argdict['path']}/SelectedData/{argdict['dataset']}/{argdict['dataset_size']}/train_{argdict['random_seed']}.tsv", sep='\t', index_col=0)
     # except:
     #     create_train=True
-    os.makedirs(f"{argdict['path']}/SelectedData/{argdict['dataset']}/{argdict['dataset_size']}/",exist_ok=True)
+    os.makedirs(f"{argdict['path']}/SelectedData/task/{argdict['dataset_size']}/",exist_ok=True)
 
     # if create_train:
     print(f"{argdict['path']}/data/{task}/train.tsv")
@@ -60,8 +58,7 @@ def create_datasets(argdict, dataset):
         from data.SST2.SST2Dataset import SST2_dataset
         #Textual dataset
         tokenizer=TweetTokenizer()
-
-        train, dev, test=get_dataFrame(argdict)
+        train, dev, test=get_dataFrame(argdict, dataset, argdict['dataset_size'])
         vocab = build_vocab_from_iterator((iter([tokenizer.tokenize(sentence) for sentence in list(train['sentence'])])),specials=["<unk>", "<pad>", "<bos>", "<eos>"])
         vocab.set_default_index(vocab["<unk>"])
         train=SST2_dataset(train, tokenizer, vocab, argdict)
@@ -69,6 +66,18 @@ def create_datasets(argdict, dataset):
         test=SST2_dataset(test, tokenizer, vocab, argdict)
         argdict['input_size']=train.vocab_size
         return train, dev, test
+    elif dataset in ["Wiki"]:
+        from data.Wikipedia.WikiDataset import Wiki_dataset
+        #Textual dataset
+        tokenizer=TweetTokenizer()
+        train, dev, test=get_dataFrame(argdict, dataset, argdict['dataset_size'])
+        vocab = build_vocab_from_iterator((iter([tokenizer.tokenize(sentence) for sentence in list(train['sentence'])])),specials=["<unk>", "<pad>", "<bos>", "<eos>"])
+        vocab.set_default_index(vocab["<unk>"])
+        train=Wiki_dataset(train, tokenizer, vocab, argdict)
+        dev=Wiki_dataset(dev, tokenizer, vocab, argdict)
+        # test=SST2_dataset(test, tokenizer, vocab, argdict)
+        argdict['input_size']=train.vocab_size
+        return train, dev
     elif dataset in ['MNIST']:
         #Image dataset
         from data.MNIST.MNIST_dataset import MNIST_dataset
