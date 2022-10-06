@@ -27,9 +27,9 @@ def main(argdict):
     # run_lstm(argdict)
     set_seed(argdict['random_seed'])
     if argdict['pretraining']:
-        train_pretrain, dev_pretrain=create_datasets(argdict, argdict['pretraining_dataset'])
+        train_pretrain, dev_pretrain=create_datasets(argdict, argdict['pretraining_dataset'], 0)
 
-    train, dev, test=create_datasets(argdict, argdict['dataset'])
+    train, dev, test=create_datasets(argdict, argdict['dataset'], argdict['dataset_size'])
     print(train_pretrain)
     fds
     Gen = generator(argdict, {'train':train, 'dev':dev, 'test':test}, dataset_pretraining={'train':train_pretrain, "dev":dev_pretrain})

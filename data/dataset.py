@@ -53,12 +53,12 @@ def get_dataFrame(argdict, task, dataset_size):
         # dfTrain.to_csv(f"{argdict['path']}/SelectedData/{argdict['dataset']}/{argdict['dataset_size']}/train_{argdict['random_seed']}.tsv", sep='\t')
     return dfTrain, dfVal, dfTest
 
-def create_datasets(argdict, dataset):
+def create_datasets(argdict, dataset, size):
     if dataset in ['SST2', "SST100"]:
         from data.SST2.SST2Dataset import SST2_dataset
         #Textual dataset
         tokenizer=TweetTokenizer()
-        train, dev, test=get_dataFrame(argdict, dataset, argdict['dataset_size'])
+        train, dev, test=get_dataFrame(argdict, dataset, size)
         vocab = build_vocab_from_iterator((iter([tokenizer.tokenize(sentence) for sentence in list(train['sentence'])])),specials=["<unk>", "<pad>", "<bos>", "<eos>"])
         vocab.set_default_index(vocab["<unk>"])
         train=SST2_dataset(train, tokenizer, vocab, argdict)
@@ -70,7 +70,7 @@ def create_datasets(argdict, dataset):
         from data.Wikipedia.WikiDataset import Wiki_dataset
         #Textual dataset
         tokenizer=TweetTokenizer()
-        train, dev, test=get_dataFrame(argdict, dataset, argdict['dataset_size'])
+        train, dev, test=get_dataFrame(argdict, dataset, size)
         vocab = build_vocab_from_iterator((iter([tokenizer.tokenize(sentence) for sentence in list(train['sentence'])])),specials=["<unk>", "<pad>", "<bos>", "<eos>"])
         vocab.set_default_index(vocab["<unk>"])
         train=Wiki_dataset(train, tokenizer, vocab, argdict)
