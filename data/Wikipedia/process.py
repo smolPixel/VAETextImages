@@ -2,7 +2,7 @@ import pandas as pd
 from nltk.tokenize import sent_tokenize
 import nltk
 
-file=open('wiki.valid.tokens', 'r').read().split('\n')
+file=open('wiki.train.tokens', 'r').read().split('\n')
 
 dict={'sentence':[]}
 
@@ -16,4 +16,4 @@ for line in file:
 
 
 df=pd.DataFrame.from_dict(dict)
-df.to_csv('dev.tsv', sep='\t')
+df.to_csv('train.tsv', sep='\t')
