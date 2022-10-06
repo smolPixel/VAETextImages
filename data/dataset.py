@@ -66,7 +66,7 @@ def create_datasets(argdict, dataset):
         test=SST2_dataset(test, tokenizer, vocab, argdict)
         argdict['input_size']=train.vocab_size
         return train, dev, test
-    elif dataset in ["Wiki"]:
+    elif dataset in ["Wikipedia"]:
         from data.Wikipedia.WikiDataset import Wiki_dataset
         #Textual dataset
         tokenizer=TweetTokenizer()
