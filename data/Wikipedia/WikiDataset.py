@@ -46,7 +46,7 @@ class Wiki_dataset(Dataset):
 					self.max_len=len(input)
 				self.data[index] = {'sentence':row['sentence'], 'input': input}
 			else:
-				self.data[index]={'sentence':row['sentence'], 'input':[0], 'label':0}
+				self.data[index]={'sentence':row['sentence'], 'input':[0]}
 			index+=1
 
 	# def tokenize_and_vectorize(self, sentences):
@@ -139,7 +139,6 @@ class Wiki_dataset(Dataset):
 			'length': length,
 			'input': np.asarray(input, dtype=int),
 			'target': np.asarray(target, dtype=int),
-			'label': label,
 		}
 
 	def get_texts(self):
