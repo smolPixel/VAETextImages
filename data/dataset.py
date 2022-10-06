@@ -13,7 +13,7 @@ from torchvision import datasets, transforms
 import copy
 import math
 
-def get_dataFrame(argdict, task, dataset_size:
+def get_dataFrame(argdict, task, dataset_size):
     """Get the dataframe for the particular split. If it does not exist: create it"""
     create_train=False
 
