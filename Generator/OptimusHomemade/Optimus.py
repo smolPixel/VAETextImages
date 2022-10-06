@@ -17,6 +17,7 @@ from sklearn.svm import LinearSVC
 class OptimusVAE():
 	def __init__(self, argdict, datasets, datasetsPretraining=None):
 		self.datasets=datasets
+		self.datasets_pretraining=datasetsPretraining
 		self.argdict=argdict
 		self.splits=['train', 'dev', 'test']
 		self.model=OptimusHomemade(argdict)
@@ -131,7 +132,7 @@ class OptimusVAE():
 		for epoch in range(self.argdict['nb_epoch_pretraining']):
 			#How many batches
 			data_loader = DataLoader(
-				dataset=self.datasets['train'],
+				dataset=self.datasets_pretraining['train'],
 				batch_size=self.argdict['batch_size'],
 				shuffle= True,
 				num_workers=cpu_count(),
@@ -171,7 +172,7 @@ class OptimusVAE():
 
 			#dev
 			data_loader = DataLoader(
-				dataset=self.datasets['dev'],
+				dataset=self.datasets_pretraining['dev'],
 				batch_size=self.argdict['batch_size'],
 				shuffle=False,
 				num_workers=cpu_count(),
