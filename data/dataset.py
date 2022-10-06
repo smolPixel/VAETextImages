@@ -34,6 +34,7 @@ def get_dataFrame(argdict, task, dataset_size):
     dfVal=pd.read_csv(f'{argdict["path"]}/data/{task}/dev.tsv', sep='\t')
     dfTest=pd.read_csv(f'{argdict["path"]}/data/{task}/test.tsv', sep='\t')
     #
+    print(dataset_size)
     if argdict['dataset_size']!=0:
     #     #Sampling balanced data
     #     # print(len(dfTrain[dfTrain['label']==0]))
