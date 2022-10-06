@@ -12,7 +12,7 @@ for line in file:
 		continue
 	line=sent_tokenize(line)
 	for sent in line:
-		dict['sentences'].append(sent)
+		dict['sentence'].append(sent)
 
 
 df=pd.DataFrame.from_dict(dict)
