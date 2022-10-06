@@ -4,7 +4,7 @@ import nltk
 
 file=open('wiki.valid.tokens', 'r').read().split('\n')
 
-dict={'sentences':[]}
+dict={'sentence':[]}
 
 for line in file:
 	line=line.strip()
