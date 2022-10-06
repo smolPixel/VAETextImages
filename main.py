@@ -26,8 +26,13 @@ def set_seed(seed=42):
 def main(argdict):
     # run_lstm(argdict)
     set_seed(argdict['random_seed'])
-    train, dev, test=create_datasets(argdict)
-    Gen = generator(argdict, train, dev, test)
+    if argdict['pretraining']:
+        train_pretrain, dev_pretrain=create_datasets(argdict, argdict['pretraining_dataset'])
+
+    train, dev, test=create_datasets(argdict, argdict['dataset'])
+    print(train_pretrain)
+    fds
+    Gen = generator(argdict, {'train':train, 'dev':dev, 'test':test}, dataset_pretraining={'train':train_pretrain, "dev":dev_pretrain})
     Gen.train()
     metrics=Gen.test()
     print(metrics)

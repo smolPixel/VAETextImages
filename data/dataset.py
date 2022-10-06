@@ -55,8 +55,8 @@ def get_dataFrame(argdict):
         # dfTrain.to_csv(f"{argdict['path']}/SelectedData/{argdict['dataset']}/{argdict['dataset_size']}/train_{argdict['random_seed']}.tsv", sep='\t')
     return dfTrain, dfVal, dfTest
 
-def create_datasets(argdict):
-    if argdict['dataset'] in ['SST2', "SST100"]:
+def create_datasets(argdict, dataset):
+    if dataset in ['SST2', "SST100"]:
         from data.SST2.SST2Dataset import SST2_dataset
         #Textual dataset
         tokenizer=TweetTokenizer()
@@ -69,7 +69,7 @@ def create_datasets(argdict):
         test=SST2_dataset(test, tokenizer, vocab, argdict)
         argdict['input_size']=train.vocab_size
         return train, dev, test
-    elif argdict['dataset'] in ['MNIST']:
+    elif dataset in ['MNIST']:
         #Image dataset
         from data.MNIST.MNIST_dataset import MNIST_dataset
         train = datasets.MNIST(root='./mnist_data/', train=True, transform=transforms.ToTensor(), download=True)

@@ -15,8 +15,8 @@ import math
 from sklearn.svm import LinearSVC
 
 class OptimusVAE():
-	def __init__(self, argdict, train, dev, test):
-		self.datasets={'train':train, 'dev':dev, 'test': test}
+	def __init__(self, argdict, datasets, datasetsPretraining=None):
+		self.datasets=datasets
 		self.argdict=argdict
 		self.splits=['train', 'dev', 'test']
 		self.model=OptimusHomemade(argdict)

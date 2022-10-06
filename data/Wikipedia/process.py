@@ -1,30 +1,19 @@
-import sys
-from gensim.corpora import WikiCorpus
+import pandas as pd
+from nltk.tokenize import sent_tokenize
+import nltk
 
-def make_corpus(in_f, out_f):
+file=open('wiki.valid.tokens', 'r').read().split('\n')
 
-	"""Convert Wikipedia xml dump file to text corpus"""
-	print('opening corpus')
-	output = open(out_f, 'w')
-	wiki = WikiCorpus(in_f)
+dict={'sentences':[]}
 
-	print('corpus opened')
-
-	i = 0
-	for text in wiki.get_texts():
-		output.write(bytes(' '.join(text), 'utf-8').decode('utf-8') + '\n')
-		if (i % 10000 == 0):
-			print('Processed ' + str(i) + ' articles')
-		i = i + 1
-	output.close()
-	print('Processing complete!')
+for line in file:
+	line=line.strip()
+	if line=='' or line[0]=='=':
+		continue
+	line=sent_tokenize(line)
+	for sent in line:
+		dict['sentences'].append(sent)
 
 
-if __name__ == '__main__':
-
-	if len(sys.argv) != 3:
-		print('Usage: python make_wiki_corpus.py <wikipedia_dump_file> <processed_text_file>')
-		sys.exit(1)
-	in_f = sys.argv[1]
-	out_f = sys.argv[2]
-	make_corpus(in_f, out_f)
+df=pd.DataFrame.from_dict(dict)
+df.to_csv('dev.tsv', sep='\t')
