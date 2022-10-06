@@ -39,8 +39,8 @@ class Wiki_dataset(Dataset):
 		index=0
 		mask=len(argdict['categories'])
 		for i, row in data.iterrows():
-			if argdict['algo'] not in ['Optimus']:
-				tokenized_text = self.tokenizer.tokenize("<bos> "+row['sentences']+" <eos>")
+			if argdict['algo'] not in ['OptimusHomemade', 'Optimus']:
+				tokenized_text = self.tokenizer.tokenize("<bos> "+row['sentence']+" <eos>")
 				input =vocab(tokenized_text)
 				if find_max_len and len(input)>self.max_len:
 					self.max_len=len(input)

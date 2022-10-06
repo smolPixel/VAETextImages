@@ -72,8 +72,6 @@ def create_datasets(argdict, dataset, size):
         #Textual dataset
         tokenizer=TweetTokenizer()
         train, dev, test=get_dataFrame(argdict, dataset, size)
-        print(len(train))
-        print(len(train.dropna()))
         vocab = build_vocab_from_iterator((iter([tokenizer.tokenize(sentence) for sentence in list(train['sentence'])])),specials=["<unk>", "<pad>", "<bos>", "<eos>"])
         vocab.set_default_index(vocab["<unk>"])
         train=Wiki_dataset(train, tokenizer, vocab, argdict)
