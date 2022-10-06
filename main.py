@@ -27,7 +27,7 @@ def main(argdict):
     # run_lstm(argdict)
     set_seed(argdict['random_seed'])
     if argdict['pretraining']:
-        train_pretrain, dev_pretrain=create_datasets(argdict, argdict['pretraining_dataset'], 0)
+        train_pretrain, dev_pretrain=create_datasets(argdict, argdict['pretraining_dataset'], argdict['pretraining_dataset_size'])
 
     train, dev, test=create_datasets(argdict, argdict['dataset'], argdict['dataset_size'])
     print(train_pretrain)

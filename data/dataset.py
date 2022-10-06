@@ -22,10 +22,9 @@ def get_dataFrame(argdict, task, dataset_size):
     #     dfTrain=pd.read_csv(f"{argdict['path']}/SelectedData/{argdict['dataset']}/{argdict['dataset_size']}/train_{argdict['random_seed']}.tsv", sep='\t', index_col=0)
     # except:
     #     create_train=True
-    os.makedirs(f"{argdict['path']}/SelectedData/task/{argdict['dataset_size']}/",exist_ok=True)
+    # os.makedirs(f"{argdict['path']}/SelectedData/task/{argdict['dataset_size']}/",exist_ok=True)
 
     # if create_train:
-    print(f"{argdict['path']}/data/{task}/train.tsv")
     dfTrain=pd.read_csv(f"{argdict['path']}/data/{task}/train.tsv", sep='\t')
 
 
@@ -36,19 +35,21 @@ def get_dataFrame(argdict, task, dataset_size):
     #
     if dataset_size!=0:
     #     #Sampling balanced data
-    #     # print(len(dfTrain[dfTrain['label']==0]))
-    #     # prop=len(dfTrain[dfTrain['label']==0])/len(dfTrain)
-        dfTrain['true_label']=dfTrain['label']
-        nb_points=math.ceil(dataset_size/len(argdict['categories']))
-        # print(prop)
-        # print(int(argdict['dataset_size']/len(argdict['categories'])))
-        # print(argdict['labelled_dataset_size'])
-        NewdfTrain=dfTrain[dfTrain['label']==0].sample(n=nb_points)
-        for i in range(1, len(argdict['categories'])):
+        if 'label' in list(dfTrain):
+            dfTrain['true_label']=dfTrain['label']
+            nb_points=math.ceil(dataset_size/len(argdict['categories']))
+            # print(prop)
             # print(int(argdict['dataset_size']/len(argdict['categories'])))
-            # print(i)
-            NewdfTrain=pd.concat([NewdfTrain ,dfTrain[dfTrain['label']==i].sample(n=nb_points)])
-        dfTrain=NewdfTrain
+            # print(argdict['labelled_dataset_size'])
+            NewdfTrain=dfTrain[dfTrain['label']==0].sample(n=nb_points)
+            for i in range(1, len(argdict['categories'])):
+                # print(int(argdict['dataset_size']/len(argdict['categories'])))
+                # print(i)
+                NewdfTrain=pd.concat([NewdfTrain ,dfTrain[dfTrain['label']==i].sample(n=nb_points)])
+            dfTrain=NewdfTrain
+        else:
+            #Data without labels, such as wiki for pretraining
+            dfTrain=dfTrain.sample(n=dataset_size)
         # dfTrain.drop(NewdfTrain.index)
         # dfTrain.to_csv(f"{argdict['path']}/SelectedData/{argdict['dataset']}/{argdict['dataset_size']}/train_{argdict['random_seed']}.tsv", sep='\t')
     return dfTrain, dfVal, dfTest
