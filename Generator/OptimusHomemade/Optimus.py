@@ -23,7 +23,7 @@ class OptimusVAE():
 		self.device='cuda'
 
 		self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)
-		self.loss_function_basic = train.loss_function
+		self.loss_function_basic = datasets['train'].loss_function
 		self.step = 0
 		self.epoch = 0
 		if argdict['dataset'] in ['SST2']:
