@@ -39,11 +39,14 @@ class Wiki_dataset(Dataset):
 		index=0
 		mask=len(argdict['categories'])
 		for i, row in data.iterrows():
-			tokenized_text = self.tokenizer.tokenize("<bos> "+row['sentences']+" <eos>")
-			input =vocab(tokenized_text)
-			if find_max_len and len(input)>self.max_len:
-				self.max_len=len(input)
-			self.data[index] = {'sentence':row['sentences'], 'input': input}
+			if argdict['algo'] not in ['Optimus']:
+				tokenized_text = self.tokenizer.tokenize("<bos> "+row['sentences']+" <eos>")
+				input =vocab(tokenized_text)
+				if find_max_len and len(input)>self.max_len:
+					self.max_len=len(input)
+				self.data[index] = {'sentence':row['sentence'], 'input': input}
+			else:
+				self.data[index]={'sentence':row['sentence'], 'input':0}
 			index+=1
 
 	# def tokenize_and_vectorize(self, sentences):
