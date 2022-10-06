@@ -34,13 +34,12 @@ def get_dataFrame(argdict, task, dataset_size):
     dfVal=pd.read_csv(f'{argdict["path"]}/data/{task}/dev.tsv', sep='\t')
     dfTest=pd.read_csv(f'{argdict["path"]}/data/{task}/test.tsv', sep='\t')
     #
-    print(dataset_size)
-    if argdict['dataset_size']!=0:
+    if dataset_size!=0:
     #     #Sampling balanced data
     #     # print(len(dfTrain[dfTrain['label']==0]))
     #     # prop=len(dfTrain[dfTrain['label']==0])/len(dfTrain)
         dfTrain['true_label']=dfTrain['label']
-        nb_points=math.ceil(argdict['dataset_size']/len(argdict['categories']))
+        nb_points=math.ceil(dataset_size/len(argdict['categories']))
         # print(prop)
         # print(int(argdict['dataset_size']/len(argdict['categories'])))
         # print(argdict['labelled_dataset_size'])
