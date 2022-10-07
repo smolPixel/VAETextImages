@@ -27,7 +27,7 @@ dropout: 0.3
 word_dropout: 0.3
 x0: 15
 strategy: ['Memory']
-
+lambda: 1
 
 device: 'cuda'
 

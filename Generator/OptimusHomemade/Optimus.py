@@ -45,8 +45,8 @@ class OptimusVAE():
 		# KL Divergence
 		#TODO Check that this is correct
 		dimensionwise_loss = -0.5 * (1 + logv - mean ** 2 - logv.exp())
-		dimensionwise_loss=torch.mean(dimensionwise_loss, dim=0)
-		print(dimensionwise_loss.shape)
+		# dimensionwise_loss=torch.m(dimensionwise_loss, dim=0)
+		# print(dimensionwise_loss.shape)
 		dimensionwise_loss[dimensionwise_loss < lamb] = lamb
 		KL_loss = dimensionwise_loss.sum()
 		# KL_loss = -0.5 * torch.sum(1 + logv - mean.pow(2) - logv.exp())
@@ -155,13 +155,13 @@ class OptimusVAE():
 			for i, batch in enumerate(data_loader):
 				if i<ratios[0]:
 					#AE objective
-					args_KL={'strategy': 'beta', 'k': 0, 'step':0, 'x0':0, 'lamb':5}
+					args_KL={'strategy': 'beta', 'k': 0, 'step':0, 'x0':0, 'lamb':self.argdict['lambda']}
 				elif i<ratios[1]:
 					#annealing
-					args_KL={'strategy': 'logistic', 'step':i-ratios[0] , 'k':1, 'x0':math.floor(num_iter_anneal)/2, 'lamb':5}
+					args_KL={'strategy': 'logistic', 'step':i-ratios[0] , 'k':1, 'x0':math.floor(num_iter_anneal)/2, 'lamb':self.argdict['lambda']}
 				else:
 					#beta=1
-					args_KL = {'strategy': 'beta', 'k': 1, 'step':0, 'x0':0, 'lamb':5}
+					args_KL = {'strategy': 'beta', 'k': 1, 'step':0, 'x0':0, 'lamb':self.argdict['lambda']}
 				loss, KL_loss, NLL_loss, KL_weight=self.run_batch(batch, args_KL)
 				train_loss.append(loss.detach().cpu())
 				train_NLL.append(NLL_loss.detach().cpu())
