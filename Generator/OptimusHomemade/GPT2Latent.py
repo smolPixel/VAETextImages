@@ -248,7 +248,6 @@ class GPT2ModelLatent(GPT2PreTrainedModel):
 		all_cross_attentions = () if output_attentions and self.config.add_cross_attention else None
 		all_hidden_states = () if output_hidden_states else None
 		for i, (block, layer_past) in enumerate(zip(self.h, past_key_values)):
-			print(layer_past)
 			# Model parallel
 			if self.model_parallel:
 				torch.cuda.set_device(hidden_states.device)

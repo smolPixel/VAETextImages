@@ -36,8 +36,9 @@ class OptimusHomemade(nn.Module):
 		logv=self.hidden_to_logp(output)
 		mean=self.hidden_to_mean(output)
 
-		#TODO REPARAMETRIZATION
-		z=mean
+		std = torch.exp(0.5 * logv)
+		z = torch.randn([len(sents), self.argdict['latent_size']])
+		z = z * std + mean
 
 
 		#decoder
@@ -55,8 +56,9 @@ class OptimusHomemade(nn.Module):
 		logv=self.hidden_to_logp(output)
 		mean=self.hidden_to_mean(output)
 
-		#TODO REPARAMETRIZATION
-		z=mean
+		std = torch.exp(0.5 * logv)
+		z = torch.randn([len(sents), self.argdict['latent_size']])
+		z = z * std + mean
 
 		return z
 
