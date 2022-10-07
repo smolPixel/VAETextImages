@@ -37,7 +37,7 @@ class OptimusHomemade(nn.Module):
 		mean=self.hidden_to_mean(output)
 
 		std = torch.exp(0.5 * logv)
-		z = torch.randn([len(sents), self.argdict['latent_size']])
+		z = torch.randn([len(sents), self.argdict['latent_size']]).to(self.device)
 		z = z * std + mean
 
 
@@ -57,7 +57,7 @@ class OptimusHomemade(nn.Module):
 		mean=self.hidden_to_mean(output)
 
 		std = torch.exp(0.5 * logv)
-		z = torch.randn([len(sents), self.argdict['latent_size']])
+		z = torch.randn([len(sents), self.argdict['latent_size']]).to(self.device)
 		z = z * std + mean
 
 		return z
