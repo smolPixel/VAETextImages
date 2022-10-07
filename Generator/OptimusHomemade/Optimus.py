@@ -45,6 +45,7 @@ class OptimusVAE():
 		# KL Divergence
 		#TODO Check that this is correct
 		dimensionwise_loss = -0.5 * (1 + logv - mean ** 2 - logv.exp())
+		dimensionwise_loss=torch.mean(dimensionwise_loss, dim=0)
 		print(dimensionwise_loss.shape)
 		dimensionwise_loss[dimensionwise_loss < lamb] = lamb
 		KL_loss = dimensionwise_loss.sum()
