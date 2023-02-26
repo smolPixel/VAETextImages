@@ -26,6 +26,7 @@ def set_seed(seed=42):
 def main(argdict):
     # run_lstm(argdict)
     set_seed(argdict['random_seed'])
+    print(argdict['pretraining'])
     if argdict['pretraining']:
         train_pretrain, dev_pretrain=create_datasets(argdict, argdict['pretraining_dataset'], argdict['pretraining_dataset_size'])
 
