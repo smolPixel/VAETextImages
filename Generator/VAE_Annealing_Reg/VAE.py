@@ -24,10 +24,10 @@ from sklearn.svm import LinearSVC
 
 class VAE_Annealing_Reg():
 
-    def __init__(self, argdict, train, dev, test):
+    def __init__(self, argdict, datasets):
         self.argdict=argdict
         self.splits=['train', 'dev', 'test']
-        self.datasets={'train':train, 'dev':dev, 'test':test}
+        self.datasets=datasets
         self.model, self.params=self.init_model_dataset()
         # optimizers
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)  # self.argdict.learning_rate)
