@@ -29,6 +29,8 @@ def main(argdict):
     print(argdict['pretraining'])
     if argdict['pretraining']:
         train_pretrain, dev_pretrain=create_datasets(argdict, argdict['pretraining_dataset'], argdict['pretraining_dataset_size'])
+    else:
+        train_pretrain, dev_pretrain=None, None
 
     train, dev, test=create_datasets(argdict, argdict['dataset'], argdict['dataset_size'])
     Gen = generator(argdict, {'train':train, 'dev':dev, 'test':test}, dataset_pretraining={'train':train_pretrain, "dev":dev_pretrain})
