@@ -16,7 +16,7 @@ class GRU_Encoder(nn.Module):
 		self.hidden2logv = nn.Linear(argdict['hidden_size'], argdict['latent_size'])
 
 	def forward(self, batch, append_labels=False):
-
+		print(batch)
 		input_sequence=batch['input'].to('cuda')
 		batch_size=input_sequence.shape[0]
 

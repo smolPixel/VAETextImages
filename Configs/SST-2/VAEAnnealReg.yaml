@@ -21,3 +21,4 @@ k: 0.025
 min_z: 3
 
 pretraining: False
+pooling: last

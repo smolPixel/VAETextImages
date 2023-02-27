@@ -15,7 +15,7 @@ from sklearn.metrics import accuracy_score
 
 # from Generators.VAE.ptb import PTB
 from Generator.utils import to_var, idx2word, expierment_name
-from Generator.VAE_Annealing.model import VAE_Annealing_model
+from Generator.VAE_Annealing_Reg.model import VAE_Annealing_model
 from Encoders.encoder import encoder
 from Decoders.decoder import decoder
 from metrics import calc_au, calc_mi
@@ -31,9 +31,9 @@ class VAE_Annealing_Reg():
         self.model, self.params=self.init_model_dataset()
         # optimizers
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)  # self.argdict.learning_rate)
-        self.loss_function_basic=train.loss_function
+        self.loss_function_basic=self.datasets['train'].loss_function
         if argdict['dataset'] in ['SST2']:
-            self.loss_function_ppl=torch.nn.CrossEntropyLoss(ignore_index=train.pad_idx, reduction='mean')
+            self.loss_function_ppl=torch.nn.CrossEntropyLoss(ignore_index=self.datasets['train'].pad_idx, reduction='mean')
         else:
             self.loss_function_ppl=self.loss_function_basic
 
@@ -126,7 +126,7 @@ class VAE_Annealing_Reg():
                 Average_NLL.append(NLL_loss.cpu().detach()/batch_size)
             print(f"{split.upper()} Epoch {self.epoch}/{self.argdict['nb_epoch']}, Mean ELBO {np.mean(Average_loss)}, Mean NLL {np.mean(Average_NLL)}, Mean KL div {np.mean(Average_KL_Div)} KL Weight {KL_weight}")
 
-    def test(self):
+    def test_model(self):
         data_loader = DataLoader(
             dataset=self.datasets['test'],
             batch_size=64,  # self.argdict.batch_size,
@@ -198,7 +198,7 @@ class VAE_Annealing_Reg():
         df.to_csv(f'graph_{self.argdict["dataset"]}.tsv', sep='\t')
         sdffd
 
-    def train(self):
+    def train_model(self):
         ts = time.strftime('%Y-%b-%d-%H:%M:%S', time.gmtime())
 
 

@@ -38,7 +38,7 @@ class VAE_Annealing_model(nn.Module):
         # input_sequence = input_sequence[sorted_idx]
 
         # ENCODER
-        mean, logv=self.encoder(input_sequence)
+        mean, logv=self.encoder({'input': input_sequence})
         std = torch.exp(0.5 * logv)
 
         z = to_var(torch.randn([batch_size, self.argdict['latent_size']]))
