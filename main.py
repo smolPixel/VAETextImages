@@ -33,6 +33,7 @@ def main(argdict):
         train_pretrain, dev_pretrain=None, None
 
     train, dev, test=create_datasets(argdict, argdict['dataset'], argdict['dataset_size'])
+    print(train, dev test)
     Gen = generator(argdict, {'train':train, 'dev':dev, 'test':test}, dataset_pretraining={'train':train_pretrain, "dev":dev_pretrain})
     Gen.train()
     metrics=Gen.test()
