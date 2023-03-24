@@ -8,7 +8,6 @@ import shutil
 import numpy as np
 import pandas as pd
 from multiprocessing import cpu_count
-from tensorboardX import SummaryWriter
 from torch.utils.data import DataLoader
 from collections import OrderedDict, defaultdict
 from sklearn.metrics import accuracy_score
