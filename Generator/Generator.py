@@ -62,7 +62,7 @@ class generator():
             self.generator = WSVAE(self.argdict, train, dev, test)
         elif algo == "InfoMaxVAE":
             from Generator.InfoMaxVAE.VAE import InfoMaxVAE
-            self.generator = InfoMaxVAE(self.argdict, train, dev, test)
+            self.generator = InfoMaxVAE(self.argdict, datasets)
         elif algo == "T5VAE":
             """Pretrained"""
             from Generator.T5VAE.T5VAE import T5VAE
