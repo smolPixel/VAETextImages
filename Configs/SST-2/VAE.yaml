@@ -16,3 +16,5 @@ batch_size: 64
 dropout: 0.3
 word_dropout: 0.3
 x0: 15
+
+pretraining: False
