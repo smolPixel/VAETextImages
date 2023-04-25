@@ -34,6 +34,7 @@ class generator():
             from Generator.AE.AE import AE
             self.generator=AE(self.argdict, train, dev, test)
         elif algo == "VAE":
+            fds
             from Generator.VAE.VAE import VAE
             self.generator=VAE(self.argdict, train, dev, test)
         elif algo == "VAE_Annealing":
