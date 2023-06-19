@@ -7,58 +7,54 @@
 # @Description  : 
 # Copyrights (C) 2018. All Rights Reserved.
 
-from modelsGAN.SeqGAN_D import SeqGAN_D
-from modelsGAN.SeqGAN_G import SeqGAN_G
-from utils import rollout
-from utils.data_loader import GenDataIter, DisDataIter
+# from modelsGAN.SeqGAN_D import SeqGAN_D
+# from modelsGAN.SeqGAN_G import SeqGAN_G
+# from utils import rollout
+# from utils.data_loader import GenDataIter, DisDataIter
 
 import numpy as np
 import torch
 import torch.nn as nn
 
-import config as cfg
-from metrics.bleu import BLEU
-from metrics.clas_acc import ACC
-from metrics.nll import NLL
-from metrics.ppl import PPL
-from utils.cat_data_loader import CatClasDataIter
-from utils.data_loader import GenDataIter
-from utils.helpers import Signal, create_logger, get_fixed_temperature
-from utils.text_process import load_dict, write_tokens, tensor_to_tokens
+# import config as cfg
+from utils import Signal
+# from metrics.bleu import BLEU
+# from metrics.clas_acc import ACC
+# from metrics.nll import NLL
+# from metrics.ppl import PPL
+# from utils.cat_data_loader import CatClasDataIter
+# from utils.data_loader import GenDataIter
+# from utils.helpers import Signal, create_logger, get_fixed_temperature
+# from utils.text_process import load_dict, write_tokens, tensor_to_tokens
 
 
 class BasicInstructor:
-    def __init__(self, argdict):
-        self.log = create_logger(__name__, silent=False, to_disk=True,
-                                 log_file=cfg.log_filename if cfg.if_test
-                                 else [cfg.log_filename, cfg.save_root + 'log.txt'])
-        self.sig = Signal(cfg.signal_file)
-        self.opt = argdict
+    def __init__(self, argdict, datasets):
+        self.sig = Signal()
+        self.argdict = argdict
         self.show_config()
 
         self.clas = None
-
-        # load dictionary
-        self.word2idx_dict, self.idx2word_dict = load_dict(cfg.dataset)
-
-        # Dataloader
-        try:
-            self.train_data = GenDataIter(cfg.train_data)
-            self.test_data = GenDataIter(cfg.test_data, if_test_data=True)
-        except:
-            pass
-
-        try:
-            self.train_data_list = [GenDataIter(cfg.cat_train_data.format(i)) for i in range(cfg.k_label)]
-            self.test_data_list = [GenDataIter(cfg.cat_test_data.format(i), if_test_data=True) for i in
-                                   range(cfg.k_label)]
-            self.clas_data_list = [GenDataIter(cfg.cat_test_data.format(str(i)), if_test_data=True) for i in
-                                   range(cfg.k_label)]
-
-            self.train_samples_list = [self.train_data_list[i].target for i in range(cfg.k_label)]
-            self.clas_samples_list = [self.clas_data_list[i].target for i in range(cfg.k_label)]
-        except:
-            pass
+        self.dataset=datsets
+        #
+        # # Dataloader
+        # try:
+        #     self.train_data = GenDataIter(cfg.train_data)
+        #     self.test_data = GenDataIter(cfg.test_data, if_test_data=True)
+        # except:
+        #     pass
+        #
+        # try:
+        #     self.train_data_list = [GenDataIter(cfg.cat_train_data.format(i)) for i in range(cfg.k_label)]
+        #     self.test_data_list = [GenDataIter(cfg.cat_test_data.format(i), if_test_data=True) for i in
+        #                            range(cfg.k_label)]
+        #     self.clas_data_list = [GenDataIter(cfg.cat_test_data.format(str(i)), if_test_data=True) for i in
+        #                            range(cfg.k_label)]
+        #
+        #     self.train_samples_list = [self.train_data_list[i].target for i in range(cfg.k_label)]
+        #     self.clas_samples_list = [self.clas_data_list[i].target for i in range(cfg.k_label)]
+        # except:
+        #     pass
 
         # Criterion
         self.mle_criterion = nn.NLLLoss()
@@ -69,14 +65,16 @@ class BasicInstructor:
         self.clas_opt = None
 
         # Metrics
-        self.bleu = BLEU('BLEU', gram=[2, 3, 4, 5], if_use=cfg.use_bleu)
-        self.nll_gen = NLL('NLL_gen', if_use=cfg.use_nll_gen, gpu=cfg.CUDA)
-        self.nll_div = NLL('NLL_div', if_use=cfg.use_nll_div, gpu=cfg.CUDA)
-        self.self_bleu = BLEU('Self-BLEU', gram=[2, 3, 4], if_use=cfg.use_self_bleu)
-        self.clas_acc = ACC(if_use=cfg.use_clas_acc)
-        self.ppl = PPL(self.train_data, self.test_data, n_gram=5, if_use=cfg.use_ppl)
-        self.all_metrics = [self.bleu, self.nll_gen, self.nll_div, self.self_bleu, self.ppl]
-        self.gen = SeqGAN_G(cfg.gen_embed_dim, cfg.gen_hidden_dim, cfg.vocab_size, cfg.max_seq_len,
+        # self.bleu = BLEU('BLEU', gram=[2, 3, 4, 5], if_use=cfg.use_bleu)
+        # self.nll_gen = NLL('NLL_gen', if_use=cfg.use_nll_gen, gpu=cfg.CUDA)
+        # self.nll_div = NLL('NLL_div', if_use=cfg.use_nll_div, gpu=cfg.CUDA)
+        # self.self_bleu = BLEU('Self-BLEU', gram=[2, 3, 4], if_use=cfg.use_self_bleu)
+        # self.clas_acc = ACC(if_use=cfg.use_clas_acc)
+        # self.ppl = PPL(self.train_data, self.test_data, n_gram=5, if_use=cfg.use_ppl)
+        # self.all_metrics = [self.bleu, self.nll_gen, self.nll_div, self.self_bleu, self.ppl]
+        print(datasets)
+        fds
+        self.gen = SeqGAN_G(300, 1024, cfg.vocab_size, cfg.max_seq_len,
                             cfg.padding_idx, gpu=cfg.CUDA)
         self.dis = SeqGAN_D(cfg.dis_embed_dim, cfg.vocab_size, cfg.padding_idx, gpu=cfg.CUDA)
         self.init_model()
@@ -88,17 +86,16 @@ class BasicInstructor:
 
 
     def init_model(self):
-        if cfg.dis_pretrain:
-            self.log.info(
-                'Load pre-trained discriminator: {}'.format(cfg.pretrained_dis_path))
-            self.dis.load_state_dict(torch.load(cfg.pretrained_dis_path, map_location='cuda:{}'.format(cfg.device)))
-        if cfg.gen_pretrain:
-            self.log.info('Load MLE pre-trained generator: {}'.format(cfg.pretrained_gen_path))
-            self.gen.load_state_dict(torch.load(cfg.pretrained_gen_path, map_location='cuda:{}'.format(cfg.device)))
-
-        if cfg.CUDA:
-            self.gen = self.gen.cuda()
-            self.dis = self.dis.cuda()
+        # if cfg.dis_pretrain:
+        #     self.log.info('Load pre-trained discriminator: {}'.format(cfg.pretrained_dis_path))
+        #     self.dis.load_state_dict(torch.load(cfg.pretrained_dis_path, map_location='cuda:{}'.format(cfg.device)))
+        # if cfg.gen_pretrain:
+        #     self.log.info('Load MLE pre-trained generator: {}'.format(cfg.pretrained_gen_path))
+        #     self.gen.load_state_dict(torch.load(cfg.pretrained_gen_path, map_location='cuda:{}'.format(cfg.device)))
+        #
+        # if cfg.CUDA:
+        self.gen = self.gen.cuda()
+        self.dis = self.dis.cuda()
 
     def train_gen_epoch(self, model, data_loader, criterion, optimizer):
         total_loss = 0
@@ -200,12 +197,6 @@ class BasicInstructor:
             torch.nn.utils.clip_grad_norm_(model.parameters(), cfg.clip_norm)
         opt.step()
 
-    def show_config(self):
-        self.log.info(100 * '=')
-        self.log.info('> training arguments:')
-        for arg in vars(self.opt):
-            self.log.info('>>> {0}: {1}'.format(arg, getattr(self.opt, arg)))
-        self.log.info(100 * '=')
 
     def cal_metrics(self, fmt_str=False):
         """
