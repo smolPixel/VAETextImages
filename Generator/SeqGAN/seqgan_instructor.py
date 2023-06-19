@@ -17,7 +17,7 @@ import torch
 import torch.nn as nn
 
 # import config as cfg
-from utils import Signal
+from Generator.SeqGAN.utils import Signal
 # from metrics.bleu import BLEU
 # from metrics.clas_acc import ACC
 # from metrics.nll import NLL
