@@ -35,7 +35,7 @@ class SeqGANInstructor:
         self.show_config()
 
         self.clas = None
-        self.dataset=datsets
+        self.dataset=datasets
         #
         # # Dataloader
         # try:
