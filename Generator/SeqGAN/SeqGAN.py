@@ -1,4 +1,4 @@
-
+from Generator.SeqGAN.seqgan_instructor import SeqGANInstructor
 
 class SeqGAN():
 
@@ -6,3 +6,8 @@ class SeqGAN():
         self.argdict=argdict
         self.splits=['train', 'dev', 'test']
         self.datasets=datasets
+        self.model, self.params = self.init_model_dataset()
+
+    def init_model_dataset(self):
+        self.instructor=SeqGANInstructor
+        fds
