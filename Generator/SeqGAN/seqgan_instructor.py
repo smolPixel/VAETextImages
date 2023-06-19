@@ -76,8 +76,8 @@ class SeqGANInstructor:
         # self.ppl = PPL(self.train_data, self.test_data, n_gram=5, if_use=cfg.use_ppl)
         # self.all_metrics = [self.bleu, self.nll_gen, self.nll_div, self.self_bleu, self.ppl]
         self.vocab_size=self.training_set.vocab_size
-        self.gen = SeqGAN_G(300, 1024, self.vocab_size, 32,
-                            self.training_set.pad_idx)
+        self.gen = SeqGAN_G(300, 1024, self.vocab_size, 32, self.training_set.pad_idx)
+        fds
         self.dis = SeqGAN_D(cfg.dis_embed_dim, cfg.vocab_size, cfg.padding_idx, gpu=cfg.CUDA)
         self.init_model()
 
