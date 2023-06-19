@@ -9,5 +9,5 @@ class SeqGAN():
         self.model, self.params = self.init_model_dataset()
 
     def init_model_dataset(self):
-        self.instructor=SeqGANInstructor
+        self.instructor=SeqGANInstructor(self.argdict, self.datasets)
         fds
