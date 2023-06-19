@@ -35,7 +35,7 @@ class generator():
             self.generator=AE(self.argdict, train, dev, test)
         elif algo == "SeqGAN":
             from Generator.SeqGAN import SeqGAN
-            self.generator=SeqGAN(self.argdict, train, dev, test)
+            self.generator=SeqGAN(self.argdict, datasets)
         elif algo == "VAE":
             fds
             from Generator.VAE.VAE import VAE
