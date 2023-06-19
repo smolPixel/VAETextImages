@@ -32,7 +32,6 @@ class SeqGANInstructor:
     def __init__(self, argdict, datasets):
         self.sig = Signal()
         self.argdict = argdict
-        self.show_config()
 
         self.clas = None
         self.training_set, self.dev_set, self.test_set=datasets
