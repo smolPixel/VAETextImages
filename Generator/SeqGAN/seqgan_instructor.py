@@ -28,7 +28,7 @@ from Generator.SeqGAN.utils import Signal
 # from utils.text_process import load_dict, write_tokens, tensor_to_tokens
 
 
-class BasicInstructor:
+class SeqGANInstructor:
     def __init__(self, argdict, datasets):
         self.sig = Signal()
         self.argdict = argdict
