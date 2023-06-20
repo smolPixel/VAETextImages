@@ -106,7 +106,7 @@ class SeqGANInstructor:
             inp, target = torch.Tensor(data['input']), torch.Tensor(data['target'])
             inp, target = inp.cuda(), target.cuda()
 
-            hidden = model.init_hidden(data_loader.batch_size)
+            hidden = model.init_hidden(self.argdict['batch_size'])
             pred = model.forward(inp, hidden)
             loss = criterion(pred, target.view(-1))
             self.optimize(optimizer, loss, model)
