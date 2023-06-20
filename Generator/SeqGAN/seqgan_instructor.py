@@ -19,6 +19,7 @@ import torch.nn as nn
 # import config as cfg
 from Generator.SeqGAN.utils import Signal
 from Decoders.LSTMGAN import SeqGAN_G
+from Discriminators.CNNDiscriminatorGAN import SeqGAN_D
 # from metrics.bleu import BLEU
 # from metrics.clas_acc import ACC
 # from metrics.nll import NLL
