@@ -33,7 +33,8 @@ class LSTMGenerator(nn.Module):
         :param hidden: (h, c)
         :param need_hidden: if return hidden, use for sampling
         """
-        # print(inp.shape)
+        print(inp.shape)
+        fds
         emb = self.embeddings(inp)  # batch_size * len * embedding_dim
         if len(inp.size()) == 1:
             emb = emb.unsqueeze(1)  # batch_size * 1 * embedding_dim
