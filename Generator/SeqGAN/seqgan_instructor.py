@@ -318,7 +318,7 @@ class SeqGANInstructor:
         for epoch in range(epochs):
             self.sig.update()
             if self.sig.pre_sig:
-                pre_loss = self.train_gen_epoch(self.gen, self.train_data.loader, self.mle_criterion, self.gen_opt)
+                pre_loss = self.train_gen_epoch(self.gen, self.datasets['train'], self.mle_criterion, self.gen_opt)
 
                 # ===Test===
                 if epoch % cfg.pre_log_step == 0 or epoch == epochs - 1:
