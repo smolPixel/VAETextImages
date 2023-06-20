@@ -15,7 +15,7 @@
 import numpy as np
 import torch
 import torch.nn as nn
-
+import torch.optim as optim
 # import config as cfg
 from Generator.SeqGAN.utils import Signal
 from Decoders.LSTMGAN import SeqGAN_G
@@ -80,13 +80,12 @@ class SeqGANInstructor:
         self.vocab_size=self.training_set.vocab_size
         self.gen = SeqGAN_G(300, 1024, self.vocab_size, 32, self.training_set.pad_idx)
         self.dis = SeqGAN_D(300, self.vocab_size, self.training_set.pad_idx)
-        fds
         self.init_model()
 
         # Optimizer
-        self.gen_opt = optim.Adam(self.gen.parameters(), lr=cfg.gen_lr)
-        self.gen_adv_opt = optim.Adam(self.gen.parameters(), lr=cfg.gen_lr)
-        self.dis_opt = optim.Adam(self.dis.parameters(), lr=cfg.dis_lr)
+        self.gen_opt = optim.Adam(self.gen.parameters())
+        self.gen_adv_opt = optim.Adam(self.gen.parameters())
+        self.dis_opt = optim.Adam(self.dis.parameters())
 
 
     def init_model(self):
