@@ -51,7 +51,7 @@ class LSTMGenerator(nn.Module):
         else:
             return pred
 
-    def sample(self, num_samples, batch_size, start_letter=cfg.start_letter):
+    def sample(self, num_samples, batch_size, start_letter='<s>'):
         """
         Samples the network and returns num_samples samples of length max_seq_len.
         :return samples: num_samples * max_seq_length (a sampled sequence in each row)
@@ -79,12 +79,13 @@ class LSTMGenerator(nn.Module):
         for param in self.parameters():
             if param.requires_grad and len(param.shape) > 0:
                 stddev = 1 / math.sqrt(param.shape[0])
-                if cfg.gen_init == 'uniform':
-                    torch.nn.init.uniform_(param, a=-0.05, b=0.05)
-                elif cfg.gen_init == 'normal':
-                    torch.nn.init.normal_(param, std=stddev)
-                elif cfg.gen_init == 'truncated_normal':
-                    truncated_normal_(param, std=stddev)
+                torch.nn.init.normal_(param, std=stddev)
+                # if cfg.gen_init == 'uniform':
+                #     torch.nn.init.uniform_(param, a=-0.05, b=0.05)
+                # elif cfg.gen_init == 'normal':
+                #     torch.nn.init.normal_(param, std=stddev)
+                # elif cfg.gen_init == 'truncated_normal':
+                #     truncated_normal_(param, std=stddev)
 
     def init_oracle(self):
         for param in self.parameters():
