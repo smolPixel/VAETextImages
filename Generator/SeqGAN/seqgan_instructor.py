@@ -83,9 +83,9 @@ class SeqGANInstructor:
         self.init_model()
 
         # Optimizer
-        self.gen_opt = optim.Adam(self.gen.parameters())
-        self.gen_adv_opt = optim.Adam(self.gen.parameters())
-        self.dis_opt = optim.Adam(self.dis.parameters())
+        self.gen_opt = optim.Adam(self.gen.parameters(), 0.01)
+        self.gen_adv_opt = optim.Adam(self.gen.parameters(), 0.01)
+        self.dis_opt = optim.Adam(self.dis.parameters(), 1e-4)
 
 
     def init_model(self):
