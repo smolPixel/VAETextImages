@@ -104,8 +104,7 @@ class SeqGANInstructor:
         total_loss = 0
         for i, data in enumerate(data_loader):
             inp, target = data['input'], data['target']
-            if cfg.CUDA:
-                inp, target = inp.cuda(), target.cuda()
+            inp, target = inp.cuda(), target.cuda()
 
             hidden = model.init_hidden(data_loader.batch_size)
             pred = model.forward(inp, hidden)

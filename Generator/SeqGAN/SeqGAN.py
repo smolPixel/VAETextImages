@@ -10,4 +10,3 @@ class SeqGAN():
 
     def init_model_dataset(self):
         self.instructor=SeqGANInstructor(self.argdict, self.datasets)
-        fds
