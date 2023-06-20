@@ -78,8 +78,8 @@ class SeqGANInstructor:
         # self.all_metrics = [self.bleu, self.nll_gen, self.nll_div, self.self_bleu, self.ppl]
         self.vocab_size=self.training_set.vocab_size
         self.gen = SeqGAN_G(300, 1024, self.vocab_size, 32, self.training_set.pad_idx)
+        self.dis = SeqGAN_D(300, self.vocab_size, self.training_set.pad_idx)
         fds
-        self.dis = SeqGAN_D(cfg.dis_embed_dim, cfg.vocab_size, cfg.padding_idx, gpu=cfg.CUDA)
         self.init_model()
 
         # Optimizer
