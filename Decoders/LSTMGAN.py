@@ -92,7 +92,7 @@ class LSTMGenerator(nn.Module):
             if param.requires_grad:
                 torch.nn.init.normal_(param, mean=0, std=1)
 
-    def init_hidden(self, batch_size=cfg.batch_size):
+    def init_hidden(self, batch_size=8):
         h = torch.zeros(1, batch_size, self.hidden_dim)
         c = torch.zeros(1, batch_size, self.hidden_dim)
 
