@@ -127,6 +127,7 @@ class SeqGANInstructor:
             self.optimize(optimizer, loss, model)
 
             total_loss += loss.item()
+            total_loss += loss.item()
             total_acc += torch.sum((pred.argmax(dim=-1) == target)).item()
             total_num += inp.size(0)
 
@@ -270,12 +271,12 @@ class SeqGANInstructor:
     def _run(self):
         # ===PRE-TRAINING===
         # TRAIN GENERATOR
-        if not cfg.gen_pretrain:
-            self.log.info('Starting Generator MLE Training...')
-            self.pretrain_generator(cfg.MLE_train_epoch)
-            if cfg.if_save and not cfg.if_test:
-                torch.save(self.gen.state_dict(), cfg.pretrained_gen_path)
-                print('Save pre-trained generator: {}'.format(cfg.pretrained_gen_path))
+        if not self.argdict['gen_pretrain']:
+            print('Starting Generator MLE Training...')
+            self.pretrain_generator(self.argdict['MLE_train_epoch'])
+            # if cfg.if_save and not cfg.if_test:
+            #     torch.save(self.gen.state_dict(), cfg.pretrained_gen_path)
+            #     print('Save pre-trained generator: {}'.format(cfg.pretrained_gen_path))
 
         # ===TRAIN DISCRIMINATOR====
         if not cfg.dis_pretrain:
