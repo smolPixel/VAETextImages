@@ -103,7 +103,7 @@ class SeqGANInstructor:
     def train_gen_epoch(self, model, data_loader, criterion, optimizer):
         total_loss = 0
         for i, data in enumerate(data_loader):
-            inp, target = torch.Tensor(data['input']), torch.Tensor(data['target'])
+            inp, target = torch.Tensor(data['input']).int(), torch.Tensor(data['target']).int()
             inp, target = inp.cuda(), target.cuda()
 
             hidden = model.init_hidden(self.argdict['batch_size'])
