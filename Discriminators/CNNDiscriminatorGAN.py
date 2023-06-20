@@ -62,12 +62,13 @@ class CNNDiscriminator(nn.Module):
         for param in self.parameters():
             if param.requires_grad and len(param.shape) > 0:
                 stddev = 1 / math.sqrt(param.shape[0])
-                if cfg.dis_init == 'uniform':
-                    torch.nn.init.uniform_(param, a=-0.05, b=0.05)
-                elif cfg.dis_init == 'normal':
-                    torch.nn.init.normal_(param, std=stddev)
-                elif cfg.dis_init == 'truncated_normal':
-                    truncated_normal_(param, std=stddev)
+                torch.nn.init.normal_(param, std=stddev)
+                # if cfg.dis_init == 'uniform':
+                #     torch.nn.init.uniform_(param, a=-0.05, b=0.05)
+                # elif cfg.dis_init == 'normal':
+                #     torch.nn.init.normal_(param, std=stddev)
+                # elif cfg.dis_init == 'truncated_normal':
+                #     truncated_normal_(param, std=stddev)
 class SeqGAN_D(CNNDiscriminator):
     def __init__(self, embed_dim, vocab_size, padding_idx, gpu=False, dropout=0.25):
         super(SeqGAN_D, self).__init__(embed_dim, vocab_size, dis_filter_sizes, dis_num_filters, padding_idx, gpu,
