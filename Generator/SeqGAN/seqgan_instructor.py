@@ -19,7 +19,9 @@ import torch.optim as optim
 # import config as cfg
 from Generator.SeqGAN.utils import Signal
 from Decoders.LSTMGAN import SeqGAN_G
+from torch.utils.data import DataLoader
 from Discriminators.CNNDiscriminatorGAN import SeqGAN_D
+from multiprocessing import cpu_count
 # from metrics.bleu import BLEU
 # from metrics.clas_acc import ACC
 # from metrics.nll import NLL
@@ -38,11 +40,8 @@ class SeqGANInstructor:
         self.clas = None
         self.datasets=datasets
         self.training_set=self.datasets['train']
-        print(self.training_set)
-        fds
         self.dev_set=self.datasets['dev']
         self.test_set=self.datasets['test']
-        print(self.training_set)
         #
         # # Dataloader
         # try:
@@ -102,8 +101,17 @@ class SeqGANInstructor:
         self.gen = self.gen.cuda()
         self.dis = self.dis.cuda()
 
-    def train_gen_epoch(self, model, data_loader, criterion, optimizer):
+    def train_gen_epoch(self, model, dataset, criterion, optimizer):
         total_loss = 0
+
+        data_loader = DataLoader(
+            dataset=dataset,
+            batch_size=self.argdict['batch_size'],  # self.argdict.batch_size,
+            shuffle=True,
+            num_workers=cpu_count(),
+            pin_memory=torch.cuda.is_available()
+        )
+
         for i, data in enumerate(data_loader):
             inp, target = torch.Tensor(data['input']).int(), torch.Tensor(data['target']).int()
             inp, target = inp.cuda(), target.cuda()
