@@ -13,7 +13,7 @@ dis_num_filters = [100, 200, 200, 200, 200, 100, 100, 100, 100, 100, 160, 160]
 
 
 class CNNDiscriminator(nn.Module):
-    def __init__(self, argdict,  embed_dim, vocab_size, filter_sizes, num_filters, padding_idx, gpu=False,
+    def __init__(self, argdict, embed_dim, vocab_size, filter_sizes, num_filters, padding_idx, gpu=False,
                  dropout=0.2):
         super(CNNDiscriminator, self).__init__()
         self.argdict=argdict
@@ -71,6 +71,6 @@ class CNNDiscriminator(nn.Module):
                 # elif cfg.dis_init == 'truncated_normal':
                 #     truncated_normal_(param, std=stddev)
 class SeqGAN_D(CNNDiscriminator):
-    def __init__(self, embed_dim, vocab_size, padding_idx, gpu=False, dropout=0.25):
-        super(SeqGAN_D, self).__init__(embed_dim, vocab_size, dis_filter_sizes, dis_num_filters, padding_idx, gpu,
+    def __init__(self, argdict, embed_dim, vocab_size, padding_idx, gpu=False, dropout=0.25):
+        super(SeqGAN_D, self).__init__(argdict, embed_dim, vocab_size, dis_filter_sizes, dis_num_filters, padding_idx, gpu,
                                        dropout)
