@@ -6,9 +6,10 @@ import torch.nn as nn
 
 class LSTMGenerator(nn.Module):
 
-    def __init__(self, embedding_dim, hidden_dim, vocab_size, max_seq_len, padding_idx, gpu=False):
+    def __init__(self, argdict, embedding_dim, hidden_dim, vocab_size, max_seq_len, padding_idx, gpu=False):
         super(LSTMGenerator, self).__init__()
         self.name = 'vanilla'
+        self.argdict=argdict
 
         self.hidden_dim = hidden_dim
         self.embedding_dim = embedding_dim
@@ -99,8 +100,8 @@ class LSTMGenerator(nn.Module):
 
 
 class SeqGAN_G(LSTMGenerator):
-    def __init__(self, embedding_dim, hidden_dim, vocab_size, max_seq_len, padding_idx, gpu=False):
-        super(SeqGAN_G, self).__init__(embedding_dim, hidden_dim, vocab_size, max_seq_len, padding_idx, gpu)
+    def __init__(self, argdict, embedding_dim, hidden_dim, vocab_size, max_seq_len, padding_idx, gpu=False):
+        super(SeqGAN_G, self).__init__(argdict, embedding_dim, hidden_dim, vocab_size, max_seq_len, padding_idx, gpu)
         self.name = 'seqgan'
 
     def batchPGLoss(self, inp, target, reward):
