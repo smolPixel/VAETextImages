@@ -207,7 +207,7 @@ class SeqGANInstructor:
         opt.zero_grad()
         loss.backward(retain_graph=retain_graph)
         if model is not None:
-            torch.nn.utils.clip_grad_norm_(model.parameters(), self.argdict['clip_norm'])
+            torch.nn.utils.clip_grad_norm_(model.parameters(), model.argdict['clip_norm'])
         opt.step()
 
 
