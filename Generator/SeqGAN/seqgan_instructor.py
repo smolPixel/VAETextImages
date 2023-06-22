@@ -103,6 +103,7 @@ class SeqGANInstructor:
     def train_gen_epoch(self, model, data_loader, criterion, optimizer):
         total_loss = 0
         for i, data in enumerate(data_loader):
+            print(data['input'])
             inp, target = torch.Tensor(data['input']).int(), torch.Tensor(data['target']).int()
             inp, target = inp.cuda(), target.cuda()
 
