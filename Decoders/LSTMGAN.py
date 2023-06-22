@@ -40,6 +40,9 @@ class LSTMGenerator(nn.Module):
         # print(emb.shape)
         # print(hidden[0].shape, hidden[1].shape)
         # print(hidden.shape)
+        print(emb.shape)
+        print(hidden.shape)
+        fds
         out, hidden = self.lstm(emb, hidden)  # out: batch_size * seq_len * hidden_dim
         out = out.contiguous().view(-1, self.hidden_dim)  # out: (batch_size * len) * hidden_dim
         out = self.lstm2out(out)  # (batch_size * seq_len) * vocab_size
