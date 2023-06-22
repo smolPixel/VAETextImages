@@ -95,10 +95,7 @@ class LSTMGenerator(nn.Module):
         h = torch.zeros(1, batch_size, self.hidden_dim)
         c = torch.zeros(1, batch_size, self.hidden_dim)
 
-        if self.gpu:
-            return h.cuda(), c.cuda()
-        else:
-            return h, c
+        return h.cuda(), c.cuda()
 
 
 class SeqGAN_G(LSTMGenerator):
