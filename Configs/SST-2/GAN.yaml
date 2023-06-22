@@ -17,7 +17,7 @@ dropout: 0.3
 word_dropout: 0.3
 x0: 15
 
-
+clip_norm: 5
 gen_pretrain: False
 dis_pretrain: False
 MLE_train_epoch: 120
