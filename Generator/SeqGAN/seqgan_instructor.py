@@ -113,7 +113,7 @@ class SeqGANInstructor:
         )
 
         for i, data in enumerate(data_loader):
-            inp, target = torch.Tensor(data['input']).int(), torch.Tensor(data['target']).int()
+            inp, target = torch.Tensor(data['input']).int().cuda(), torch.Tensor(data['target']).int().cuda()
             inp, target = inp.cuda(), target.cuda()
 
             hidden = model.init_hidden(self.argdict['batch_size'])
