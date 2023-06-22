@@ -13,9 +13,10 @@ dis_num_filters = [100, 200, 200, 200, 200, 100, 100, 100, 100, 100, 160, 160]
 
 
 class CNNDiscriminator(nn.Module):
-    def __init__(self, embed_dim, vocab_size, filter_sizes, num_filters, padding_idx, gpu=False,
+    def __init__(self, argdict,  embed_dim, vocab_size, filter_sizes, num_filters, padding_idx, gpu=False,
                  dropout=0.2):
         super(CNNDiscriminator, self).__init__()
+        self.argdict=argdict
         self.embedding_dim = embed_dim
         self.vocab_size = vocab_size
         self.padding_idx = padding_idx
