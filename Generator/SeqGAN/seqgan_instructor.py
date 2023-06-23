@@ -224,7 +224,7 @@ class SeqGANInstructor:
             print(eval_samples.shape)
             # gen_data = GenDataIter(eval_samples)
             gen_tokens = self.training_set.arr_to_sentences(eval_samples)
-            gen_tokens_s = self.training_set.arr_to_sentences(self.gen.sample(200, 200))
+            gen_tokens_s = self.training_set.arr_to_sentences(self.gen.sample(200, 200, self.training_set.sos_idx))
 
             # Reset metrics
             self.bleu.reset(test_text=gen_tokens, real_text=self.test_data.tokens)
