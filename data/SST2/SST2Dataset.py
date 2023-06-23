@@ -157,6 +157,18 @@ class SST2_dataset(Dataset):
 		else:
 			raise ValueError("Idk what this is supposed to return")
 
+	# def tensor_to_tokens(self, tensor, dictionary):
+	# 	"""transform Tensor to word tokens"""
+	# 	tokens = []
+	# 	for sent in tensor:
+	# 		sent_token = []
+	# 		for word in sent.tolist():
+	# 			if word == self.pad_idx:
+	# 				break
+	# 			sent_token.append(dictionary[str(word)])
+	# 		tokens.append(sent_token)
+	# 	return tokens
+
 	def arr_to_sentences(self, array):
 		sentences=[]
 		for arr in array:
