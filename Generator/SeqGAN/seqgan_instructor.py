@@ -330,13 +330,13 @@ class SeqGANInstructor:
             self.sig.update()
             if self.sig.pre_sig:
                 pre_loss = self.train_gen_epoch(self.gen, self.datasets['train'], self.mle_criterion, self.gen_opt)
-
+                print('[MLE-GEN] epoch %d : pre_loss = %.4f, %s' % (epoch, pre_loss, self.cal_metrics(fmt_str=True)))
                 # ===Test===
-                if epoch % cfg.pre_log_step == 0 or epoch == epochs - 1:
-                    self.log.info(
-                        '[MLE-GEN] epoch %d : pre_loss = %.4f, %s' % (epoch, pre_loss, self.cal_metrics(fmt_str=True)))
-                    if cfg.if_save and not cfg.if_test:
-                        self._save('MLE', epoch)
+                # if epoch % cfg.pre_log_step == 0 or epoch == epochs - 1:
+                #     self.log.info(
+                #         '[MLE-GEN] epoch %d : pre_loss = %.4f, %s' % (epoch, pre_loss, self.cal_metrics(fmt_str=True)))
+                #     if cfg.if_save and not cfg.if_test:
+                #         self._save('MLE', epoch)
             else:
                 self.log.info('>>> Stop by pre signal, skip to adversarial training...')
                 break
