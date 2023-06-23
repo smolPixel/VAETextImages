@@ -53,7 +53,7 @@ class LSTMGenerator(nn.Module):
         else:
             return pred
 
-    def sample(self, num_samples, batch_size, start_letter='<s>'):
+    def sample(self, num_samples, batch_size, start_letter):
         """
         Samples the network and returns num_samples samples of length max_seq_len.
         :return samples: num_samples * max_seq_length (a sampled sequence in each row)
@@ -64,8 +64,6 @@ class LSTMGenerator(nn.Module):
         # Generate sentences with multinomial sampling strategy
         for b in range(num_batch):
             hidden = self.init_hidden(batch_size)
-            print(batch_size)
-            print(start_letter)
             inp = torch.LongTensor([start_letter] * batch_size)
             if self.gpu:
                 inp = inp.cuda()
