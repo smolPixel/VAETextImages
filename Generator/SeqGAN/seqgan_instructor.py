@@ -219,7 +219,7 @@ class SeqGANInstructor:
         """
         with torch.no_grad():
             # Prepare data for evaluation
-            eval_samples = self.gen.sample(cfg.samples_num, 4 * cfg.batch_size)
+            eval_samples = self.gen.sample(self.argdict['samples_num'], 4 * self.argdict['batch_size'])
             gen_data = GenDataIter(eval_samples)
             gen_tokens = tensor_to_tokens(eval_samples, self.idx2word_dict)
             gen_tokens_s = tensor_to_tokens(self.gen.sample(200, 200), self.idx2word_dict)
@@ -338,7 +338,7 @@ class SeqGANInstructor:
                 #     if cfg.if_save and not cfg.if_test:
                 #         self._save('MLE', epoch)
             else:
-                self.log.info('>>> Stop by pre signal, skip to adversarial training...')
+                print('>>> Stop by pre signal, skip to adversarial training...')
                 break
 
     def adv_train_generator(self, g_step):
