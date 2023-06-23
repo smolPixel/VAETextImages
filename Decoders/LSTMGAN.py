@@ -64,9 +64,7 @@ class LSTMGenerator(nn.Module):
         # Generate sentences with multinomial sampling strategy
         for b in range(num_batch):
             hidden = self.init_hidden(batch_size)
-            inp = torch.LongTensor([start_letter] * batch_size)
-            if self.gpu:
-                inp = inp.cuda()
+            inp = torch.LongTensor([start_letter] * batch_size).cuda()
 
             for i in range(self.max_seq_len):
                 out, hidden = self.forward(inp, hidden, need_hidden=True)  # out: batch_size * vocab_size
