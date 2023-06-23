@@ -220,6 +220,7 @@ class SeqGANInstructor:
         with torch.no_grad():
             # Prepare data for evaluation
             eval_samples = self.gen.sample(self.argdict['samples_num'], 4 * self.argdict['batch_size'], self.training_set.sos_idx)
+            print(eval_samples)
             gen_data = GenDataIter(eval_samples)
             gen_tokens = tensor_to_tokens(eval_samples, self.idx2word_dict)
             gen_tokens_s = tensor_to_tokens(self.gen.sample(200, 200), self.idx2word_dict)
