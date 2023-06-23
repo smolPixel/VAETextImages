@@ -64,6 +64,8 @@ class LSTMGenerator(nn.Module):
         # Generate sentences with multinomial sampling strategy
         for b in range(num_batch):
             hidden = self.init_hidden(batch_size)
+            print(batch_size)
+            print(start_letter)
             inp = torch.LongTensor([start_letter] * batch_size)
             if self.gpu:
                 inp = inp.cuda()
