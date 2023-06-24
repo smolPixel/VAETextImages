@@ -102,16 +102,19 @@ class SeqGANInstructor:
         self.gen = self.gen.cuda()
         self.dis = self.dis.cuda()
 
-    def train_gen_epoch(self, model, dataset, criterion, optimizer):
-        total_loss = 0
-
-        data_loader = DataLoader(
-            dataset=dataset,
+    def get_data_loader(self, set):
+        return DataLoader(
+            dataset=set,
             batch_size=self.argdict['batch_size'],  # self.argdict.batch_size,
             shuffle=True,
             num_workers=cpu_count(),
             pin_memory=torch.cuda.is_available()
         )
+
+    def train_gen_epoch(self, model, dataset, criterion, optimizer):
+        total_loss = 0
+
+        data_loader = self.get_data_loader(self.training_set)
 
         for i, data in enumerate(data_loader):
             inp, target = torch.Tensor(data['input']).type(torch.LongTensor), torch.Tensor(data['target']).type(torch.LongTensor)
@@ -229,10 +232,13 @@ class SeqGANInstructor:
 
             # Reset metrics
             #TODO REFACTOR THIS THING
-            self.bleu.reset(test_text=gen_tokens, real_text=self.test_data.tokens)
+            # self.bleu.reset(test_text=gen_tokens, real_text=self.test_set.tokens)
+            data_loader=self.get_data_loader(self.training_set)
+
+            return f"NLL_oracle: {self.mle_criterion()}"
             self.nll_gen.reset(self.gen, self.train_data.loader)
             self.nll_div.reset(self.gen, gen_data.loader)
-            self.self_bleu.reset(test_text=gen_tokens_s, real_text=gen_tokens)
+            # self.self_bleu.reset(test_text=gen_tokens_s, real_text=gen_tokens)
             self.ppl.reset(gen_tokens)
 
         if fmt_str:
@@ -240,26 +246,43 @@ class SeqGANInstructor:
         else:
             return [metric.get_score() for metric in self.all_metrics]
 
-    def cal_metrics_with_label(self, label_i):
-        assert type(label_i) == int, 'missing label'
-
+    def get_nll(self, model, data_loader, criterion):
+        """NLL score for general text generation model, used only for pretraining?."""
+        total_loss = 0
         with torch.no_grad():
-            # Prepare data for evaluation
-            eval_samples = self.gen.sample(cfg.samples_num, 8 * cfg.batch_size, label_i=label_i)
-            gen_data = GenDataIter(eval_samples)
-            gen_tokens = tensor_to_tokens(eval_samples, self.idx2word_dict)
-            gen_tokens_s = tensor_to_tokens(self.gen.sample(200, 200, label_i=label_i), self.idx2word_dict)
-            clas_data = CatClasDataIter([eval_samples], label_i)
+            for i, data in enumerate(data_loader):
+                inp, target = data['input'], data['target']
+                inp, target = inp.cuda(), target.cuda()
 
-            # Reset metrics
-            self.bleu.reset(test_text=gen_tokens, real_text=self.test_data_list[label_i].tokens)
-            self.nll_gen.reset(self.gen, self.train_data_list[label_i].loader, label_i)
-            self.nll_div.reset(self.gen, gen_data.loader, label_i)
-            self.self_bleu.reset(test_text=gen_tokens_s, real_text=gen_tokens)
-            self.clas_acc.reset(self.clas, clas_data.loader)
-            self.ppl.reset(gen_tokens)
+                # print(inp.shape)
 
-        return [metric.get_score() for metric in self.all_metrics]
+                # hidden = model.init_hidden(data_loader.batch_size)
+                hidden = model.init_hidden(inp.shape[0])
+                pred = model.forward(inp, hidden)
+                loss = criterion(pred, target.view(-1))
+                total_loss += loss.item()
+        return round(total_loss / len(data_loader), 4)
+
+    # def cal_metrics_with_label(self, label_i):
+    #     assert type(label_i) == int, 'missing label'
+    #
+    #     with torch.no_grad():
+    #         # Prepare data for evaluation
+    #         eval_samples = self.gen.sample(cfg.samples_num, 8 * cfg.batch_size, label_i=label_i)
+    #         gen_data = GenDataIter(eval_samples)
+    #         gen_tokens = tensor_to_tokens(eval_samples, self.idx2word_dict)
+    #         gen_tokens_s = tensor_to_tokens(self.gen.sample(200, 200, label_i=label_i), self.idx2word_dict)
+    #         clas_data = CatClasDataIter([eval_samples], label_i)
+    #
+    #         # Reset metrics
+    #         self.bleu.reset(test_text=gen_tokens, real_text=self.test_data_list[label_i].tokens)
+    #         self.nll_gen.reset(self.gen, self.train_data_list[label_i].loader, label_i)
+    #         self.nll_div.reset(self.gen, gen_data.loader, label_i)
+    #         self.self_bleu.reset(test_text=gen_tokens_s, real_text=gen_tokens)
+    #         self.clas_acc.reset(self.clas, clas_data.loader)
+    #         self.ppl.reset(gen_tokens)
+    #
+    #     return [metric.get_score() for metric in self.all_metrics]
 
     def comb_metrics(self, fmt_str=False):
         all_scores = [self.cal_metrics_with_label(label_i) for label_i in range(cfg.k_label)]
@@ -270,13 +293,13 @@ class SeqGANInstructor:
                               for (metric, score) in zip(self.all_metrics, all_scores)])
         return all_scores
 
-    def _save(self, phase, epoch):
-        """Save model state dict and generator's samples"""
-        if phase != 'ADV':
-            torch.save(self.gen.state_dict(), cfg.save_model_root + 'gen_{}_{:05d}.pt'.format(phase, epoch))
-        save_sample_path = cfg.save_samples_root + 'samples_{}_{:05d}.txt'.format(phase, epoch)
-        samples = self.gen.sample(cfg.batch_size, cfg.batch_size)
-        write_tokens(save_sample_path, tensor_to_tokens(samples, self.idx2word_dict))
+    # def _save(self, phase, epoch):
+    #     """Save model state dict and generator's samples"""
+    #     if phase != 'ADV':
+    #         torch.save(self.gen.state_dict(), cfg.save_model_root + 'gen_{}_{:05d}.pt'.format(phase, epoch))
+    #     save_sample_path = cfg.save_samples_root + 'samples_{}_{:05d}.txt'.format(phase, epoch)
+    #     samples = self.gen.sample(cfg.batch_size, cfg.batch_size)
+    #     write_tokens(save_sample_path, tensor_to_tokens(samples, self.idx2word_dict))
 
     def update_temperature(self, i, N):
         self.gen.temperature.data = torch.Tensor([get_fixed_temperature(cfg.temperature, i, N, cfg.temp_adpt)])
@@ -334,7 +357,7 @@ class SeqGANInstructor:
             self.sig.update()
             if self.sig.pre_sig:
                 pre_loss = self.train_gen_epoch(self.gen, self.datasets['train'], self.mle_criterion, self.gen_opt)
-                print('[MLE-GEN] epoch %d : pre_loss = %.4f, %s' % (epoch, pre_loss, self.cal_metrics(fmt_str=True)))
+                print('[MLE-GEN] epoch %d : pre_loss = %.4f, %s' % (epoch, pre_loss))
                 # ===Test===
                 # if epoch % cfg.pre_log_step == 0 or epoch == epochs - 1:
                 #     self.log.info(
