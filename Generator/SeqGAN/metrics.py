@@ -18,7 +18,7 @@ from nltk.translate.bleu_score import SmoothingFunction
 class BLEU():
     def __init__(self, name=None, test_text=None, real_text=None, gram=3, portion=1, if_use=False):
         assert type(gram) == int or type(gram) == list, 'Gram format error!'
-        super(BLEU, self).__init__('%s-%s' % (name, gram))
+        # super(BLEU, self).__init__('%s-%s' % (name, gram))
 
         self.name=name
         self.if_use = if_use
