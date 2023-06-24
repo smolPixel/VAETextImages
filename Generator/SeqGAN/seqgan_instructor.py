@@ -22,6 +22,7 @@ from Decoders.LSTMGAN import SeqGAN_G
 from torch.utils.data import DataLoader
 from Discriminators.CNNDiscriminatorGAN import SeqGAN_D
 from multiprocessing import cpu_count
+from Generator.SeqGAN.metrics import BLEU, NLL, PPL
 # from metrics.bleu import BLEU
 # from metrics.clas_acc import ACC
 # from metrics.nll import NLL
@@ -71,12 +72,12 @@ class SeqGANInstructor:
         self.clas_opt = None
 
         # Metrics
-        self.bleu = BLEU('BLEU', gram=[2, 3, 4, 5], if_use=cfg.use_bleu)
-        self.nll_gen = NLL('NLL_gen', if_use=cfg.use_nll_gen, gpu=cfg.CUDA)
-        self.nll_div = NLL('NLL_div', if_use=cfg.use_nll_div, gpu=cfg.CUDA)
-        self.self_bleu = BLEU('Self-BLEU', gram=[2, 3, 4], if_use=cfg.use_self_bleu)
+        self.bleu = BLEU('BLEU', gram=[2, 3, 4, 5])
+        # self.nll_gen = NLL('NLL_gen')
+        # self.nll_div = NLL('NLL_div')
+        self.self_bleu = BLEU('Self-BLEU', gram=[2, 3, 4])
         # self.clas_acc = ACC(if_use=cfg.use_clas_acc)
-        # self.ppl = PPL(self.train_data, self.test_data, n_gram=5, if_use=cfg.use_ppl)
+        # self.ppl = PPL(self.training_set, self.test_set, n_gram=5)
         # self.all_metrics = [self.bleu, self.nll_gen, self.nll_div, self.self_bleu, self.ppl]
         self.vocab_size=self.training_set.vocab_size
         self.gen = SeqGAN_G(argdict, 300, 1024, self.vocab_size, 32, self.training_set.pad_idx)
@@ -227,12 +228,12 @@ class SeqGANInstructor:
             gen_tokens_s = self.training_set.arr_to_sentences(self.gen.sample(200, 200, self.training_set.sos_idx))
 
             # Reset metrics
-
-            bleu=self.bleu(test_text=gen_tokens, real_text=self.test_data.tokens)
-            nll_gen=self.nll_gen(self.gen, self.train_data.loader)
-            nll_div=self.nll_div(self.gen, gen_data.loader)
-            self_bleu=self.self_bleu(test_text=gen_tokens_s, real_text=gen_tokens)
-            ppl=self.ppl(gen_tokens)
+            #TODO REFACTOR THIS THING
+            self.bleu.reset(test_text=gen_tokens, real_text=self.test_data.tokens)
+            self.nll_gen.reset(self.gen, self.train_data.loader)
+            self.nll_div.reset(self.gen, gen_data.loader)
+            self.self_bleu.reset(test_text=gen_tokens_s, real_text=gen_tokens)
+            self.ppl.reset(gen_tokens)
 
         if fmt_str:
             return ', '.join(['%s = %s' % (metric.get_name(), metric.get_score()) for metric in self.all_metrics])
