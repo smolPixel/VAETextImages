@@ -395,7 +395,7 @@ class SeqGANInstructor:
         for step in range(d_step):
             # prepare loader for training
             pos_samples = self.training_set
-            neg_samples = self.gen.sample(self.argdict['samples_num'], 4 * self.argdict['batch_size'])
+            neg_samples = self.gen.sample(self.argdict['samples_num'], 4 * self.argdict['batch_size'], start_letter=self.training_set.sos_idx)
             # dis_data = DisDataIter(pos_samples, neg_samples)
 
             for epoch in range(d_epoch):
