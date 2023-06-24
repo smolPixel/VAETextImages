@@ -22,7 +22,7 @@ from Decoders.LSTMGAN import SeqGAN_G
 from torch.utils.data import DataLoader
 from Discriminators.CNNDiscriminatorGAN import SeqGAN_D
 from multiprocessing import cpu_count
-from Generator.SeqGAN.metrics import BLEU, NLL, PPL
+from Generator.SeqGAN.metrics import BLEU#, NLL, PPL
 # from metrics.bleu import BLEU
 # from metrics.clas_acc import ACC
 # from metrics.nll import NLL
