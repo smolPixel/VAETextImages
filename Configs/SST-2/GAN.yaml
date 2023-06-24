@@ -18,10 +18,14 @@ word_dropout: 0.3
 x0: 15
 
 clip_norm: 5
-gen_pretrain: False
-dis_pretrain: False
-MLE_train_epoch: 120
+gen_pretrain: True
+dis_pretrain: True
+MLE_train_epoch: 20
 ADV_train_epoch: 200
+
+discriminator_step: 5
+discriminator_epoch: 3
+
 samples_num: 10000
 
 

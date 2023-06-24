@@ -309,7 +309,7 @@ class SeqGANInstructor:
     def _run(self):
         # ===PRE-TRAINING===
         # TRAIN GENERATOR
-        if not self.argdict['gen_pretrain']:
+        if self.argdict['gen_pretrain']:
             print('Starting Generator MLE Training...')
             self.pretrain_generator(self.argdict['MLE_train_epoch'])
             # if cfg.if_save and not cfg.if_test:
@@ -317,12 +317,10 @@ class SeqGANInstructor:
             #     print('Save pre-trained generator: {}'.format(cfg.pretrained_gen_path))
 
         # ===TRAIN DISCRIMINATOR====
-        if not cfg.dis_pretrain:
-            self.log.info('Starting Discriminator Training...')
-            self.train_discriminator(cfg.d_step, cfg.d_epoch)
-            if cfg.if_save and not cfg.if_test:
-                torch.save(self.dis.state_dict(), cfg.pretrained_dis_path)
-                print('Save pre-trained discriminator: {}'.format(cfg.pretrained_dis_path))
+        if self.argdict['dis_pretrain']:
+            print('Starting Discriminator Training...')
+            # self.train_discriminator(cfg.d_step, cfg.d_epoch)
+            self.train_discriminator(self.argdict['discriminator_step'], self.argdict['discriminator_epoch'])
 
         # ===ADVERSARIAL TRAINING===
         self.log.info('Starting Adversarial Training...')
