@@ -394,7 +394,7 @@ class SeqGANInstructor:
         global d_loss, train_acc
         for step in range(d_step):
             # prepare loader for training
-            pos_samples = self.train_data.target
+            pos_samples = self.training_set
             neg_samples = self.gen.sample(self.argdict['samples_num'], 4 * self.argdict['batch_size'])
             # dis_data = DisDataIter(pos_samples, neg_samples)
 
