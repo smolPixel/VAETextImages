@@ -20,7 +20,7 @@ x0: 15
 clip_norm: 5
 gen_pretrain: True
 dis_pretrain: True
-MLE_train_epoch: 20
+MLE_train_epoch: 1 #20
 ADV_train_epoch: 200
 
 discriminator_step: 5

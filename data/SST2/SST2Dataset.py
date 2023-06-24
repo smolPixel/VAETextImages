@@ -49,6 +49,7 @@ class SST2_dataset(Dataset):
 	# def tokenize_and_vectorize(self, sentences):
 	#     """Takes an array of sentences and return encoded data"""
 
+
 	def batch_tokenize_and_pad(self, sentences):
 		bs=len(sentences)
 		array=torch.zeros((bs, self.max_len))

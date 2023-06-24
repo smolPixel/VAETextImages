@@ -395,20 +395,17 @@ class SeqGANInstructor:
         for step in range(d_step):
             # prepare loader for training
             pos_samples = self.train_data.target
-            neg_samples = self.gen.sample(cfg.samples_num, 4 * cfg.batch_size)
-            dis_data = DisDataIter(pos_samples, neg_samples)
+            neg_samples = self.gen.sample(self.argdict['samples_num'], 4 * self.argdict['batch_size'])
+            # dis_data = DisDataIter(pos_samples, neg_samples)
 
             for epoch in range(d_epoch):
                 # ===Train===
-                d_loss, train_acc = self.train_dis_epoch(self.dis, dis_data.loader, self.dis_criterion,
+                d_loss, train_acc = self.train_dis_epoch(self.dis, pos_samples, neg_samples, self.dis_criterion,
                                                          self.dis_opt)
 
             # ===Test===
-            self.log.info('[%s-DIS] d_step %d: d_loss = %.4f, train_acc = %.4f,' % (
+            print('[%s-DIS] d_step %d: d_loss = %.4f, train_acc = %.4f,' % (
                 phase, step, d_loss, train_acc))
-
-            if cfg.if_save and not cfg.if_test:
-                torch.save(self.dis.state_dict(), cfg.pretrained_dis_path)
 #
 # class SeqGANInstructor(BasicInstructor):
 #     def __init__(self, opt):
