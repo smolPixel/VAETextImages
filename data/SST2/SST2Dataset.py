@@ -27,7 +27,7 @@ class SST2_dataset(Dataset):
 			find_max_len=True
 		self.vocab_object = vocab
 		self.tokenizer = tokenizer
-		 = self.vocab_object['<pad>']
+		self.pad_idx = self.vocab_object['<pad>']
 		self.sos_idx = self.vocab_object['<bos>']
 		self.eos_idx = self.vocab_object['<eos>']
 		self.unk_idx = self.vocab_object['<unk>']
