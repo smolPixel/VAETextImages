@@ -418,10 +418,6 @@ class SeqGANInstructor:
             inp = torch.zeros(samples.size()).long()
             target = samples
             inp[:, 0] = self.training_set.sos_idx
-            print(inp)
-            print(inp.shape)
-            print(target.shape)
-            print(self.training_set.max_len)
             inp[:, 1:] = target[:, :self.training_set.max_len - 1]
 
             inp, target=inp.cuda(), target.cuda()
@@ -432,7 +428,8 @@ class SeqGANInstructor:
             total_g_loss += adv_loss.item()
 
         # ===Test===
-        self.log.info('[ADV-GEN]: g_loss = %.4f, %s' % (total_g_loss, self.cal_metrics(fmt_str=True)))
+        # print('[ADV-GEN]: g_loss = %.4f, %s' % (total_g_loss, self.cal_metrics(fmt_str=True)))
+        print('[ADV-GEN]: g_loss = %.4f' % (total_g_loss))#, self.cal_metrics(fmt_str=True)))
 
     def train_discriminator(self, d_step, d_epoch, phase='MLE'):
         """
