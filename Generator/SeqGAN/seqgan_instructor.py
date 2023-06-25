@@ -47,7 +47,7 @@ class Discri_dataset(Dataset):
         index = 0
         mask = len(argdict['categories'])
         for i, dat in pos.data.items():
-            self.data[index] = {'input': dat['input'], 'label': 1}
+            self.data[index] = {'input': dat['input'].tolist(), 'label': 1}
             index+=1
         for dat in neg:
             self.data[index] ={'input': dat, 'label': 0}
