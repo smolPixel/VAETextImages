@@ -42,7 +42,7 @@ class Discri_dataset(Dataset):
 		   tokenizer: tokenizer trained
 		   vocabInput+Output: vocab trained on train"""
         self.data = {}
-        self.max_len = argdict['max_length']
+        self.max_len = pos.max_len
         self.pad_idx=pos.pad_idx
         find_max_len = False
         index = 0
