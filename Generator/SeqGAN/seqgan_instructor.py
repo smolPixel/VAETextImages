@@ -41,9 +41,6 @@ class Discri_dataset(Dataset):
         """data: tsv of the data
 		   tokenizer: tokenizer trained
 		   vocabInput+Output: vocab trained on train"""
-        print(pos)
-        print(neg)
-        fds
         self.data = {}
         self.max_len = argdict['max_length']
         find_max_len = False
