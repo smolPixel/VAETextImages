@@ -421,6 +421,7 @@ class SeqGANInstructor:
             print(inp)
             print(inp.shape)
             print(target.shape)
+            print(self.training_set.max_len)
             inp[:, 1:] = target[:, :self.training_set.max_len - 1]
 
             inp, target=inp.cuda(), target.cuda()
