@@ -23,8 +23,8 @@ dis_pretrain: True
 MLE_train_epoch: 1 #20
 ADV_train_epoch: 200
 
-discriminator_step: 5
-discriminator_epoch: 3
+discriminator_step: 1 #5
+discriminator_epoch: 1 #3
 
 samples_num: 10000
 
