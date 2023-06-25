@@ -411,13 +411,18 @@ class SeqGANInstructor:
 		The gen is trained using policy gradients, using the reward from the discriminator.
 		Training is done for num_batches batches.
 		"""
-        rollout_func = ROLLOUT(self.gen, cfg.CUDA)
+        rollout_func = ROLLOUT(self.gen, True)
         total_g_loss = 0
         for step in range(g_step):
-            inp, target = GenDataIter.prepare(self.gen.sample(cfg.batch_size, cfg.batch_size), gpu=cfg.CUDA)
+            samples=self.gen.sample(self.argdict['batch_size'], self.argdict['batch_size'])
+            inp = torch.zeros(samples.size()).long()
+            target = samples
+            inp[:, 0] = self.training_set.sos_idx
+            inp[:, 1:] = target[:, :self.argdict['max_seq_len'] - 1]
 
+            inp, target=inp.cuda(), target.cuda()
             # ===Train===
-            rewards = rollout_func.get_reward(target, cfg.rollout_num, self.dis)
+            rewards = rollout_func.get_reward(target, self.argdict['rollout_num'], self.dis)
             adv_loss = self.gen.batchPGLoss(inp, target, rewards)
             self.optimize(self.gen_adv_opt, adv_loss)
             total_g_loss += adv_loss.item()
