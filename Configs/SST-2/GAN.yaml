@@ -10,7 +10,7 @@ decoder: "GRU"
 nb_epoch: 30
 latent_size: 15
 hidden_size: 1024
-embedd_size: 300
+embedd_size: 600
 num_layers: 1
 batch_size: 64
 dropout: 0.3
