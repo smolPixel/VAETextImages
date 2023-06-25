@@ -61,7 +61,7 @@ class Discri_dataset(Dataset):
 
     def __getitem__(self, item):
         return {
-            'input': self.data[item]['input'],
+            'input': np.asarray(self.data[item]['input'], int),
             'label': self.data[item]['label']
         }
 
