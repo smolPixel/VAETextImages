@@ -61,7 +61,6 @@ class Discri_dataset(Dataset):
         return len(self.data)
 
     def __getitem__(self, item):
-        print(self.data[item]['input'])
         input = self.data[item]['input'][:self.max_len]
         input.extend([self.pad_idx] * (self.max_len - len(input)))
         return {
@@ -175,7 +174,7 @@ class SeqGANInstructor:
         data_loader=self.get_data_loader(dataset)
 
         for i, data in enumerate(data_loader):
-            inp, target = data['input'], data['target']
+            inp, target = data['input'], data['label']
             inp, target = inp.cuda(), target.cuda()
 
             pred = model.forward(inp)
