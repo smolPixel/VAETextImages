@@ -47,7 +47,7 @@ class Discri_dataset(Dataset):
         index = 0
         mask = len(argdict['categories'])
         for i, dat in pos.data.items():
-            self.data[index] = {'input': dat['input'].tolist(), 'label': 1}
+            self.data[index] = {'input': dat['input'], 'label': 1}
             index+=1
         for dat in neg:
             self.data[index] ={'input': dat, 'label': 0}
@@ -60,9 +60,11 @@ class Discri_dataset(Dataset):
         return len(self.data)
 
     def __getitem__(self, item):
-        print(self.data[item]['input'])
+        # print(self.data[item]['input'])
+        input = self.data[item]['input'][:self.max_len]
+        input.extend([self.pad_idx] * (self.max_len - len(input)))
         return {
-            'input': np.asarray(self.data[item]['input'], int),
+            'input': np.asarray(input, int),
             'label': self.data[item]['label']
         }
 
