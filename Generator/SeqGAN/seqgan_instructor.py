@@ -418,7 +418,7 @@ class SeqGANInstructor:
             inp = torch.zeros(samples.size()).long()
             target = samples
             inp[:, 0] = self.training_set.sos_idx
-            inp[:, 1:] = target[:, :self.training_set.max_len - 1]
+            inp[:, 1:] = target[:, :self.training_set.max_len]
 
             inp, target=inp.cuda(), target.cuda()
             # ===Train===
