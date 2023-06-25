@@ -43,6 +43,7 @@ class Discri_dataset(Dataset):
 		   vocabInput+Output: vocab trained on train"""
         self.data = {}
         self.max_len = argdict['max_length']
+        self.pad_idx=pos.pad_idx
         find_max_len = False
         index = 0
         mask = len(argdict['categories'])
