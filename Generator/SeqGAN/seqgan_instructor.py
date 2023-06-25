@@ -364,20 +364,20 @@ class SeqGANInstructor:
 
         # ===ADVERSARIAL TRAINING===
         print('Starting Adversarial Training...')
-        print('Initial generator: %s' % (self.cal_metrics(fmt_str=True)))
+        # print('Initial generator: %s' % (self.cal_metrics(fmt_str=True)))
 
         for adv_epoch in range(self.config['ADV_train_epoch']):
             print('-----\nADV EPOCH %d\n-----' % adv_epoch)
             self.sig.update()
             if self.sig.adv_sig:
-                self.adv_train_generator(cfg.ADV_g_step)  # Generator
-                self.train_discriminator(cfg.ADV_d_step, cfg.ADV_d_epoch, 'ADV')  # Discriminator
+                self.adv_train_generator(self.argdict['ADV_g_step'])  # Generator
+                self.train_discriminator(self.argdict['ADV_d_step'], self.argdict['ADV_d_epoch'], 'ADV')  # Discriminator
 
-                if adv_epoch % cfg.adv_log_step == 0 or adv_epoch == cfg.ADV_train_epoch - 1:
-                    if cfg.if_save and not cfg.if_test:
-                        self._save('ADV', adv_epoch)
+                # if adv_epoch % cfg.adv_log_step == 0 or adv_epoch == cfg.ADV_train_epoch - 1:
+                #     if cfg.if_save and not cfg.if_test:
+                #         self._save('ADV', adv_epoch)
             else:
-                self.log.info('>>> Stop by adv_signal! Finishing adversarial training...')
+                print('>>> Stop by adv_signal! Finishing adversarial training...')
                 break
         self._sample()
 
