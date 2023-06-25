@@ -116,7 +116,7 @@ class SeqGANInstructor:
         # self.ppl = PPL(self.training_set, self.test_set, n_gram=5)
         # self.all_metrics = [self.bleu, self.nll_gen, self.nll_div, self.self_bleu, self.ppl]
         self.vocab_size = self.training_set.vocab_size
-        self.gen = SeqGAN_G(argdict, 300, 1024, self.vocab_size, 32, self.training_set.pad_idx)
+        self.gen = SeqGAN_G(argdict, 300, 1024, self.vocab_size, self.training_set.max_len, self.training_set.pad_idx)
         self.dis = SeqGAN_D(argdict, 300, self.vocab_size, self.training_set.pad_idx)
         self.init_model()
 
@@ -414,7 +414,7 @@ class SeqGANInstructor:
         rollout_func = ROLLOUT(self.gen, True)
         total_g_loss = 0
         for step in range(g_step):
-            samples=self.gen.sample(self.argdict['batch_size'], self.training_set.max_len, self.training_set.sos_idx)
+            samples=self.gen.sample(self.argdict['batch_size'], self.argdict['batch_size'], self.training_set.sos_idx)
             inp = torch.zeros(samples.size()).long()
             target = samples
             inp[:, 0] = self.training_set.sos_idx
