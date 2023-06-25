@@ -47,21 +47,11 @@ class Discri_dataset(Dataset):
         self.data = {}
         self.max_len = argdict['max_length']
         find_max_len = False
-        if self.max_len == 0:
-            find_max_len = True
-        self.vocab_object = vocab
-        self.tokenizer = tokenizer
-        self.pad_idx = self.vocab_object['<pad>']
-        self.sos_idx = self.vocab_object['<bos>']
-        self.eos_idx = self.vocab_object['<eos>']
-        self.unk_idx = self.vocab_object['<unk>']
-        argdict['pad_idx'] = self.pad_idx
-        argdict['sos_idx'] = self.sos_idx
-        argdict['unk_idx'] = self.unk_idx
-        # self.loss_function=torch.nn.CrossEntropyLoss(ignore_index=self.pad_idx, reduction='mean')
-        self.loss_function = torch.nn.CrossEntropyLoss(ignore_index=self.pad_idx, reduction='sum')
         index = 0
         mask = len(argdict['categories'])
+        for i, dat in pos.data.items():
+            print(i, dat)
+            fds
         for i, row in data.iterrows():
             tokenized_text = self.tokenizer.tokenize("<bos> " + row['sentence'] + " <eos>")
             input = vocab(tokenized_text)
