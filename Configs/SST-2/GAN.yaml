@@ -25,6 +25,7 @@ ADV_train_epoch: 200
 
 ADV_g_step: 1
 ADV_d_epoch: 3
+rollout_num: 16
 
 discriminator_step: 1 #5
 discriminator_epoch: 1 #3
