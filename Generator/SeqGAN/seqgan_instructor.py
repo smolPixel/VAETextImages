@@ -60,7 +60,7 @@ class Discri_dataset(Dataset):
         return len(self.data)
 
     def __getitem__(self, item):
-        print(len(self.data[item]['input']))
+        print(self.data[item]['input'])
         return {
             'input': np.asarray(self.data[item]['input'], int),
             'label': self.data[item]['label']
