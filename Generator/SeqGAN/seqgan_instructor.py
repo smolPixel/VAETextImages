@@ -414,7 +414,7 @@ class SeqGANInstructor:
         rollout_func = ROLLOUT(self.gen, True)
         total_g_loss = 0
         for step in range(g_step):
-            samples=self.gen.sample(self.argdict['batch_size'], self.argdict['batch_size'], self.training_set.sos_idx)
+            samples=self.gen.sample(self.argdict['batch_size'], self.training_set.max_len, self.training_set.sos_idx)
             inp = torch.zeros(samples.size()).long()
             target = samples
             inp[:, 0] = self.training_set.sos_idx
