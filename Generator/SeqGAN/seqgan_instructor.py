@@ -62,7 +62,7 @@ class Discri_dataset(Dataset):
     def __getitem__(self, item):
         input = self.data[item]['input']
         return {
-            'input': self.data['input']
+            'input': self.data['input'],
             'label': self.data['label']
         }
 
