@@ -50,9 +50,8 @@ class Discri_dataset(Dataset):
             self.data[index] = {'input': dat['input'], 'label': 1}
             index+=1
         for dat in neg:
-            print(dat)
-            fds
-
+            self.data[index] ={'input': dat, 'label': 0}
+            index+=1
 
     # def tokenize_and_vectorize(self, sentences):
     #     """Takes an array of sentences and return encoded data"""
@@ -61,18 +60,10 @@ class Discri_dataset(Dataset):
         return len(self.data)
 
     def __getitem__(self, item):
-        input = self.data[item]['input'][:self.max_len]
-        length = len(input)
-        label = self.data[item]['label']
-        input.extend([self.pad_idx] * (self.max_len - len(input)))
-        target = input[1:]
-        input = input[:-1]
+        input = self.data[item]['input']
         return {
-            'sentence': self.data[item]['sentence'],
-            'length': length,
-            'input': np.asarray(input, dtype=int),
-            'target': np.asarray(target, dtype=int),
-            'label': label,
+            'input': self.data['input']
+            'label': self.data['label']
         }
 
 
