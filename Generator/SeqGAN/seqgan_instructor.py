@@ -47,15 +47,12 @@ class Discri_dataset(Dataset):
         index = 0
         mask = len(argdict['categories'])
         for i, dat in pos.data.items():
-            print(i, dat)
+            self.data[index] = {'input': dat['input'], 'label': 1}
+            index+=1
+        for dat in neg:
+            print(dat)
             fds
-        for i, row in data.iterrows():
-            tokenized_text = self.tokenizer.tokenize("<bos> " + row['sentence'] + " <eos>")
-            input = vocab(tokenized_text)
-            if find_max_len and len(input) > self.max_len:
-                self.max_len = len(input)
-            self.data[index] = {'sentence': row['sentence'], 'input': input, 'label': row['label']}
-            index += 1
+
 
     # def tokenize_and_vectorize(self, sentences):
     #     """Takes an array of sentences and return encoded data"""
