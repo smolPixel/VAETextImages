@@ -174,6 +174,7 @@ class SeqGANInstructor:
         data_loader=self.get_data_loader(dataset)
 
         for i, data in enumerate(data_loader):
+            print(data)
             inp, target = data['input'], data['label']
             inp, target = inp.cuda(), target.cuda()
 
