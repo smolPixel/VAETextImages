@@ -419,6 +419,7 @@ class SeqGANInstructor:
             target = samples
             inp[:, 0] = self.training_set.sos_idx
             print(inp)
+            print(inp.shape)
             print(target.shape)
             inp[:, 1:] = target[:, :self.training_set.max_len - 1]
 
