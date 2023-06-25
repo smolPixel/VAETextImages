@@ -189,8 +189,6 @@ class SeqGANInstructor:
 		total_loss = 0
 		total_acc = 0
 		total_num = 0
-		#pos_data is real data
-		all_data=[dat[]]
 
 		for i, data in enumerate(data_loader):
 			inp, target = data['input'], data['target']
