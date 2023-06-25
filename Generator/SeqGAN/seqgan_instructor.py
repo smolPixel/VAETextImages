@@ -363,11 +363,11 @@ class SeqGANInstructor:
             self.train_discriminator(self.argdict['discriminator_step'], self.argdict['discriminator_epoch'])
 
         # ===ADVERSARIAL TRAINING===
-        self.log.info('Starting Adversarial Training...')
-        self.log.info('Initial generator: %s' % (self.cal_metrics(fmt_str=True)))
+        print('Starting Adversarial Training...')
+        print('Initial generator: %s' % (self.cal_metrics(fmt_str=True)))
 
-        for adv_epoch in range(cfg.ADV_train_epoch):
-            self.log.info('-----\nADV EPOCH %d\n-----' % adv_epoch)
+        for adv_epoch in range(self.config['ADV_train_epoch']):
+            print('-----\nADV EPOCH %d\n-----' % adv_epoch)
             self.sig.update()
             if self.sig.adv_sig:
                 self.adv_train_generator(cfg.ADV_g_step)  # Generator
