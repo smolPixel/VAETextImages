@@ -366,7 +366,7 @@ class SeqGANInstructor:
         print('Starting Adversarial Training...')
         # print('Initial generator: %s' % (self.cal_metrics(fmt_str=True)))
 
-        for adv_epoch in range(self.config['ADV_train_epoch']):
+        for adv_epoch in range(self.argdict['ADV_train_epoch']):
             print('-----\nADV EPOCH %d\n-----' % adv_epoch)
             self.sig.update()
             if self.sig.adv_sig:
