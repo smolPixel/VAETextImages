@@ -60,10 +60,9 @@ class Discri_dataset(Dataset):
         return len(self.data)
 
     def __getitem__(self, item):
-        input = self.data[item]['input']
         return {
-            'input': self.data['input'],
-            'label': self.data['label']
+            'input': self.data[item]['input'],
+            'label': self.data[item]['label']
         }
 
 
