@@ -24,7 +24,7 @@ from Discriminators.CNNDiscriminatorGAN import SeqGAN_D
 from multiprocessing import cpu_count
 from Generator.SeqGAN.metrics import BLEU  # , NLL, PPL
 from torch.utils.data import Dataset
-
+from Generator.SeqGAN.utils import ROLLOUT
 
 # from metrics.bleu import BLEU
 # from metrics.clas_acc import ACC
@@ -411,7 +411,7 @@ class SeqGANInstructor:
 		The gen is trained using policy gradients, using the reward from the discriminator.
 		Training is done for num_batches batches.
 		"""
-        rollout_func = rollout.ROLLOUT(self.gen, cfg.CUDA)
+        rollout_func = ROLLOUT(self.gen, cfg.CUDA)
         total_g_loss = 0
         for step in range(g_step):
             inp, target = GenDataIter.prepare(self.gen.sample(cfg.batch_size, cfg.batch_size), gpu=cfg.CUDA)
