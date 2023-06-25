@@ -50,7 +50,7 @@ class Discri_dataset(Dataset):
             self.data[index] = {'input': dat['input'], 'label': 1}
             index+=1
         for dat in neg:
-            self.data[index] ={'input': dat, 'label': 0}
+            self.data[index] ={'input': dat.tolist(), 'label': 0}
             index+=1
 
     # def tokenize_and_vectorize(self, sentences):
@@ -60,7 +60,7 @@ class Discri_dataset(Dataset):
         return len(self.data)
 
     def __getitem__(self, item):
-        # print(self.data[item]['input'])
+        print(self.data[item]['input'])
         input = self.data[item]['input'][:self.max_len]
         input.extend([self.pad_idx] * (self.max_len - len(input)))
         return {
